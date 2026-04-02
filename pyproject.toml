@@ -1,0 +1,25 @@
+[project]
+name = "amr-profiling"
+version = "0.1.0"
+requires-python = "==3.12.*"
+dependencies = [
+    "python-dotenv",
+    "tqdm"
+]
+
+
+[dependency-groups]
+dev = [
+    "ipykernel",
+    "ipywidgets"
+]
+
+
+# [tool.uv.sources]
+# torch = { index = "pytorch" }
+
+
+# [[tool.uv.index]]
+# name = "pytorch"
+# url = "https://download.pytorch.org/whl/cu128"
+# explicit = true
