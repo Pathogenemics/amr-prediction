@@ -285,12 +285,11 @@ For each antibiotic-specific table, genotype rows were aggregated by:
 
 The resulting features included:
 
-- gene presence
 - `{element}_coverage`
 - `{element}_identity`
 - lineage-match feature
 
-This means the final model inputs were not just raw gene presence matrices. They also retained quantitative genotype evidence through coverage and identity, and they kept connection-scope information through lineage matching.
+This means the final model inputs retained quantitative genotype evidence through coverage and identity, and they kept connection-scope information through lineage matching.
 
 
 ## 12. Three Connection Tiers

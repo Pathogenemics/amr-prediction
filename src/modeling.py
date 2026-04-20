@@ -18,6 +18,17 @@ class ModelingResult:
     top_features: pd.DataFrame
 
 
+TOP_FEATURE_COLUMNS = [
+    "scope",
+    "Antibiotic",
+    "rank",
+    "feature",
+    "feature_base",
+    "feature_type",
+    "importance",
+]
+
+
 def train_models(
     phenotype: pd.DataFrame,
     features: pd.DataFrame,
@@ -151,12 +162,23 @@ def build_model(config: PipelineConfig, y: pd.Series) -> XGBClassifier:
     )
 
 
+def split_feature_column(feature_name: str) -> tuple[str, str]:
+    if feature_name.endswith("_coverage"):
+        return feature_name[: -len("_coverage")], "coverage"
+    if feature_name.endswith("_identity"):
+        return feature_name[: -len("_identity")], "identity"
+    if feature_name.endswith("_lineage_match"):
+        return feature_name[: -len("_lineage_match")], "lineage_match"
+    return feature_name, "other"
+
+
 def train_prepared_models(
     prepared_inputs: list[PreparedAntibioticInput],
     config: PipelineConfig,
     scope_name: str | None = None,
 ) -> ModelingResult:
     metric_rows: list[dict[str, float | int | str]] = []
+    feature_rows: list[dict[str, float | int | str]] = []
 
     iterator = tqdm(
         prepared_inputs,
@@ -295,6 +317,25 @@ def train_prepared_models(
             }
         )
 
+        fitted_model = build_model(config, y)
+        fitted_model.fit(X, y)
+        importances = pd.Series(fitted_model.feature_importances_, index=X.columns, dtype="float64")
+        importances = importances[importances > 0].sort_values(ascending=False).head(config.top_feature_count)
+
+        for rank, (feature_name, importance) in enumerate(importances.items(), start=1):
+            feature_base, feature_type = split_feature_column(feature_name)
+            feature_rows.append(
+                {
+                    "scope": scope_name or "",
+                    "Antibiotic": antibiotic,
+                    "rank": rank,
+                    "feature": feature_name,
+                    "feature_base": feature_base,
+                    "feature_type": feature_type,
+                    "importance": float(importance),
+                }
+            )
+
         if config.show_progress:
             iterator.set_postfix(
                 samples=len(frame),
@@ -306,4 +347,8 @@ def train_prepared_models(
     if not metrics.empty:
         metrics = metrics.sort_values(["scope", "roc_auc", "Antibiotic"], ascending=[True, False, True]).reset_index(drop=True)
 
-    return ModelingResult(metrics=metrics, top_features=pd.DataFrame())
+    top_features = pd.DataFrame(feature_rows, columns=TOP_FEATURE_COLUMNS)
+    if not top_features.empty:
+        top_features = top_features.sort_values(["scope", "Antibiotic", "rank"]).reset_index(drop=True)
+
+    return ModelingResult(metrics=metrics, top_features=top_features)

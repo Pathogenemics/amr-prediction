@@ -3,6 +3,7 @@
   "prepared_input_dir": "data\\model_inputs\\broad",
   "prepared_input_root": "data\\model_inputs",
   "cv_folds": 5,
+  "top_feature_count": 20,
   "random_state": 42,
   "n_estimators": 250,
   "learning_rate": 0.05,

@@ -36,6 +36,12 @@ def add_model_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--output-dir", default="outputs", help="Directory for training outputs.")
     parser.add_argument("--cv-folds", type=int, default=5, help="Number of stratified CV folds.")
     parser.add_argument(
+        "--top-feature-count",
+        type=int,
+        default=20,
+        help="Maximum number of feature-importance rows to export per antibiotic.",
+    )
+    parser.add_argument(
         "--antibiotic",
         action="append",
         dest="antibiotics",
@@ -60,6 +66,7 @@ def build_config(args: argparse.Namespace) -> PipelineConfig:
         prepared_input_dir=Path(args.prepared_input_dir) if args.prepared_input_dir else None,
         prepared_input_root=Path(args.prepared_input_root) if args.prepared_input_root else None,
         cv_folds=args.cv_folds,
+        top_feature_count=args.top_feature_count,
         show_progress=not args.no_progress,
         show_fold_progress=args.progress_folds,
         antibiotics=args.antibiotics,
@@ -92,10 +99,12 @@ def run_prepared_directory(config: PipelineConfig, input_dir: Path, output_dir: 
     results = train_prepared_models(artifacts.inputs, config, scope_name=scope_name)
 
     metrics_path = output_dir / "metrics.csv"
+    top_features_path = output_dir / "top_features.csv"
     summary_path = output_dir / "dataset_summary.json"
     config_path = output_dir / "run_config.json"
 
     results.metrics.to_csv(metrics_path, index=False)
+    results.top_features.to_csv(top_features_path, index=False)
 
     summary = {
         "prepared_input_dir": str(input_dir),
@@ -109,6 +118,7 @@ def run_prepared_directory(config: PipelineConfig, input_dir: Path, output_dir: 
     print(f"Prepared scope: {scope_name}")
     print(f"Selected antibiotics: {len(artifacts.summary)}")
     print(f"Metrics written to: {metrics_path}")
+    print(f"Top features written to: {top_features_path}")
 
 
 def resolve_scope_output_dir(base_output_dir: Path, scope_name: str) -> Path:

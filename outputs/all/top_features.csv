@@ -1,0 +1,281 @@
+scope,Antibiotic,rank,feature,feature_base,feature_type,importance
+all,amoxicillin-clavulanic acid,1,blacmy_2_coverage,blacmy_2,coverage,0.4646117389202118
+all,amoxicillin-clavulanic acid,2,blacmy_2_identity,blacmy_2,identity,0.22373232245445251
+all,amoxicillin-clavulanic acid,3,blacmy_identity,blacmy,identity,0.038210343569517136
+all,amoxicillin-clavulanic acid,4,ant_2_ia_coverage,ant_2_ia,coverage,0.024820156395435333
+all,amoxicillin-clavulanic acid,5,blacmy_coverage,blacmy,coverage,0.02051921933889389
+all,amoxicillin-clavulanic acid,6,ant_2_ia_identity,ant_2_ia,identity,0.014333372004330158
+all,amoxicillin-clavulanic acid,7,blaher_3_lineage_match,blaher_3,lineage_match,0.012521189637482166
+all,amoxicillin-clavulanic acid,8,aac_6_ib3_coverage,aac_6_ib3,coverage,0.00851494912058115
+all,amoxicillin-clavulanic acid,9,blaher_3_coverage,blaher_3,coverage,0.007590941619127989
+all,amoxicillin-clavulanic acid,10,blaher_identity,blaher,identity,0.007284415420144796
+all,amoxicillin-clavulanic acid,11,blatem_coverage,blatem,coverage,0.007169725839048624
+all,amoxicillin-clavulanic acid,12,blatem_1_coverage,blatem_1,coverage,0.006374449469149113
+all,amoxicillin-clavulanic acid,13,blaher_3_identity,blaher_3,identity,0.006025183945894241
+all,amoxicillin-clavulanic acid,14,gyra_d87y_identity,gyra_d87y,identity,0.005943671800196171
+all,amoxicillin-clavulanic acid,15,gyra_s83f_identity,gyra_s83f,identity,0.005518559366464615
+all,amoxicillin-clavulanic acid,16,gyra_s83f_coverage,gyra_s83f,coverage,0.005372581072151661
+all,amoxicillin-clavulanic acid,17,blatem_1_identity,blatem_1,identity,0.004798126872628927
+all,amoxicillin-clavulanic acid,18,sul1_identity,sul1,identity,0.004593395162373781
+all,amoxicillin-clavulanic acid,19,gyra_d87y_coverage,gyra_d87y,coverage,0.0045304689556360245
+all,amoxicillin-clavulanic acid,20,blaher_coverage,blaher,coverage,0.004206444602459669
+all,ampicillin,1,blatem_1_lineage_match,blatem_1,lineage_match,0.19141173362731934
+all,ampicillin,2,blatem_1_identity,blatem_1,identity,0.12053987383842468
+all,ampicillin,3,blacmy_2_coverage,blacmy_2,coverage,0.1125180572271347
+all,ampicillin,4,blacmy_2_identity,blacmy_2,identity,0.1070241630077362
+all,ampicillin,5,blatem_1_coverage,blatem_1,coverage,0.07970412075519562
+all,ampicillin,6,blactx_m_65_coverage,blactx_m_65,coverage,0.07058107852935791
+all,ampicillin,7,blactx_m_65_identity,blactx_m_65,identity,0.059993963688611984
+all,ampicillin,8,blacarb_2_lineage_match,blacarb_2,lineage_match,0.04349178075790405
+all,ampicillin,9,blaher_3_identity,blaher_3,identity,0.034122686833143234
+all,ampicillin,10,blacarb_2_coverage,blacarb_2,coverage,0.02882523648440838
+all,ampicillin,11,blaher_3_lineage_match,blaher_3,lineage_match,0.028025416657328606
+all,ampicillin,12,blacarb_2_identity,blacarb_2,identity,0.022943025454878807
+all,ampicillin,13,blaher_3_coverage,blaher_3,coverage,0.021885577589273453
+all,ampicillin,14,blacmy_identity,blacmy,identity,0.01143385749310255
+all,ampicillin,15,blacmy_coverage,blacmy,coverage,0.007475349586457014
+all,ampicillin,16,flor_coverage,flor,coverage,0.004110537935048342
+all,ampicillin,17,blaher_identity,blaher,identity,0.0039426302537322044
+all,ampicillin,18,blaher_lineage_match,blaher,lineage_match,0.002627727808430791
+all,ampicillin,19,blaher_coverage,blaher,coverage,0.002572606550529599
+all,ampicillin,20,blatem_coverage,blatem,coverage,0.0024408611934632063
+all,cefoxitin,1,blacmy_2_identity,blacmy_2,identity,0.5235097408294678
+all,cefoxitin,2,blacmy_2_coverage,blacmy_2,coverage,0.22077308595180511
+all,cefoxitin,3,blacmy_identity,blacmy,identity,0.031067615374922752
+all,cefoxitin,4,aada7_coverage,aada7,coverage,0.021660422906279564
+all,cefoxitin,5,fosa7_8_coverage,fosa7_8,coverage,0.017299804836511612
+all,cefoxitin,6,sul2_coverage,sul2,coverage,0.014773954637348652
+all,cefoxitin,7,blacmy_coverage,blacmy,coverage,0.011271024122834206
+all,cefoxitin,8,cmla5_identity,cmla5,identity,0.010099399834871292
+all,cefoxitin,9,aac_3_iva_coverage,aac_3_iva,coverage,0.007578545715659857
+all,cefoxitin,10,dfra1_identity,dfra1,identity,0.006160463206470013
+all,cefoxitin,11,arma_coverage,arma,coverage,0.005806487053632736
+all,cefoxitin,12,bladha_coverage,bladha,coverage,0.005534985568374395
+all,cefoxitin,13,aac_6_ib3_coverage,aac_6_ib3,coverage,0.005297405645251274
+all,cefoxitin,14,blacmy_4_coverage,blacmy_4,coverage,0.0050903139635920525
+all,cefoxitin,15,dfra1_coverage,dfra1,coverage,0.004639487247914076
+all,cefoxitin,16,mph_g_coverage,mph_g,coverage,0.004544982686638832
+all,cefoxitin,17,tet_a_coverage,tet_a,coverage,0.004418970551341772
+all,cefoxitin,18,gyra_s83f_identity,gyra_s83f,identity,0.004017739091068506
+all,cefoxitin,19,aac_3_iie_coverage,aac_3_iie,coverage,0.003987031988799572
+all,cefoxitin,20,gyrb_s464y_coverage,gyrb_s464y,coverage,0.003887087805196643
+all,ceftiofur,1,blacmy_2_coverage,blacmy_2,coverage,0.37989670038223267
+all,ceftiofur,2,blacmy_2_identity,blacmy_2,identity,0.36624807119369507
+all,ceftiofur,3,blacmy_identity,blacmy,identity,0.030722154304385185
+all,ceftiofur,4,blacmy_coverage,blacmy,coverage,0.029338601976633072
+all,ceftiofur,5,blactx_m_65_coverage,blactx_m_65,coverage,0.014550169929862022
+all,ceftiofur,6,blactx_m_65_identity,blactx_m_65,identity,0.0131507134065032
+all,ceftiofur,7,fosa7_8_coverage,fosa7_8,coverage,0.008274552412331104
+all,ceftiofur,8,blactx_m_1_identity,blactx_m_1,identity,0.008117525838315487
+all,ceftiofur,9,blashv_2a_coverage,blashv_2a,coverage,0.0075911409221589565
+all,ceftiofur,10,sul2_identity,sul2,identity,0.0073476992547512054
+all,ceftiofur,11,blashv_2a_identity,blashv_2a,identity,0.007168887183070183
+all,ceftiofur,12,blactx_m_1_coverage,blactx_m_1,coverage,0.00702643021941185
+all,ceftiofur,13,aph_3_ia_identity,aph_3_ia,identity,0.005220601335167885
+all,ceftiofur,14,gyra_s83f_identity,gyra_s83f,identity,0.0045232996344566345
+all,ceftiofur,15,blatem_identity,blatem,identity,0.004250998143106699
+all,ceftiofur,16,fosa7_2_identity,fosa7_2,identity,0.003831189125776291
+all,ceftiofur,17,gyra_d87y_identity,gyra_d87y,identity,0.0037907103542238474
+all,ceftiofur,18,aph_4_ia_coverage,aph_4_ia,coverage,0.0035938224755227566
+all,ceftiofur,19,qnrb19_coverage,qnrb19,coverage,0.0035826596431434155
+all,ceftiofur,20,aada2_identity,aada2,identity,0.003459845669567585
+all,ceftriaxone,1,blacmy_2_coverage,blacmy_2,coverage,0.179985910654068
+all,ceftriaxone,2,blacmy_2_identity,blacmy_2,identity,0.16133840382099152
+all,ceftriaxone,3,blactx_m_65_identity,blactx_m_65,identity,0.16021928191184998
+all,ceftriaxone,4,blactx_m_65_coverage,blactx_m_65,coverage,0.15855945646762848
+all,ceftriaxone,5,gyra_d87y_identity,gyra_d87y,identity,0.046384505927562714
+all,ceftriaxone,6,blactx_m_15_identity,blactx_m_15,identity,0.026921000331640244
+all,ceftriaxone,7,blashv_12_identity,blashv_12,identity,0.015340798534452915
+all,ceftriaxone,8,blactx_m_15_coverage,blactx_m_15,coverage,0.015323961153626442
+all,ceftriaxone,9,dfra19_coverage,dfra19,coverage,0.014136160723865032
+all,ceftriaxone,10,cata1_coverage,cata1,coverage,0.013359184376895428
+all,ceftriaxone,11,blacmy_identity,blacmy,identity,0.012748433277010918
+all,ceftriaxone,12,blacmy_coverage,blacmy,coverage,0.011747235432267189
+all,ceftriaxone,13,sul2_coverage,sul2,coverage,0.010824468918144703
+all,ceftriaxone,14,blashv_12_coverage,blashv_12,coverage,0.010763553902506828
+all,ceftriaxone,15,blactx_m_1_identity,blactx_m_1,identity,0.010153207927942276
+all,ceftriaxone,16,parc_s80i_identity,parc_s80i,identity,0.009653412736952305
+all,ceftriaxone,17,gyra_s83y_identity,gyra_s83y,identity,0.0077955820597708225
+all,ceftriaxone,18,fosa7_8_coverage,fosa7_8,coverage,0.007588517386466265
+all,ceftriaxone,19,aac_6_ib3_identity,aac_6_ib3,identity,0.007182764820754528
+all,ceftriaxone,20,blactx_m_1_coverage,blactx_m_1,coverage,0.007074207998812199
+all,chloramphenicol,1,flor_lineage_match,flor,lineage_match,0.4277830123901367
+all,chloramphenicol,2,flor_coverage,flor,coverage,0.22992679476737976
+all,chloramphenicol,3,flor_identity,flor,identity,0.11691803485155106
+all,chloramphenicol,4,cmla1_lineage_match,cmla1,lineage_match,0.02093135379254818
+all,chloramphenicol,5,cmla1_coverage,cmla1,coverage,0.012585972435772419
+all,chloramphenicol,6,cata1_coverage,cata1,coverage,0.011681370437145233
+all,chloramphenicol,7,aac_3_iva_coverage,aac_3_iva,coverage,0.011359073221683502
+all,chloramphenicol,8,aada2_identity,aada2,identity,0.010977827943861485
+all,chloramphenicol,9,aph_4_ia_coverage,aph_4_ia,coverage,0.010137188248336315
+all,chloramphenicol,10,cata2_coverage,cata2,coverage,0.009519792161881924
+all,chloramphenicol,11,cata2_identity,cata2,identity,0.008884965442121029
+all,chloramphenicol,12,aada2_coverage,aada2,coverage,0.00879921019077301
+all,chloramphenicol,13,blactx_m_15_identity,blactx_m_15,identity,0.007884299382567406
+all,chloramphenicol,14,blacarb_2_coverage,blacarb_2,coverage,0.006571284960955381
+all,chloramphenicol,15,cmla5_identity,cmla5,identity,0.006474544759839773
+all,chloramphenicol,16,blactx_m_15_coverage,blactx_m_15,coverage,0.006472971756011248
+all,chloramphenicol,17,cmla5_coverage,cmla5,coverage,0.005448838695883751
+all,chloramphenicol,18,ant_2_ia_coverage,ant_2_ia,coverage,0.005431561265140772
+all,chloramphenicol,19,sul2_coverage,sul2,coverage,0.00473850267007947
+all,chloramphenicol,20,aac_3_iig_coverage,aac_3_iig,coverage,0.0041600484400987625
+all,ciprofloxacin,1,gyra_d87y_lineage_match,gyra_d87y,lineage_match,0.36867454648017883
+all,ciprofloxacin,2,gyra_d87y_identity,gyra_d87y,identity,0.23894906044006348
+all,ciprofloxacin,3,gyra_d87y_coverage,gyra_d87y,coverage,0.18171660602092743
+all,ciprofloxacin,4,qnrs2_lineage_match,qnrs2,lineage_match,0.018781691789627075
+all,ciprofloxacin,5,sul3_identity,sul3,identity,0.014698689803481102
+all,ciprofloxacin,6,qnrb19_identity,qnrb19,identity,0.014583904296159744
+all,ciprofloxacin,7,aac_3_via_coverage,aac_3_via,coverage,0.010771793313324451
+all,ciprofloxacin,8,qnrb19_coverage,qnrb19,coverage,0.01042782049626112
+all,ciprofloxacin,9,gyra_s83y_lineage_match,gyra_s83y,lineage_match,0.009820571169257164
+all,ciprofloxacin,10,qnrb19_lineage_match,qnrb19,lineage_match,0.009629450738430023
+all,ciprofloxacin,11,gyra_s83f_coverage,gyra_s83f,coverage,0.00930276233702898
+all,ciprofloxacin,12,qnrs2_coverage,qnrs2,coverage,0.00894369836896658
+all,ciprofloxacin,13,gyra_s83y_identity,gyra_s83y,identity,0.008282925933599472
+all,ciprofloxacin,14,qnrs2_identity,qnrs2,identity,0.00811668299138546
+all,ciprofloxacin,15,gyra_s83y_coverage,gyra_s83y,coverage,0.00769087765365839
+all,ciprofloxacin,16,gyra_s83f_identity,gyra_s83f,identity,0.007683310657739639
+all,ciprofloxacin,17,aac_6_ib_cr5_coverage,aac_6_ib_cr5,coverage,0.006019296124577522
+all,ciprofloxacin,18,sul3_coverage,sul3,coverage,0.005995896179229021
+all,ciprofloxacin,19,aac_3_iie_coverage,aac_3_iie,coverage,0.005694061983376741
+all,ciprofloxacin,20,blactx_m_15_coverage,blactx_m_15,coverage,0.005636597517877817
+all,gentamicin,1,aada1_identity,aada1,identity,0.40037304162979126
+all,gentamicin,2,ant_2_ia_coverage,ant_2_ia,coverage,0.05417640879750252
+all,gentamicin,3,ant_2_ia_identity,ant_2_ia,identity,0.05257316306233406
+all,gentamicin,4,aada1_coverage,aada1,coverage,0.04981417581439018
+all,gentamicin,5,grda_coverage,grda,coverage,0.03262529894709587
+all,gentamicin,6,aac_3_iva_coverage,aac_3_iva,coverage,0.027260998263955116
+all,gentamicin,7,grda_identity,grda,identity,0.02417180873453617
+all,gentamicin,8,sul1_coverage,sul1,coverage,0.020855914801359177
+all,gentamicin,9,aac_3_iid_coverage,aac_3_iid,coverage,0.019555674865841866
+all,gentamicin,10,gyra_d87y_identity,gyra_d87y,identity,0.016845647245645523
+all,gentamicin,11,sul1_identity,sul1,identity,0.01596107706427574
+all,gentamicin,12,aac_3_iid_lineage_match,aac_3_iid,lineage_match,0.015387536957859993
+all,gentamicin,13,grda_lineage_match,grda,lineage_match,0.013802552595734596
+all,gentamicin,14,aada22_identity,aada22,identity,0.01292364951223135
+all,gentamicin,15,aph_4_ia_coverage,aph_4_ia,coverage,0.011796578764915466
+all,gentamicin,16,aac_3_iid_identity,aac_3_iid,identity,0.011167033575475216
+all,gentamicin,17,aac_3_via_identity,aac_3_via,identity,0.010878032073378563
+all,gentamicin,18,blacarb_2_coverage,blacarb_2,coverage,0.010368126444518566
+all,gentamicin,19,aac_3_via_lineage_match,aac_3_via,lineage_match,0.009575656615197659
+all,gentamicin,20,aac_3_via_coverage,aac_3_via,coverage,0.009472565725445747
+all,kanamycin,1,aph_6_ic_coverage,aph_6_ic,coverage,0.325736939907074
+all,kanamycin,2,aph_3_iia_identity,aph_3_iia,identity,0.11459372937679291
+all,kanamycin,3,aph_3_iia_coverage,aph_3_iia,coverage,0.09252359718084335
+all,kanamycin,4,aph_3_iia_lineage_match,aph_3_iia,lineage_match,0.07861140370368958
+all,kanamycin,5,aph_3_ia_coverage,aph_3_ia,coverage,0.06713429093360901
+all,kanamycin,6,aph_3_ia_lineage_match,aph_3_ia,lineage_match,0.06590893119573593
+all,kanamycin,7,aph_3_ia_identity,aph_3_ia,identity,0.059909887611866
+all,kanamycin,8,ant_2_ia_identity,ant_2_ia,identity,0.055789265781641006
+all,kanamycin,9,ant_2_ia_coverage,ant_2_ia,coverage,0.043357983231544495
+all,kanamycin,10,aac_6_ib4_coverage,aac_6_ib4,coverage,0.018497716635465622
+all,kanamycin,11,ant_2_ia_lineage_match,ant_2_ia,lineage_match,0.010754624381661415
+all,kanamycin,12,grda_identity,grda,identity,0.009304835461080074
+all,kanamycin,13,grda_coverage,grda,coverage,0.0032411213032901287
+all,kanamycin,14,aac_3_iid_identity,aac_3_iid,identity,0.0028648816514760256
+all,kanamycin,15,sul2_coverage,sul2,coverage,0.0024977289140224457
+all,kanamycin,16,tet_a_coverage,tet_a,coverage,0.002434382913634181
+all,kanamycin,17,blacmy_2_identity,blacmy_2,identity,0.0022907545790076256
+all,kanamycin,18,aac_3_iid_coverage,aac_3_iid,coverage,0.002280056243762374
+all,kanamycin,19,tet_a_identity,tet_a,identity,0.0022162022069096565
+all,kanamycin,20,sul2_identity,sul2,identity,0.0021965820342302322
+all,nalidixic acid,1,gyra_d87y_identity,gyra_d87y,identity,0.338032603263855
+all,nalidixic acid,2,gyra_d87y_coverage,gyra_d87y,coverage,0.25221872329711914
+all,nalidixic acid,3,gyra_d87y_lineage_match,gyra_d87y,lineage_match,0.08355211466550827
+all,nalidixic acid,4,gyra_d87n_lineage_match,gyra_d87n,lineage_match,0.029745617881417274
+all,nalidixic acid,5,gyra_d87n_coverage,gyra_d87n,coverage,0.02287045679986477
+all,nalidixic acid,6,gyra_s83f_coverage,gyra_s83f,coverage,0.021416127681732178
+all,nalidixic acid,7,gyra_d87n_identity,gyra_d87n,identity,0.019495515152812004
+all,nalidixic acid,8,gyra_d87g_identity,gyra_d87g,identity,0.017428454011678696
+all,nalidixic acid,9,gyra_s83y_identity,gyra_s83y,identity,0.01647774688899517
+all,nalidixic acid,10,qnrb19_identity,qnrb19,identity,0.015185056254267693
+all,nalidixic acid,11,gyra_d87g_coverage,gyra_d87g,coverage,0.012486443854868412
+all,nalidixic acid,12,gyra_s83f_lineage_match,gyra_s83f,lineage_match,0.012261486612260342
+all,nalidixic acid,13,qnrb19_coverage,qnrb19,coverage,0.012129034847021103
+all,nalidixic acid,14,gyra_s83f_identity,gyra_s83f,identity,0.010888691060245037
+all,nalidixic acid,15,gyra_s83y_coverage,gyra_s83y,coverage,0.010860699228942394
+all,nalidixic acid,16,cata1_coverage,cata1,coverage,0.006911582313477993
+all,nalidixic acid,17,qnrs2_coverage,qnrs2,coverage,0.006450566463172436
+all,nalidixic acid,18,bleo_identity,bleo,identity,0.006329838186502457
+all,nalidixic acid,19,bleo_coverage,bleo,coverage,0.005909962113946676
+all,nalidixic acid,20,dfra14_identity,dfra14,identity,0.005218064412474632
+all,streptomycin,1,aph_3_ib_lineage_match,aph_3_ib,lineage_match,0.31996655464172363
+all,streptomycin,2,aph_3_ib_coverage,aph_3_ib,coverage,0.17457406222820282
+all,streptomycin,3,sul1_coverage,sul1,coverage,0.1225537359714508
+all,streptomycin,4,aph_3_ib_identity,aph_3_ib,identity,0.09645181894302368
+all,streptomycin,5,sul1_identity,sul1,identity,0.03857937455177307
+all,streptomycin,6,aada1_lineage_match,aada1,lineage_match,0.03642452880740166
+all,streptomycin,7,aada1_identity,aada1,identity,0.022450575605034828
+all,streptomycin,8,aada1_coverage,aada1,coverage,0.014002528041601181
+all,streptomycin,9,aada2_lineage_match,aada2,lineage_match,0.013215816579759121
+all,streptomycin,10,aada7_coverage,aada7,coverage,0.01135534979403019
+all,streptomycin,11,sul3_coverage,sul3,coverage,0.0053630005568265915
+all,streptomycin,12,cmla1_coverage,cmla1,coverage,0.005294418428093195
+all,streptomycin,13,aph_3_iia_identity,aph_3_iia,identity,0.0050420090556144714
+all,streptomycin,14,aada7_identity,aada7,identity,0.0040223971009254456
+all,streptomycin,15,dfra1_identity,dfra1,identity,0.003762283595278859
+all,streptomycin,16,aada2_coverage,aada2,coverage,0.00363443186506629
+all,streptomycin,17,blacarb_2_identity,blacarb_2,identity,0.003461560932919383
+all,streptomycin,18,tet_g_identity,tet_g,identity,0.003276657313108444
+all,streptomycin,19,aada2_identity,aada2,identity,0.0030382873956114054
+all,streptomycin,20,dfra1_coverage,dfra1,coverage,0.0029160049743950367
+all,sulfisoxazole,1,sul1_coverage,sul1,coverage,0.2126232236623764
+all,sulfisoxazole,2,sul1_lineage_match,sul1,lineage_match,0.1545306295156479
+all,sulfisoxazole,3,tet_a_coverage,tet_a,coverage,0.14812901616096497
+all,sulfisoxazole,4,sul1_identity,sul1,identity,0.12352477014064789
+all,sulfisoxazole,5,sul2_identity,sul2,identity,0.10695227980613708
+all,sulfisoxazole,6,sul2_coverage,sul2,coverage,0.06344351917505264
+all,sulfisoxazole,7,aac_3_iid_identity,aac_3_iid,identity,0.030042119324207306
+all,sulfisoxazole,8,tet_a_identity,tet_a,identity,0.02864636667072773
+all,sulfisoxazole,9,cmla1_coverage,cmla1,coverage,0.02041991613805294
+all,sulfisoxazole,10,sul3_lineage_match,sul3,lineage_match,0.01746501959860325
+all,sulfisoxazole,11,sul3_coverage,sul3,coverage,0.009218462742865086
+all,sulfisoxazole,12,sul3_identity,sul3,identity,0.008992361836135387
+all,sulfisoxazole,13,aph_6_id_identity,aph_6_id,identity,0.00862746313214302
+all,sulfisoxazole,14,blacmy_2_identity,blacmy_2,identity,0.004015687387436628
+all,sulfisoxazole,15,aada2_coverage,aada2,coverage,0.003486907808110118
+all,sulfisoxazole,16,tet_c_identity,tet_c,identity,0.002924741245806217
+all,sulfisoxazole,17,tet_c_coverage,tet_c,coverage,0.0024375703651458025
+all,sulfisoxazole,18,aada1_coverage,aada1,coverage,0.0023742755874991417
+all,sulfisoxazole,19,aac_3_via_coverage,aac_3_via,coverage,0.0023214858956635
+all,sulfisoxazole,20,aac_3_iid_coverage,aac_3_iid,coverage,0.0022478618193417788
+all,tetracycline,1,tet_b_lineage_match,tet_b,lineage_match,0.2520449161529541
+all,tetracycline,2,tet_b_identity,tet_b,identity,0.15703245997428894
+all,tetracycline,3,tet_b_coverage,tet_b,coverage,0.15021854639053345
+all,tetracycline,4,tet_a_coverage,tet_a,coverage,0.10829449445009232
+all,tetracycline,5,tet_a_lineage_match,tet_a,lineage_match,0.07156640291213989
+all,tetracycline,6,tet_a_identity,tet_a,identity,0.051445938646793365
+all,tetracycline,7,tet_c_lineage_match,tet_c,lineage_match,0.04171130806207657
+all,tetracycline,8,tet_c_identity,tet_c,identity,0.03629038482904434
+all,tetracycline,9,tet_g_coverage,tet_g,coverage,0.028222691267728806
+all,tetracycline,10,tet_c_coverage,tet_c,coverage,0.024661727249622345
+all,tetracycline,11,tet_g_identity,tet_g,identity,0.02014194428920746
+all,tetracycline,12,flor_identity,flor,identity,0.01849636435508728
+all,tetracycline,13,blacarb_2_coverage,blacarb_2,coverage,0.006695528514683247
+all,tetracycline,14,blacarb_2_identity,blacarb_2,identity,0.003693439532071352
+all,tetracycline,15,aada2_coverage,aada2,coverage,0.0018208511173725128
+all,tetracycline,16,aada2_identity,aada2,identity,0.001588705345056951
+all,tetracycline,17,aph_3_iia_identity,aph_3_iia,identity,0.0011420451337471604
+all,tetracycline,18,aac_3_via_coverage,aac_3_via,coverage,0.0011385323014110327
+all,tetracycline,19,aac_3_via_identity,aac_3_via,identity,0.0011147470213472843
+all,tetracycline,20,aph_6_ic_identity,aph_6_ic,identity,0.0010782988974824548
+all,trimethoprim-sulfamethoxazole,1,dfra14_lineage_match,dfra14,lineage_match,0.16673271358013153
+all,trimethoprim-sulfamethoxazole,2,dfra14_coverage,dfra14,coverage,0.12273386865854263
+all,trimethoprim-sulfamethoxazole,3,dfra14_identity,dfra14,identity,0.09806903451681137
+all,trimethoprim-sulfamethoxazole,4,aada2_identity,aada2,identity,0.0586390495300293
+all,trimethoprim-sulfamethoxazole,5,blactx_m_15_identity,blactx_m_15,identity,0.03564181923866272
+all,trimethoprim-sulfamethoxazole,6,dfra5_identity,dfra5,identity,0.03391845151782036
+all,trimethoprim-sulfamethoxazole,7,dfra19_identity,dfra19,identity,0.031519435346126556
+all,trimethoprim-sulfamethoxazole,8,sul1_lineage_match,sul1,lineage_match,0.029569244012236595
+all,trimethoprim-sulfamethoxazole,9,blactx_m_15_coverage,blactx_m_15,coverage,0.028035635128617287
+all,trimethoprim-sulfamethoxazole,10,dfra12_coverage,dfra12,coverage,0.026966996490955353
+all,trimethoprim-sulfamethoxazole,11,dfra19_coverage,dfra19,coverage,0.023352444171905518
+all,trimethoprim-sulfamethoxazole,12,dfra12_lineage_match,dfra12,lineage_match,0.021614693105220795
+all,trimethoprim-sulfamethoxazole,13,dfra5_lineage_match,dfra5,lineage_match,0.019988398998975754
+all,trimethoprim-sulfamethoxazole,14,dfra1_coverage,dfra1,coverage,0.019278666004538536
+all,trimethoprim-sulfamethoxazole,15,dfra1_identity,dfra1,identity,0.016813935711979866
+all,trimethoprim-sulfamethoxazole,16,aada5_identity,aada5,identity,0.015215139836072922
+all,trimethoprim-sulfamethoxazole,17,aada5_coverage,aada5,coverage,0.011818947270512581
+all,trimethoprim-sulfamethoxazole,18,sul1_coverage,sul1,coverage,0.011277437210083008
+all,trimethoprim-sulfamethoxazole,19,dfra15_identity,dfra15,identity,0.009786631911993027
+all,trimethoprim-sulfamethoxazole,20,dfra5_coverage,dfra5,coverage,0.009607041254639626
