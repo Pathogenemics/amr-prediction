@@ -1,0 +1,148 @@
+{
+  "prepared_input_dir": "data\\model_inputs\\all",
+  "scope": "all",
+  "selected_antibiotics": [
+    "ampicillin",
+    "trimethoprim-sulfamethoxazole",
+    "ceftriaxone",
+    "nalidixic acid",
+    "tetracycline",
+    "chloramphenicol",
+    "cefoxitin",
+    "sulfisoxazole",
+    "ciprofloxacin",
+    "gentamicin",
+    "amoxicillin-clavulanic acid",
+    "streptomycin",
+    "ceftiofur",
+    "kanamycin"
+  ],
+  "prepared_input_summary": [
+    {
+      "Antibiotic": "ampicillin",
+      "table_path": "data\\model_inputs\\all\\model_input__ampicillin.csv",
+      "n_samples": 6810,
+      "n_susceptible": 4370,
+      "n_resistant": 2440,
+      "feature_count": 556,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "trimethoprim-sulfamethoxazole",
+      "table_path": "data\\model_inputs\\all\\model_input__trimethoprim_sulfamethoxazole.csv",
+      "n_samples": 6808,
+      "n_susceptible": 6494,
+      "n_resistant": 314,
+      "feature_count": 556,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "ceftriaxone",
+      "table_path": "data\\model_inputs\\all\\model_input__ceftriaxone.csv",
+      "n_samples": 6807,
+      "n_susceptible": 5594,
+      "n_resistant": 1213,
+      "feature_count": 552,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "nalidixic acid",
+      "table_path": "data\\model_inputs\\all\\model_input__nalidixic_acid.csv",
+      "n_samples": 6789,
+      "n_susceptible": 5974,
+      "n_resistant": 815,
+      "feature_count": 520,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "tetracycline",
+      "table_path": "data\\model_inputs\\all\\model_input__tetracycline.csv",
+      "n_samples": 6780,
+      "n_susceptible": 1941,
+      "n_resistant": 4839,
+      "feature_count": 544,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "chloramphenicol",
+      "table_path": "data\\model_inputs\\all\\model_input__chloramphenicol.csv",
+      "n_samples": 6730,
+      "n_susceptible": 6146,
+      "n_resistant": 584,
+      "feature_count": 520,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "cefoxitin",
+      "table_path": "data\\model_inputs\\all\\model_input__cefoxitin.csv",
+      "n_samples": 6715,
+      "n_susceptible": 5917,
+      "n_resistant": 798,
+      "feature_count": 544,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "sulfisoxazole",
+      "table_path": "data\\model_inputs\\all\\model_input__sulfisoxazole.csv",
+      "n_samples": 6558,
+      "n_susceptible": 3845,
+      "n_resistant": 2713,
+      "feature_count": 524,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "ciprofloxacin",
+      "table_path": "data\\model_inputs\\all\\model_input__ciprofloxacin.csv",
+      "n_samples": 6550,
+      "n_susceptible": 5951,
+      "n_resistant": 599,
+      "feature_count": 500,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "gentamicin",
+      "table_path": "data\\model_inputs\\all\\model_input__gentamicin.csv",
+      "n_samples": 6459,
+      "n_susceptible": 5575,
+      "n_resistant": 884,
+      "feature_count": 540,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "amoxicillin-clavulanic acid",
+      "table_path": "data\\model_inputs\\all\\model_input__amoxicillin_clavulanic_acid.csv",
+      "n_samples": 6159,
+      "n_susceptible": 5262,
+      "n_resistant": 897,
+      "feature_count": 512,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "streptomycin",
+      "table_path": "data\\model_inputs\\all\\model_input__streptomycin.csv",
+      "n_samples": 6050,
+      "n_susceptible": 2850,
+      "n_resistant": 3200,
+      "feature_count": 512,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "ceftiofur",
+      "table_path": "data\\model_inputs\\all\\model_input__ceftiofur.csv",
+      "n_samples": 3562,
+      "n_susceptible": 2854,
+      "n_resistant": 708,
+      "feature_count": 384,
+      "zero_feature_rows": 0
+    },
+    {
+      "Antibiotic": "kanamycin",
+      "table_path": "data\\model_inputs\\all\\model_input__kanamycin.csv",
+      "n_samples": 2772,
+      "n_susceptible": 2304,
+      "n_resistant": 468,
+      "feature_count": 280,
+      "zero_feature_rows": 0
+    }
+  ]
+}

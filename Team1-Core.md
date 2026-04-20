@@ -12,59 +12,35 @@ The central biological question is: **can the presence of known resistance genes
 
 All data originates from **NCBI Pathogen Detection** (https://www.ncbi.nlm.nih.gov/pathogens/), working exclusively with *Salmonella enterica* isolates. The universal join key across every table and file is `BioSample` - a unique identifier per isolate (format: `SAMN########`).
 
-### FASTA Files - Assembled Genomes
-
-**Sources:**
-- **NCBI SRA** (https://www.ncbi.nlm.nih.gov/sra) - search by BioSample ID or SRA accession (`SRR#######`) and download FASTA directly
-- **NCBI Datasets Genome** (https://www.ncbi.nlm.nih.gov/datasets/genome/) - alternative source for pre-assembled genomes linked to the same BioSample IDs
-
-**What:** One assembled genome per isolate (~5 MB each). The reconstructed DNA sequence of a single *Salmonella enterica* isolate.  
-**Role:** Starting point for resistance gene detection. AMRFinderPlus scans these files to identify which resistance genes are present in each genome.
-
-### Isolates Metadata Table
-
-**Source:** NCBI Pathogen Detection → Isolates Browser → Download as TSV  
-**What:** One row per isolate. Provides geographic, temporal, and biological context.
-
-| Column | Description | Importance |
-|---|---|---|
-| `BioSample` | Universal identifier per isolate | Primary join key linking this table to MicroBIGG-E and the AST table |
-| `AMR genotypes` | Quick summary of resistance genes detected per isolate | Useful for a fast per-isolate overview; MicroBIGG-E provides the full per-gene detail needed for the feature matrix |
-| `Location` | Geographic origin | Enables geographic resistance trend analysis - e.g., is a drug class becoming more prevalent in a specific region? |
-| `Create date` | Collection/submission date | Enables temporal trend analysis - e.g., is resistance to a drug class increasing over time? |
-| `Isolation source` | Sample origin (e.g., chicken breast, clinical swab) | Supports subgroup analysis by source type, relevant when comparing food vs. clinical isolates |
-| `Isolation type` | Clinical / food / environmental | Coarser version of isolation source; useful for stratifying model performance across surveillance contexts |
-| `Serovar` | Subspecies classification (e.g., Typhimurium, Enteritidis) | Relevant for per-serovar model analysis - resistance gene prevalence varies significantly across serovars |
-
 ### MicroBIGG-E AMR Gene Table
 
 **Source:** NCBI Pathogens → MicroBIGG-E → search `taxgroup_name:"Salmonella enterica"` → filter Type = AMR → Download TSV (~600 MB)  
 **What:** One row per resistance gene detected per isolate. This is the **primary feature source** for the ML model. NCBI generated this table by running AMRFinderPlus on all assembled genomes - Team 1 reproduces a subset of this process on prototype FASTA files as pipeline validation.
 
-| Column | Description | Importance |
-|---|---|---|
-| `BioSample` | Join key | Links gene-level features to isolate metadata and AST labels |
-| `Element symbol` | Gene or mutation name (e.g., `blaTEM-1`, `gyrA_D87Y`) | Becomes the column name in the feature matrix - one column per unique gene across all isolates |
-| `Class` | Broad drug resistance category (e.g., `AMINOGLYCOSIDE`, `BETA-LACTAM`, `QUINOLONE`, `TETRACYCLINE`) | Defines the prediction target - each ML model is trained to predict resistance for one drug class |
-| `Subclass` | More specific drug category within Class (e.g., `STREPTOMYCIN`, `CEPHALOSPORIN`, `TRIMETHOPRIM`, `KANAMYCIN`) | Allows finer-grained prediction targets; useful when a broad Class contains clinically distinct sub-drugs |
-| `Subtype` | Detection category: `AMR` (intact resistance gene), `POINT` (point mutation in a native gene), `POINT_DISRUPT` (disruptive point mutation, rare) | Decides how to split the feature space - `POINT` genes represent a different resistance mechanism from `AMR` genes and may warrant separate treatment |
-| `Method` | How the gene was detected. Suffix `P` = protein-based, `X` = nucleotide-based. Prefixes: `EXACT`, `BLAST`, `ALLELE` (whole-gene methods), `POINT` (mutation), `PARTIAL`, `PARTIAL_CONTIG_END` (incomplete detections), `INTERNAL_STOP` (premature stop codon - gene likely non-functional), `HMM` (distant homolog) | Determines which rows to filter out before building the feature matrix - `INTERNAL_STOP` should be excluded as the gene is likely non-functional; `PARTIAL*` rows should be filtered by coverage threshold |
-| `% Coverage` | Fraction of the reference gene sequence present in this isolate | Used to set a minimum completeness threshold; low coverage may indicate a degraded or partial gene that provides unreliable resistance |
-| `% Identity` | Sequence similarity to the database reference | Used to set a minimum confidence threshold; low identity may indicate a divergent gene variant with uncertain function |
-| `Scope` | `core` (well-established) or `plus` (accessory, weaker evidence) | Decides the feature inclusion boundary - starting with `core` only is the conservative choice; adding `plus` is an explicit engineering decision to test |
+| Column           | Description                                                                                                                                                                                                                                                                                                         | Importance                                                                                                                                                                                                 |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BioSample`      | Join key                                                                                                                                                                                                                                                                                                            | Links gene-level features to isolate metadata and AST labels                                                                                                                                               |
+| `Element symbol` | Gene or mutation name (e.g., `blaTEM-1`, `gyrA_D87Y`)                                                                                                                                                                                                                                                               | Becomes the column name in the feature matrix - one column per unique gene across all isolates                                                                                                             |
+| `Class`          | Broad drug resistance category (e.g., `AMINOGLYCOSIDE`, `BETA-LACTAM`, `QUINOLONE`, `TETRACYCLINE`)                                                                                                                                                                                                                 | Defines the prediction target - each ML model is trained to predict resistance for one drug class                                                                                                          |
+| `Subclass`       | More specific drug category within Class (e.g., `STREPTOMYCIN`, `CEPHALOSPORIN`, `TRIMETHOPRIM`, `KANAMYCIN`)                                                                                                                                                                                                       | Allows finer-grained prediction targets; useful when a broad Class contains clinically distinct sub-drugs                                                                                                  |
+| `Subtype`        | Detection category: `AMR` (intact resistance gene), `POINT` (point mutation in a native gene), `POINT_DISRUPT` (disruptive point mutation, rare)                                                                                                                                                                    | Decides how to split the feature space - `POINT` genes represent a different resistance mechanism from `AMR` genes and may warrant separate treatment                                                      |
+| `Method`         | How the gene was detected. Suffix `P` = protein-based, `X` = nucleotide-based. Prefixes: `EXACT`, `BLAST`, `ALLELE` (whole-gene methods), `POINT` (mutation), `PARTIAL`, `PARTIAL_CONTIG_END` (incomplete detections), `INTERNAL_STOP` (premature stop codon - gene likely non-functional), `HMM` (distant homolog) | Determines which rows to filter out before building the feature matrix - `INTERNAL_STOP` should be excluded as the gene is likely non-functional; `PARTIAL*` rows should be filtered by coverage threshold |
+| `% Coverage`     | Fraction of the reference gene sequence present in this isolate                                                                                                                                                                                                                                                     | Used to set a minimum completeness threshold; low coverage may indicate a degraded or partial gene that provides unreliable resistance                                                                     |
+| `% Identity`     | Sequence similarity to the database reference                                                                                                                                                                                                                                                                       | Used to set a minimum confidence threshold; low identity may indicate a divergent gene variant with uncertain function                                                                                     |
+
 
 ### AST Table - Antibiotic Susceptibility Tests
 
 **Source:** NCBI Pathogens → AST Browser (https://www.ncbi.nlm.nih.gov/pathogens/ast) → filter *Salmonella enterica* → Download TSV  
 **What:** Lab-confirmed resistance test results. One row per (isolate × antibiotic) combination. This is the **ground truth label** for supervised learning.
 
-| Column | Description | Importance |
-|---|---|---|
-| `BioSample` | Join key | Links lab phenotype labels back to the gene-level features in MicroBIGG-E |
-| `Antibiotic` | Drug tested (e.g., `ciprofloxacin`, `ampicillin`) | Determines which subset of rows is used to train each per-antibiotic model |
-| `Resistance phenotype` | Lab result: `susceptible` / `resistant` / `intermediate` | The prediction target (Y) - the core label the ML model learns from |
-| `MIC (mg/L)` | Minimum Inhibitory Concentration - quantitative resistance measure | Optional regression target for a more nuanced model: instead of predicting resistant/susceptible, predict the exact drug concentration needed to inhibit growth |
-| `Testing standard` | Interpretation standard used (CLSI or EUCAST) | Relevant when interpreting borderline phenotype calls - the same MIC value may be classified differently under CLSI vs. EUCAST cutoffs |
+| Column                 | Description                                                        | Importance                                                                                                                                                      |
+| ---------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `BioSample`            | Join key                                                           | Links lab phenotype labels back to the gene-level features in MicroBIGG-E                                                                                       |
+| `Antibiotic`           | Drug tested (e.g., `ciprofloxacin`, `ampicillin`)                  | Determines which subset of rows is used to train each per-antibiotic model                                                                                      |
+| `Resistance phenotype` | Lab result: `susceptible` / `resistant`           | The prediction target (Y) - the core label the ML model learns from                                                                                             |
+| `MIC (mg/L)`           | Minimum Inhibitory Concentration - quantitative resistance measure | Optional regression target for a more nuanced model: instead of predicting resistant/susceptible, predict the exact drug concentration needed to inhibit growth |
+
 
 **Important limitation:** Not all isolates have AST records. After joining MicroBIGG-E with the AST table on `BioSample`, expect a significant reduction in dataset size - lab phenotyping is not performed for every isolate in a surveillance program.
 
@@ -74,10 +50,10 @@ All data originates from **NCBI Pathogen Detection** (https://www.ncbi.nlm.nih.g
 
 ### Step 1 - Resistance Gene Detection (FASTA → Gene Table)
 
-**Tool:** AMRFinderPlus (https://github.com/ncbi/amr)  
-**What it does:** Scans each assembled FASTA genome against NCBI's curated database of known resistance genes and mutations. For each isolate, it outputs a table listing every detected resistance gene with its drug class, detection method, coverage, and identity score.  
-**Why run it if MicroBIGG-E already exists:** Running AMRFinderPlus on the prototype FASTA files and comparing the output against MicroBIGG-E for the same isolates is the pipeline validation step. Since NCBI used AMRFinderPlus to generate MicroBIGG-E, outputs should match near-perfectly. Any discrepancy reveals database version differences and is itself a meaningful finding. This step ensures Team 1 understands the origin of their feature data - not just that genes are present, but how they were detected and what that detection means.  
-**Database:** The AMRFinderPlus reference database (~500 MB) is downloaded once via `amrfinder --update` and reused for all isolates.  
+**Tool:** AMRFinderPlus (https://github.com/ncbi/amr)
+**What it does:** Scans each assembled FASTA genome against NCBI's curated database of known resistance genes and mutations. For each isolate, it outputs a table listing every detected resistance gene with its drug class, detection method, coverage, and identity score.
+**Why run it if MicroBIGG-E already exists:** Running AMRFinderPlus on the prototype FASTA files and comparing the output against MicroBIGG-E for the same isolates is the pipeline validation step. Since NCBI used AMRFinderPlus to generate MicroBIGG-E, outputs should match near-perfectly. Any discrepancy reveals database version differences and is itself a meaningful finding. This step ensures Team 1 understands the origin of their feature data - not just that genes are present, but how they were detected and what that detection means.
+**Database:** The AMRFinderPlus reference database (~500 MB) is downloaded once via `amrfinder --update` and reused for all isolates.
 **Output per isolate:** A TSV file listing detected genes with columns matching MicroBIGG-E structure.
 
 ### Step 2 - Feature Matrix Construction (Gene Table → Binary Matrix)
@@ -101,7 +77,7 @@ All data originates from **NCBI Pathogen Detection** (https://www.ncbi.nlm.nih.g
 ### Step 3 - Label Construction and Dataset Join
 
 **Tool:** pandas  
-**What it does:** Loads the AST table, filters for one target antibiotic at a time, maps `resistant` → 1 and `susceptible` → 0 (`intermediate` is excluded or treated as a third class depending on experimental design), then performs an inner join with the feature matrix on `BioSample`.  
+**What it does:** Loads the AST table, filters for one target antibiotic at a time, maps `resistant` → 1 and `susceptible` → 0, then performs an inner join with the feature matrix on `BioSample`.  
 **Result:** A supervised dataset where each row is one isolate with its full gene presence vector (X) and a binary resistance label (Y) for one antibiotic.  
 **One model per antibiotic:** Training per antibiotic ensures each model learns the correct gene-to-drug relationship, rather than conflating unrelated resistance mechanisms across drug classes.
 

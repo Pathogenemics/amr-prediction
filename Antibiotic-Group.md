@@ -1,0 +1,51 @@
+beta-lactams
+  carbapenems
+    imipenem
+    meropenem
+    doripenem
+    ertapenem
+  monobactams
+    aztreonam
+  cephalosporins
+    cefazolin
+    cefotaxime
+    ceftriaxone
+    ceftiofur
+    ceftazidime
+    cefoxitin
+    cefepime
+  penicillins
+    amoxicillin-clavulanic acid
+    piperacillin-tazobactam
+    ampicillin-sulbactam
+    ampicillin
+    piperacillin
+tetracyclines
+  minocycline
+  tigecycline
+  tetracycline
+aminoglycosides
+  amikacin
+  tobramycin
+  streptomycin
+  gentamicin
+  kanamycin
+glycopeptides
+  vancomycin
+quinolones
+  nalidixic acid
+  fluoroquinolones
+    ciprofloxacin
+    levofloxacin
+macrolides
+  azithromycin
+nitrofurantoin
+phenicols
+  chloramphenicol
+trimethoprim-sulfamethoxazole
+polymyxins
+  colistin
+  polymyxin B
+sulfonamides/sulfanilamides
+  sulfamethoxazole
+  sulfisoxazole
