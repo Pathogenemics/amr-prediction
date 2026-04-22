@@ -4,6 +4,7 @@ import io
 
 import pandas as pd
 
+from amrfinder_features import AmrFinderFeatureBuilder
 from serving_loader import ArtifactRegistry, ModelBundle
 from serving_schemas import CsvPredictResponse, PredictRequest, PredictResponse, PredictRowOutput
 
@@ -69,6 +70,38 @@ def predict_from_request(registry: ArtifactRegistry, request: PredictRequest) ->
         feature_count=len(bundle.feature_columns),
         rows=rows,
     )
+
+
+def predict_from_fasta_bytes(
+    registry: ArtifactRegistry,
+    scope: str,
+    antibiotic: str,
+    fasta_bytes: bytes,
+    threshold: float,
+    biosample: str | None = None,
+    fasta_name: str = "sample.fasta",
+    feature_builder: AmrFinderFeatureBuilder | None = None,
+) -> PredictResponse:
+    bundle = registry.get_bundle(scope, antibiotic)
+    builder = feature_builder or AmrFinderFeatureBuilder()
+    parsed = builder.build_from_fasta_bytes(
+        fasta_bytes=fasta_bytes,
+        schema_columns=bundle.feature_columns,
+        fasta_name=fasta_name,
+    )
+
+    request = PredictRequest(
+        scope=scope,
+        antibiotic=antibiotic,
+        threshold=threshold,
+        rows=[
+            {
+                "biosample": biosample or fasta_name.rsplit(".", 1)[0],
+                "features": parsed.features,
+            }
+        ],
+    )
+    return predict_from_request(registry, request)
 
 
 def predict_from_csv_bytes(

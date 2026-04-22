@@ -18,6 +18,8 @@ These are the files exported from Colab after fitting one final model per antibi
 pip install fastapi uvicorn python-multipart pandas xgboost
 ```
 
+For FASTA inference, install AMRFinderPlus separately and ensure `amrfinder` is on `PATH`.
+
 ## Run the API
 
 From the repository root:
@@ -40,6 +42,7 @@ uvicorn serving_app:app --host 0.0.0.0 --port 8000
 - `GET /models`
 - `POST /predict`
 - `POST /predict-csv`
+- `POST /predict-fasta`
 
 ## Example JSON request
 
@@ -59,4 +62,15 @@ uvicorn serving_app:app --host 0.0.0.0 --port 8000
     }
   ]
 }
+```
+
+## Example FASTA request
+
+```bash
+curl -X POST "http://127.0.0.1:8000/predict-fasta" \
+  -F "scope=all" \
+  -F "antibiotic=ampicillin" \
+  -F "threshold=0.5" \
+  -F "biosample=demo_001" \
+  -F "file=@/path/to/isolate.fasta"
 ```
