@@ -10,7 +10,10 @@ dependencies = [
     "matplotlib",
     "seaborn",
     "python-dotenv",
-    "tqdm"
+    "tqdm",
+    "fastapi",
+    "uvicorn",
+    "python-multipart"
 ]
 
 [project.scripts]

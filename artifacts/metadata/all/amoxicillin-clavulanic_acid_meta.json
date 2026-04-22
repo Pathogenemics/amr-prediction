@@ -1,0 +1,6 @@
+{
+  "scope": "all",
+  "antibiotic": "amoxicillin-clavulanic acid",
+  "n_samples": 6159,
+  "n_features": 384
+}

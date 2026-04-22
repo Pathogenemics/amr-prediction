@@ -1,0 +1,23 @@
+[
+  "ramr_t18p_coverage",
+  "tet_a_coverage",
+  "tet_b_coverage",
+  "tet_c_coverage",
+  "tet_d_coverage",
+  "tet_g_coverage",
+  "tet_m_coverage",
+  "ramr_t18p_identity",
+  "tet_a_identity",
+  "tet_b_identity",
+  "tet_c_identity",
+  "tet_d_identity",
+  "tet_g_identity",
+  "tet_m_identity",
+  "ramr_t18p_lineage_match",
+  "tet_a_lineage_match",
+  "tet_b_lineage_match",
+  "tet_c_lineage_match",
+  "tet_d_lineage_match",
+  "tet_g_lineage_match",
+  "tet_m_lineage_match"
+]
