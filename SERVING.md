@@ -43,6 +43,7 @@ uvicorn serving_app:app --host 0.0.0.0 --port 8000
 - `POST /predict`
 - `POST /predict-csv`
 - `POST /predict-fasta`
+- `POST /predict-fasta-single`
 
 ## Example JSON request
 
@@ -68,6 +69,17 @@ uvicorn serving_app:app --host 0.0.0.0 --port 8000
 
 ```bash
 curl -X POST "http://127.0.0.1:8000/predict-fasta" \
+  -F "scope=all" \
+  -F "antibiotic=ampicillin" \
+  -F "threshold=0.5" \
+  -F "biosample=demo_001" \
+  -F "file=@/path/to/isolate.fasta"
+```
+
+## Example single-result FASTA request
+
+```bash
+curl -X POST "http://127.0.0.1:8000/predict-fasta-single" \
   -F "scope=all" \
   -F "antibiotic=ampicillin" \
   -F "threshold=0.5" \

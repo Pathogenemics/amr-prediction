@@ -3,8 +3,8 @@ from __future__ import annotations
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
 from serving_loader import ArtifactRegistry
-from serving_schemas import CsvPredictResponse, HealthResponse, ModelSummary, PredictRequest, PredictResponse
-from serving_service import predict_from_csv_bytes, predict_from_fasta_bytes, predict_from_request
+from serving_schemas import CsvPredictResponse, HealthResponse, ModelSummary, PredictRequest, PredictResponse, PredictSingleResponse
+from serving_service import predict_from_csv_bytes, predict_from_fasta_bytes, predict_from_request, predict_single_from_fasta_bytes
 
 
 registry = ArtifactRegistry()
@@ -87,6 +87,33 @@ async def predict_fasta(
     try:
         file_bytes = await file.read()
         return predict_from_fasta_bytes(
+            registry,
+            scope=scope,
+            antibiotic=antibiotic,
+            fasta_bytes=file_bytes,
+            threshold=threshold,
+            biosample=biosample,
+            fasta_name=file.filename or "sample.fasta",
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.post("/predict-fasta-single", response_model=PredictSingleResponse)
+async def predict_fasta_single(
+    scope: str = Form("all"),
+    antibiotic: str = Form(...),
+    threshold: float = Form(0.5),
+    biosample: str | None = Form(None),
+    file: UploadFile = File(...),
+) -> PredictSingleResponse:
+    try:
+        file_bytes = await file.read()
+        return predict_single_from_fasta_bytes(
             registry,
             scope=scope,
             antibiotic=antibiotic,

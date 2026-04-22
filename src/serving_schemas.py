@@ -31,6 +31,16 @@ class PredictRequest(BaseModel):
     rows: list[PredictRowInput]
 
 
+class PredictSingleResponse(BaseModel):
+    scope: str
+    antibiotic: str
+    threshold: float
+    feature_count: int
+    biosample: str
+    probability_resistant: float
+    predicted_label: str
+
+
 class PredictRowOutput(BaseModel):
     biosample: str
     probability_resistant: float
