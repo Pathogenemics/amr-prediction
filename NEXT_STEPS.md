@@ -106,12 +106,19 @@ Reason:
 - metadata files already exist
 - API lookup completes the batch lifecycle story
 
-### 2. Unify old and new data layout
+### 2. CSV batch layout partially unified
 
-The repo still contains older prototype layout such as `data/incoming/...`
-and newer staged layout under `bronze/silver/gold/results`.
+Canonical layout is now:
 
-Need to decide and standardize which layout is canonical.
+- `data/bronze/incoming_csv_batches/<batch_id>/`
+
+Legacy compatibility still exists for:
+
+- `data/incoming/<batch_id>/`
+
+The script `scripts/test_predict_from_incoming_batch.py` now prefers the canonical bronze path and only falls back to the legacy path when needed.
+
+The helper `scripts/migrate_incoming_batch_to_bronze.py` can copy legacy incoming batches into the canonical bronze layout.
 
 ### 4. Review old scripts that still assume the prototype flow
 
@@ -119,8 +126,8 @@ Especially:
 
 - `scripts/test_predict_from_incoming_batch.py`
 
-This script still targets the older prepared `/predict` flow from `data/incoming`.
-It is still useful, but it belongs to the older prototype path, not the new FASTA batch architecture.
+This script still targets the prepared `/predict` flow rather than the FASTA batch flow.
+That is acceptable, but it should now be treated as the CSV-batch serving check, not the main FASTA architecture path.
 
 ### 5. Optionally add orchestration for full batch flow
 
@@ -144,12 +151,12 @@ Need to make sure the repo does not look like it has two competing architectures
 
 If only one task should be done next, choose:
 
-### Unify old and new data layout
+### Review legacy scripts and notebooks
 
 Why:
 
 - lifecycle states and lookup endpoints now exist
-- the biggest remaining inconsistency is that the repo still has both `data/incoming` and `bronze/silver/gold/results`
+- the biggest remaining inconsistency is in older scripts and notebooks that still narrate the prototype path more heavily than the staged pipeline
 
 ## Short summary
 
