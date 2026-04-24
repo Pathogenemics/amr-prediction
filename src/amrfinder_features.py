@@ -35,20 +35,23 @@ class AmrFinderFeatureBuilder:
     def __init__(self, executable: str = "amrfinder") -> None:
         self.executable = executable
 
-    def build_from_fasta_bytes(
-        self,
-        fasta_bytes: bytes,
-        schema_columns: list[str],
-        fasta_name: str = "sample.fasta",
-    ) -> ParsedAmrFinderResult:
-        if not fasta_bytes.strip():
-            raise ValueError("Uploaded FASTA file is empty.")
-
+    def _resolve_executable_path(self) -> str:
         executable_path = shutil.which(self.executable)
         if executable_path is None:
             raise RuntimeError(
                 "amrfinder executable was not found on PATH. Install AMRFinderPlus and make sure `amrfinder` is available."
             )
+        return executable_path
+
+    def run_amrfinder(
+        self,
+        fasta_bytes: bytes,
+        fasta_name: str = "sample.fasta",
+    ) -> pd.DataFrame:
+        if not fasta_bytes.strip():
+            raise ValueError("Uploaded FASTA file is empty.")
+
+        executable_path = self._resolve_executable_path()
 
         suffix = Path(fasta_name).suffix or ".fasta"
         with tempfile.TemporaryDirectory(prefix="amrfinder_") as temp_dir:
@@ -77,8 +80,16 @@ class AmrFinderFeatureBuilder:
             if not output_path.exists():
                 raise RuntimeError("amrfinder did not produce an output table.")
 
-            frame = pd.read_csv(output_path, sep="\t", comment="#")
-            return self.build_from_amrfinder_frame(frame, schema_columns)
+            return pd.read_csv(output_path, sep="\t", comment="#")
+
+    def build_from_fasta_bytes(
+        self,
+        fasta_bytes: bytes,
+        schema_columns: list[str],
+        fasta_name: str = "sample.fasta",
+    ) -> ParsedAmrFinderResult:
+        frame = self.run_amrfinder(fasta_bytes=fasta_bytes, fasta_name=fasta_name)
+        return self.build_from_amrfinder_frame(frame, schema_columns)
 
     def build_from_amrfinder_frame(
         self,

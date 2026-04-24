@@ -4,9 +4,8 @@ import io
 
 import pandas as pd
 
-from amrfinder_features import AmrFinderFeatureBuilder
 from serving_loader import ArtifactRegistry, ModelBundle
-from serving_schemas import CsvPredictResponse, PredictRequest, PredictResponse, PredictRowOutput, PredictSingleResponse
+from serving_schemas import CsvPredictResponse, PredictRequest, PredictResponse, PredictRowOutput
 
 
 def _normalize_feature_value(value: object) -> float:
@@ -59,24 +58,6 @@ def run_prediction(bundle: ModelBundle, features: pd.DataFrame, biosamples: list
     return outputs
 
 
-def build_single_response(
-    scope: str,
-    antibiotic: str,
-    threshold: float,
-    feature_count: int,
-    row: PredictRowOutput,
-) -> PredictSingleResponse:
-    return PredictSingleResponse(
-        scope=scope,
-        antibiotic=antibiotic,
-        threshold=threshold,
-        feature_count=feature_count,
-        biosample=row.biosample,
-        probability_resistant=row.probability_resistant,
-        predicted_label=row.predicted_label,
-    )
-
-
 def predict_from_request(registry: ArtifactRegistry, request: PredictRequest) -> PredictResponse:
     bundle = registry.get_bundle(request.scope, request.antibiotic)
     features, biosamples = build_feature_frame_from_request(bundle, request)
@@ -88,68 +69,6 @@ def predict_from_request(registry: ArtifactRegistry, request: PredictRequest) ->
         feature_count=len(bundle.feature_columns),
         rows=rows,
     )
-
-
-def predict_single_from_fasta_bytes(
-    registry: ArtifactRegistry,
-    scope: str,
-    antibiotic: str,
-    fasta_bytes: bytes,
-    threshold: float,
-    biosample: str | None = None,
-    fasta_name: str = "sample.fasta",
-    feature_builder: AmrFinderFeatureBuilder | None = None,
-) -> PredictSingleResponse:
-    response = predict_from_fasta_bytes(
-        registry,
-        scope=scope,
-        antibiotic=antibiotic,
-        fasta_bytes=fasta_bytes,
-        threshold=threshold,
-        biosample=biosample,
-        fasta_name=fasta_name,
-        feature_builder=feature_builder,
-    )
-    row = response.rows[0]
-    return build_single_response(
-        scope=response.scope,
-        antibiotic=response.antibiotic,
-        threshold=response.threshold,
-        feature_count=response.feature_count,
-        row=row,
-    )
-
-
-def predict_from_fasta_bytes(
-    registry: ArtifactRegistry,
-    scope: str,
-    antibiotic: str,
-    fasta_bytes: bytes,
-    threshold: float,
-    biosample: str | None = None,
-    fasta_name: str = "sample.fasta",
-    feature_builder: AmrFinderFeatureBuilder | None = None,
-) -> PredictResponse:
-    bundle = registry.get_bundle(scope, antibiotic)
-    builder = feature_builder or AmrFinderFeatureBuilder()
-    parsed = builder.build_from_fasta_bytes(
-        fasta_bytes=fasta_bytes,
-        schema_columns=bundle.feature_columns,
-        fasta_name=fasta_name,
-    )
-
-    request = PredictRequest(
-        scope=scope,
-        antibiotic=antibiotic,
-        threshold=threshold,
-        rows=[
-            {
-                "biosample": biosample or fasta_name.rsplit(".", 1)[0],
-                "features": parsed.features,
-            }
-        ],
-    )
-    return predict_from_request(registry, request)
 
 
 def predict_from_csv_bytes(

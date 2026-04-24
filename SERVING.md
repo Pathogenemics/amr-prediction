@@ -18,7 +18,7 @@ These are the files exported from Colab after fitting one final model per antibi
 pip install fastapi uvicorn python-multipart pandas xgboost
 ```
 
-For FASTA inference, install AMRFinderPlus separately and ensure `amrfinder` is on `PATH`.
+For FASTA preprocessing, install AMRFinderPlus separately and ensure `amrfinder` is on `PATH`.
 
 ## Run the API
 
@@ -42,8 +42,7 @@ uvicorn serving_app:app --host 0.0.0.0 --port 8000
 - `GET /models`
 - `POST /predict`
 - `POST /predict-csv`
-- `POST /predict-fasta`
-- `POST /predict-fasta-single`
+- `POST /ingest-fasta-single`
 
 ## Example JSON request
 
@@ -65,24 +64,32 @@ uvicorn serving_app:app --host 0.0.0.0 --port 8000
 }
 ```
 
-## Example FASTA request
+## FASTA processing flow
+
+For a single FASTA upload via API, first ingest it into staged storage:
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/predict-fasta" \
-  -F "scope=all" \
-  -F "antibiotic=ampicillin" \
-  -F "threshold=0.5" \
+curl -X POST "http://127.0.0.1:8000/ingest-fasta-single" \
   -F "biosample=demo_001" \
-  -F "file=@/path/to/isolate.fasta"
+  -F "file=@/path/to/demo_001.fasta"
 ```
 
-## Example single-result FASTA request
+This only stores the file in `data/bronze/fasta_batches/<batch_id>/` and writes manifest/status metadata.
+
+Then process that batch outside FastAPI:
 
 ```bash
-curl -X POST "http://127.0.0.1:8000/predict-fasta-single" \
-  -F "scope=all" \
-  -F "antibiotic=ampicillin" \
-  -F "threshold=0.5" \
-  -F "biosample=demo_001" \
-  -F "file=@/path/to/isolate.fasta"
+python scripts/process_fasta_batch.py \
+  --input-dir data/bronze/fasta_batches/batch_001 \
+  --scope all \
+  --antibiotic ampicillin \
+  --batch-id batch_001
 ```
+
+This writes:
+
+- raw AMRFinder tables to `data/silver/amrfinder_outputs/<batch_id>/`
+- feature-ready tables to `data/gold/feature_ready_batches/<batch_id>/`
+- batch manifest/status files to `data/results/`
+
+Use the generated feature-ready CSV with `POST /predict-csv`, or convert it to the `/predict` JSON shape if needed.

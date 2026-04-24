@@ -62,3 +62,12 @@ class CsvPredictResponse(BaseModel):
     feature_count: int
     row_count: int
     rows: list[dict[str, Any]]
+
+
+class IngestFastaResponse(BaseModel):
+    batch_id: str
+    biosample: str
+    stored_fasta_path: str
+    manifest_path: str
+    status_path: str
+    status: str

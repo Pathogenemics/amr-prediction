@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+from dataclasses import asdict
+
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
+from ingestion_service import ingest_single_fasta
 from serving_loader import ArtifactRegistry
-from serving_schemas import CsvPredictResponse, HealthResponse, ModelSummary, PredictRequest, PredictResponse, PredictSingleResponse
-from serving_service import predict_from_csv_bytes, predict_from_fasta_bytes, predict_from_request, predict_single_from_fasta_bytes
+from serving_schemas import CsvPredictResponse, HealthResponse, IngestFastaResponse, ModelSummary, PredictRequest, PredictResponse
+from serving_service import predict_from_csv_bytes, predict_from_request
 
 
 registry = ArtifactRegistry()
@@ -76,55 +79,20 @@ async def predict_csv(
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-@app.post("/predict-fasta", response_model=PredictResponse)
-async def predict_fasta(
-    scope: str = Form("all"),
-    antibiotic: str = Form(...),
-    threshold: float = Form(0.5),
+@app.post("/ingest-fasta-single", response_model=IngestFastaResponse)
+async def ingest_fasta_single(
+    batch_id: str | None = Form(None),
     biosample: str | None = Form(None),
     file: UploadFile = File(...),
-) -> PredictResponse:
+) -> IngestFastaResponse:
     try:
         file_bytes = await file.read()
-        return predict_from_fasta_bytes(
-            registry,
-            scope=scope,
-            antibiotic=antibiotic,
+        ingested = ingest_single_fasta(
             fasta_bytes=file_bytes,
-            threshold=threshold,
-            biosample=biosample,
             fasta_name=file.filename or "sample.fasta",
+            batch_id=batch_id,
+            biosample=biosample,
         )
-    except KeyError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
+        return IngestFastaResponse.model_validate(asdict(ingested))
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except RuntimeError as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
-
-
-@app.post("/predict-fasta-single", response_model=PredictSingleResponse)
-async def predict_fasta_single(
-    scope: str = Form("all"),
-    antibiotic: str = Form(...),
-    threshold: float = Form(0.5),
-    biosample: str | None = Form(None),
-    file: UploadFile = File(...),
-) -> PredictSingleResponse:
-    try:
-        file_bytes = await file.read()
-        return predict_single_from_fasta_bytes(
-            registry,
-            scope=scope,
-            antibiotic=antibiotic,
-            fasta_bytes=file_bytes,
-            threshold=threshold,
-            biosample=biosample,
-            fasta_name=file.filename or "sample.fasta",
-        )
-    except KeyError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-    except RuntimeError as exc:
-        raise HTTPException(status_code=500, detail=str(exc)) from exc
