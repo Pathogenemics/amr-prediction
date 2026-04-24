@@ -46,6 +46,14 @@ class DummyFeatureBuilder:
         return ParsedResult()
 
 
+class FailingFeatureBuilder:
+    def run_amrfinder(self, fasta_bytes: bytes, fasta_name: str = "sample.fasta") -> pd.DataFrame:
+        raise RuntimeError("simulated amrfinder failure")
+
+    def build_from_amrfinder_frame(self, frame: pd.DataFrame, schema_columns: list[str]):  # noqa: ANN001
+        raise AssertionError("build_from_amrfinder_frame should not be called when amrfinder fails")
+
+
 class DummyModel:
     def predict_proba(self, features):  # noqa: ANN001
         probabilities = [0.8 for _ in range(len(features))]
@@ -127,7 +135,11 @@ class ProcessFastaBatchTest(unittest.TestCase):
 
             self.assertEqual(manifest["batch_id"], "batch_001")
             self.assertEqual(manifest["sample_count"], 1)
+            self.assertIn("created_at", manifest)
+            self.assertIn("updated_at", manifest)
             self.assertEqual(status["status"], "completed")
+            self.assertIn("created_at", status)
+            self.assertIn("updated_at", status)
             self.assertTrue(Path(manifest["samples"][0]["amrfinder_output_path"]).exists())
 
     def test_serving_consumes_feature_ready_csv_instead_of_fasta(self) -> None:
@@ -160,6 +172,39 @@ class ProcessFastaBatchTest(unittest.TestCase):
             self.assertEqual(response.rows[0]["biosample"], "demo_001")
             self.assertEqual(response.rows[0]["predicted_label"], "resistant")
             self.assertAlmostEqual(response.rows[0]["probability_resistant"], 0.8)
+
+    def test_processing_failure_updates_status_to_failed(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            input_dir = temp_root / "incoming" / "batch_failed_001"
+            input_dir.mkdir(parents=True)
+            (input_dir / "demo_001.fasta").write_text(">contig_1\nATGC\n", encoding="utf-8")
+
+            artifact_root = temp_root / "artifacts"
+            schema_dir = artifact_root / "schemas" / "all"
+            schema_dir.mkdir(parents=True)
+            (schema_dir / "ampicillin_features.json").write_text(
+                json.dumps(["gene_a_lineage_match"]),
+                encoding="utf-8",
+            )
+
+            data_root = temp_root / "data"
+            with self.assertRaisesRegex(RuntimeError, "simulated amrfinder failure"):
+                process_fasta_batch(
+                    input_dir=input_dir,
+                    scope="all",
+                    antibiotic="ampicillin",
+                    batch_id="batch_failed_001",
+                    data_root=data_root,
+                    artifact_root=artifact_root,
+                    feature_builder=FailingFeatureBuilder(),
+                )
+
+            status = json.loads((data_root / "results" / "status" / "batch_failed_001.json").read_text(encoding="utf-8"))
+            self.assertEqual(status["status"], "failed")
+            self.assertEqual(status["scope"], "all")
+            self.assertEqual(status["antibiotic"], "ampicillin")
+            self.assertIn("simulated amrfinder failure", status["error_message"])
 
 
 if __name__ == "__main__":

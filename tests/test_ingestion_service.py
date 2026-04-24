@@ -11,7 +11,7 @@ SRC_ROOT = PROJECT_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from ingestion_service import ingest_single_fasta
+from ingestion_service import ingest_single_fasta, read_batch_manifest, read_batch_status
 
 
 class IngestSingleFastaTest(unittest.TestCase):
@@ -35,7 +35,30 @@ class IngestSingleFastaTest(unittest.TestCase):
             self.assertEqual(result.batch_id, "batch_single_001")
             self.assertEqual(result.status, "ingested")
             self.assertEqual(manifest["batch_id"], "batch_single_001")
+            self.assertIn("created_at", manifest)
+            self.assertIn("updated_at", manifest)
             self.assertEqual(manifest["samples"][0]["biosample"], "demo_001")
+            self.assertEqual(status["status"], "ingested")
+            self.assertIn("created_at", status)
+            self.assertIn("updated_at", status)
+
+    def test_reads_saved_status_and_manifest_by_batch_id(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            ingest_single_fasta(
+                fasta_bytes=b">contig_1\nATGC\n",
+                fasta_name="demo_001.fasta",
+                data_root=temp_root / "data",
+                batch_id="batch_lookup_001",
+                biosample="demo_001",
+            )
+
+            manifest = read_batch_manifest("batch_lookup_001", data_root=temp_root / "data")
+            status = read_batch_status("batch_lookup_001", data_root=temp_root / "data")
+
+            self.assertEqual(manifest["batch_id"], "batch_lookup_001")
+            self.assertEqual(manifest["samples"][0]["biosample"], "demo_001")
+            self.assertEqual(status["batch_id"], "batch_lookup_001")
             self.assertEqual(status["status"], "ingested")
 
 

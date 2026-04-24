@@ -40,6 +40,8 @@ uvicorn serving_app:app --host 0.0.0.0 --port 8000
 
 - `GET /health`
 - `GET /models`
+- `GET /status/{batch_id}`
+- `GET /manifest/{batch_id}`
 - `POST /predict`
 - `POST /predict-csv`
 - `POST /ingest-fasta-single`
@@ -75,6 +77,13 @@ curl -X POST "http://127.0.0.1:8000/ingest-fasta-single" \
 ```
 
 This only stores the file in `data/bronze/fasta_batches/<batch_id>/` and writes manifest/status metadata.
+
+Batch status lifecycle now uses:
+
+- `ingested`
+- `processing`
+- `completed`
+- `failed`
 
 Then process that batch outside FastAPI:
 

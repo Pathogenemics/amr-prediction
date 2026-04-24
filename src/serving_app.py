@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import asdict
+from typing import Any
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
-from ingestion_service import ingest_single_fasta
+from ingestion_service import ingest_single_fasta, read_batch_manifest, read_batch_status
 from serving_loader import ArtifactRegistry
 from serving_schemas import CsvPredictResponse, HealthResponse, IngestFastaResponse, ModelSummary, PredictRequest, PredictResponse
 from serving_service import predict_from_csv_bytes, predict_from_request
@@ -51,6 +52,22 @@ def list_models(scope: str | None = None) -> list[ModelSummary]:
         )
         for bundle in bundles
     ]
+
+
+@app.get("/status/{batch_id}", response_model=dict[str, Any])
+def get_batch_status(batch_id: str) -> dict[str, Any]:
+    try:
+        return read_batch_status(batch_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/manifest/{batch_id}", response_model=dict[str, Any])
+def get_batch_manifest(batch_id: str) -> dict[str, Any]:
+    try:
+        return read_batch_manifest(batch_id)
+    except FileNotFoundError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
 @app.post("/predict", response_model=PredictResponse)

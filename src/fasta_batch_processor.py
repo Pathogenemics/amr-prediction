@@ -8,6 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 from amrfinder_features import AmrFinderFeatureBuilder
+from ingestion_service import read_batch_manifest, write_batch_status
 from serving_loader import ARTIFACT_ROOT, antibiotic_to_safe_name
 
 
@@ -113,15 +114,13 @@ def write_batch_outputs(
     safe_name = antibiotic_to_safe_name(antibiotic)
     gold_output_dir = data_root / "gold" / "feature_ready_batches" / batch_id
     manifest_dir = data_root / "results" / "manifests"
-    status_dir = data_root / "results" / "status"
 
     gold_output_dir.mkdir(parents=True, exist_ok=True)
     manifest_dir.mkdir(parents=True, exist_ok=True)
-    status_dir.mkdir(parents=True, exist_ok=True)
 
     feature_ready_path = gold_output_dir / f"{safe_name}__features.csv"
     manifest_path = manifest_dir / f"{batch_id}.json"
-    status_path = status_dir / f"{batch_id}.json"
+    status_path = data_root / "results" / "status" / f"{batch_id}.json"
     processed_at = datetime.now(UTC).isoformat()
 
     feature_frame.to_csv(feature_ready_path, index=False)
@@ -145,21 +144,13 @@ def write_batch_outputs(
         "input_dir": str(input_dir),
         "feature_ready_path": str(feature_ready_path),
         "sample_count": len(samples),
+        "created_at": processed_at,
+        "updated_at": processed_at,
         "processed_at": processed_at,
         "samples": [asdict(sample) for sample in samples],
     }
-    status_payload = {
-        "batch_id": batch_id,
-        "status": "completed",
-        "processed_at": processed_at,
-        "scope": scope,
-        "antibiotic": antibiotic,
-        "sample_count": len(samples),
-        "feature_ready_path": str(feature_ready_path),
-    }
 
     manifest_path.write_text(json.dumps(manifest_payload, indent=2), encoding="utf-8")
-    status_path.write_text(json.dumps(status_payload, indent=2), encoding="utf-8")
     return batch
 
 
@@ -173,20 +164,65 @@ def process_fasta_batch(
     feature_builder: AmrFinderFeatureBuilder | None = None,
 ) -> ProcessedFastaBatch:
     silver_output_dir = data_root / "silver" / "amrfinder_outputs" / batch_id
-    feature_frame, samples = build_feature_ready_frame(
-        input_dir=input_dir,
-        scope=scope,
-        antibiotic=antibiotic,
-        silver_output_dir=silver_output_dir,
-        artifact_root=artifact_root,
-        feature_builder=feature_builder,
-    )
-    return write_batch_outputs(
-        batch_id=batch_id,
-        input_dir=input_dir,
-        scope=scope,
-        antibiotic=antibiotic,
-        feature_frame=feature_frame,
-        samples=samples,
+    created_at: str | None = None
+    try:
+        existing_manifest = read_batch_manifest(batch_id, data_root=data_root)
+        created_at = str(existing_manifest.get("created_at") or existing_manifest.get("ingested_at") or "")
+    except FileNotFoundError:
+        created_at = None
+
+    write_batch_status(
+        batch_id,
+        status="processing",
         data_root=data_root,
+        created_at=created_at or None,
+        scope=scope,
+        antibiotic=antibiotic,
+        bronze_input_dir=str(input_dir),
+        next_step="Wait for processing to complete.",
     )
+
+    try:
+        feature_frame, samples = build_feature_ready_frame(
+            input_dir=input_dir,
+            scope=scope,
+            antibiotic=antibiotic,
+            silver_output_dir=silver_output_dir,
+            artifact_root=artifact_root,
+            feature_builder=feature_builder,
+        )
+        batch = write_batch_outputs(
+            batch_id=batch_id,
+            input_dir=input_dir,
+            scope=scope,
+            antibiotic=antibiotic,
+            feature_frame=feature_frame,
+            samples=samples,
+            data_root=data_root,
+        )
+        write_batch_status(
+            batch_id,
+            status="completed",
+            data_root=data_root,
+            created_at=created_at or batch.processed_at,
+            sample_count=batch.sample_count,
+            bronze_input_dir=str(input_dir),
+            scope=scope,
+            antibiotic=antibiotic,
+            feature_ready_path=batch.feature_ready_path,
+            next_step="Use /predict-csv or /predict with feature-ready input.",
+        )
+        return batch
+    except Exception as exc:
+        write_batch_status(
+            batch_id,
+            status="failed",
+            data_root=data_root,
+            created_at=created_at or None,
+            bronze_input_dir=str(input_dir),
+            scope=scope,
+            antibiotic=antibiotic,
+            error_message=str(exc),
+            next_step="Inspect the error and rerun processing after fixing the issue.",
+        )
+        raise
