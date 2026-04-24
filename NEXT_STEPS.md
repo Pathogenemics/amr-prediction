@@ -95,20 +95,7 @@ For the canonical architecture as of now, see `CURRENT_ARCHITECTURE.md`.
 
 ## Remaining work
 
-### 1. Batch status lookup endpoints added
-
-Implemented:
-
-- `GET /status/{batch_id}`
-- `GET /manifest/{batch_id}`
-
-Reason:
-
-- the system already creates `batch_id`
-- metadata files already exist
-- API lookup completes the batch lifecycle story
-
-### 2. CSV batch layout partially unified
+### 1. CSV batch layout partially unified
 
 Canonical layout is now:
 
@@ -122,7 +109,7 @@ The script `scripts/test_predict_from_incoming_batch.py` now prefers the canonic
 
 The helper `scripts/migrate_incoming_batch_to_bronze.py` can copy legacy incoming batches into the canonical bronze layout.
 
-### 4. Review old scripts that still assume the prototype flow
+### 2. Review old scripts that still assume the prototype flow
 
 Especially:
 
@@ -131,7 +118,7 @@ Especially:
 This script still targets the prepared `/predict` flow rather than the FASTA batch flow.
 That is acceptable, but it should now be treated as the CSV-batch serving check, not the main FASTA architecture path.
 
-### 5. Optionally add orchestration for full batch flow
+### 3. Optionally add orchestration for full batch flow
 
 Possible next enhancement:
 
@@ -142,12 +129,19 @@ Possible next enhancement:
 
 This is optional, but would make the micro-batch workflow easier to operate.
 
-### 6. Clean up docs to remove mixed architectural signals
+### 4. Clean up docs to remove mixed architectural signals
+
+Most core text docs are now aligned, but some legacy-oriented assets still remain.
 
 Need to make sure the repo does not look like it has two competing architectures:
 
 - old direct prototype path
 - new staged micro-batch path
+
+Most notably:
+
+- notebooks still narrate parts of the older prototype workflow
+- some compatibility scripts still mention legacy paths because fallback support remains intentional
 
 ## Recommended next task
 

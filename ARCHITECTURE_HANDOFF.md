@@ -1,5 +1,12 @@
 # Architecture Handoff
 
+Historical note:
+
+- this file describes the architectural gap and target direction that originally drove the refactor
+- for the canonical architecture of the repository now, see `CURRENT_ARCHITECTURE.md`
+- for completed changes, see `REFACTOR_HISTORY.md`
+- for remaining work, see `NEXT_STEPS.md`
+
 This file summarizes only the architecture-related changes that should be carried forward on the Ubuntu machine.
 
 ## Current state

@@ -56,6 +56,8 @@ Remove FASTA preprocessing from the FastAPI serving request path and move it int
 - Added `scripts/test_commands/run_fasta_architecture_test.sh`
 - Added `scripts/test_commands/run_fasta_e2e_verification.sh`
 - Added `scripts/test_commands/README.md`
+- Added `CURRENT_ARCHITECTURE.md` to define the canonical current-state architecture
+- Updated `ARCHITECTURE_HANDOFF.md` to mark it as historical context rather than the canonical current-state description
 
 #### Data layout cleanup
 
