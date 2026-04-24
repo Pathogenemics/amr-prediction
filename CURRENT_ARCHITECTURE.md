@@ -59,6 +59,7 @@ It is responsible for:
 - `POST /predict-csv`
 - `POST /ingest-fasta-single`
 - `POST /process-fasta-batch`
+- `POST /screen-fasta-single`
 
 It also serves the demo frontend at:
 

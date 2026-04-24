@@ -87,3 +87,19 @@ class ProcessBatchResponse(BaseModel):
     antibiotic: str
     bronze_input_dir: str
     message: str
+
+
+class FastaScreenPrediction(BaseModel):
+    antibiotic: str
+    probability_resistant: float
+    predicted_label: str
+
+
+class FastaScreenResponse(BaseModel):
+    scope: str
+    threshold: float
+    biosample: str
+    hit_count: int
+    resistant_antibiotics: list[FastaScreenPrediction]
+    susceptible_antibiotics: list[FastaScreenPrediction]
+    all_predictions: list[FastaScreenPrediction]

@@ -58,6 +58,7 @@ bash scripts/run_streamlit_demo.sh
 - `POST /predict-csv`
 - `POST /ingest-fasta-single`
 - `POST /process-fasta-batch`
+- `POST /screen-fasta-single`
 
 ## Example JSON request
 
@@ -127,3 +128,22 @@ This writes:
 - batch manifest/status files to `data/results/`
 
 Use the generated feature-ready CSV with `POST /predict-csv`, or convert it to the `/predict` JSON shape if needed.
+
+## Quick FASTA screening
+
+For a user-facing one-shot screen, the frontend can upload a single FASTA and ask the backend
+to score it against every loaded model in a scope:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/screen-fasta-single" \
+  -F "scope=all" \
+  -F "threshold=0.5" \
+  -F "biosample=demo_001" \
+  -F "file=@/path/to/demo_001.fasta"
+```
+
+This returns:
+
+- likely resistant antibiotics
+- likely susceptible antibiotics
+- per-antibiotic probabilities for the uploaded FASTA

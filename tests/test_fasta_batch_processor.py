@@ -15,7 +15,7 @@ if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
 from fasta_batch_processor import process_fasta_batch
-from serving_service import predict_from_csv_bytes
+from serving_service import predict_from_csv_bytes, screen_fasta_bytes
 
 
 class DummyFeatureBuilder:
@@ -55,8 +55,11 @@ class FailingFeatureBuilder:
 
 
 class DummyModel:
+    def __init__(self, probability: float = 0.8) -> None:
+        self.probability = probability
+
     def predict_proba(self, features):  # noqa: ANN001
-        probabilities = [0.8 for _ in range(len(features))]
+        probabilities = [self.probability for _ in range(len(features))]
 
         class Probabilities:
             def __getitem__(self, key):
@@ -85,6 +88,16 @@ class DummyRegistry:
         if self.bundle.scope != scope or self.bundle.antibiotic != antibiotic:
             raise KeyError(f"Missing bundle for scope={scope!r}, antibiotic={antibiotic!r}")
         return self.bundle
+
+
+class MultiBundleRegistry:
+    def __init__(self, bundles: list[DummyBundle]) -> None:
+        self.bundles = bundles
+
+    def list_bundles(self, scope: str | None = None) -> list[DummyBundle]:
+        if scope is None:
+            return list(self.bundles)
+        return [bundle for bundle in self.bundles if bundle.scope == scope]
 
 
 class ProcessFastaBatchTest(unittest.TestCase):
@@ -205,6 +218,69 @@ class ProcessFastaBatchTest(unittest.TestCase):
             self.assertEqual(status["scope"], "all")
             self.assertEqual(status["antibiotic"], "ampicillin")
             self.assertIn("simulated amrfinder failure", status["error_message"])
+
+    def test_screen_fasta_bytes_groups_resistant_and_susceptible_predictions(self) -> None:
+        class ScreeningFeatureBuilder:
+            def run_amrfinder(self, fasta_bytes: bytes, fasta_name: str = "sample.fasta") -> pd.DataFrame:
+                return pd.DataFrame(
+                    [
+                        {
+                            "Gene symbol": "gene_a",
+                            "% Coverage of reference": 100.0,
+                            "% Identity to reference": 99.5,
+                        }
+                    ]
+                )
+
+            def build_from_amrfinder_frame(self, frame: pd.DataFrame, schema_columns: list[str]):  # noqa: ANN001
+                class ParsedResult:
+                    hit_count = len(frame)
+                    features = {
+                        column: value
+                        for column, value in {
+                            "gene_a_lineage_match": 1.0,
+                            "gene_a_coverage": 100.0,
+                        }.items()
+                        if column in schema_columns
+                    }
+
+                return ParsedResult()
+
+        registry = MultiBundleRegistry(
+            [
+                DummyBundle(
+                    scope="all",
+                    antibiotic="ampicillin",
+                    safe_name="ampicillin",
+                    feature_columns=["gene_a_lineage_match", "gene_a_coverage"],
+                    metadata={},
+                    model=DummyModel(0.8),
+                ),
+                DummyBundle(
+                    scope="all",
+                    antibiotic="ciprofloxacin",
+                    safe_name="ciprofloxacin",
+                    feature_columns=["gene_a_lineage_match", "gene_a_coverage"],
+                    metadata={},
+                    model=DummyModel(0.2),
+                ),
+            ]
+        )
+
+        response = screen_fasta_bytes(
+            registry,
+            scope="all",
+            fasta_bytes=b">contig_1\nATGC\n",
+            fasta_name="demo_001.fasta",
+            biosample="demo_001",
+            threshold=0.5,
+            feature_builder=ScreeningFeatureBuilder(),
+        )
+
+        self.assertEqual(response.biosample, "demo_001")
+        self.assertEqual(response.hit_count, 1)
+        self.assertEqual([row.antibiotic for row in response.resistant_antibiotics], ["ampicillin"])
+        self.assertEqual([row.antibiotic for row in response.susceptible_antibiotics], ["ciprofloxacin"])
 
 
 if __name__ == "__main__":

@@ -26,6 +26,43 @@
       </header>
 
       <main class="dashboard-grid">
+        <section class="panel panel-accent panel-wide">
+          <div class="panel-header">
+            <p class="panel-kicker">Quick Screen</p>
+            <h2>Upload one FASTA and get likely resistant vs susceptible drugs</h2>
+          </div>
+          <form id="screen-fasta-form" class="stack">
+            <label>
+              <span>Scope</span>
+              <select name="scope" id="screen-scope-select"></select>
+            </label>
+            <label>
+              <span>Biosample</span>
+              <input type="text" name="biosample" placeholder="Optional biosample name" />
+            </label>
+            <label>
+              <span>Threshold</span>
+              <input type="number" name="threshold" min="0" max="1" step="0.01" value="0.5" />
+            </label>
+            <label>
+              <span>FASTA file</span>
+              <input type="file" name="file" accept=".fa,.faa,.fasta,.fna" required />
+            </label>
+            <button type="submit">Screen all drugs for this FASTA</button>
+          </form>
+          <div id="screen-summary" class="result-card empty-state">No FASTA screening run yet.</div>
+          <div class="screen-grid">
+            <article class="subpanel">
+              <h3>Likely Resistant</h3>
+              <div id="screen-resistant" class="result-list empty-state">No results yet.</div>
+            </article>
+            <article class="subpanel">
+              <h3>Likely Susceptible</h3>
+              <div id="screen-susceptible" class="result-list empty-state">No results yet.</div>
+            </article>
+          </div>
+        </section>
+
         <section class="panel panel-accent">
           <div class="panel-header">
             <p class="panel-kicker">Step 1</p>

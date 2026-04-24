@@ -8,8 +8,12 @@ const state = {
 const healthStatus = document.querySelector("#health-status");
 const healthDetail = document.querySelector("#health-detail");
 const scopeSelect = document.querySelector("#scope-select");
+const screenScopeSelect = document.querySelector("#screen-scope-select");
 const antibioticSelect = document.querySelector("#antibiotic-select");
 const modelsGrid = document.querySelector("#models-grid");
+const screenSummary = document.querySelector("#screen-summary");
+const screenResistant = document.querySelector("#screen-resistant");
+const screenSusceptible = document.querySelector("#screen-susceptible");
 const ingestOutput = document.querySelector("#ingest-output");
 const statusOutput = document.querySelector("#status-output");
 const manifestOutput = document.querySelector("#manifest-output");
@@ -43,6 +47,7 @@ function renderModels(models) {
   state.models = models;
   const scopes = [...new Set(models.map((model) => model.scope))];
   scopeSelect.innerHTML = scopes.map((scope) => `<option value="${scope}">${scope}</option>`).join("");
+  screenScopeSelect.innerHTML = scopes.map((scope) => `<option value="${scope}">${scope}</option>`).join("");
 
   updateAntibiotics(scopeSelect.value || scopes[0] || "");
 
@@ -125,6 +130,33 @@ async function triggerBatchProcessing(batchId) {
   });
 }
 
+async function screenSingleFasta(formData) {
+  return getJson("/screen-fasta-single", {
+    method: "POST",
+    body: formData,
+  });
+}
+
+function renderDrugList(target, rows, statusClass, emptyText) {
+  if (!rows.length) {
+    target.classList.add("empty-state");
+    target.textContent = emptyText;
+    return;
+  }
+
+  target.classList.remove("empty-state");
+  target.innerHTML = rows
+    .map(
+      (row) => `
+        <article class="drug-chip ${statusClass}">
+          <strong>${row.antibiotic}</strong>
+          <span>${(Number(row.probability_resistant) * 100).toFixed(1)}% resistant probability</span>
+        </article>
+      `
+    )
+    .join("");
+}
+
 async function initialize() {
   try {
     const [health, models] = await Promise.all([getJson("/health"), getJson("/models")]);
@@ -139,6 +171,31 @@ async function initialize() {
 
 scopeSelect.addEventListener("change", (event) => {
   updateAntibiotics(event.target.value);
+});
+
+document.querySelector("#screen-fasta-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const formData = new FormData(event.currentTarget);
+
+  try {
+    const response = await screenSingleFasta(formData);
+    screenSummary.classList.remove("empty-state");
+    screenSummary.innerHTML = `
+      <p><strong>Biosample:</strong> ${response.biosample}</p>
+      <p><strong>Scope:</strong> ${response.scope}</p>
+      <p><strong>AMRFinder hits:</strong> ${response.hit_count}</p>
+      <p><strong>Threshold:</strong> ${response.threshold}</p>
+    `;
+    renderDrugList(screenResistant, response.resistant_antibiotics, "resistant", "No drugs crossed the resistance threshold.");
+    renderDrugList(screenSusceptible, response.susceptible_antibiotics, "susceptible", "No susceptible predictions returned.");
+  } catch (error) {
+    screenSummary.classList.remove("empty-state");
+    screenSummary.textContent = error.message;
+    screenResistant.classList.add("empty-state");
+    screenResistant.textContent = "Screening failed.";
+    screenSusceptible.classList.add("empty-state");
+    screenSusceptible.textContent = "Screening failed.";
+  }
 });
 
 document.querySelector("#ingest-form").addEventListener("submit", async (event) => {

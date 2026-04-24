@@ -1,11 +1,20 @@
 from __future__ import annotations
 
 import io
+from pathlib import Path
 
 import pandas as pd
 
+from amrfinder_features import AmrFinderFeatureBuilder
 from serving_loader import ArtifactRegistry, ModelBundle
-from serving_schemas import CsvPredictResponse, PredictRequest, PredictResponse, PredictRowOutput
+from serving_schemas import (
+    CsvPredictResponse,
+    FastaScreenPrediction,
+    FastaScreenResponse,
+    PredictRequest,
+    PredictResponse,
+    PredictRowOutput,
+)
 
 
 def _normalize_feature_value(value: object) -> float:
@@ -105,4 +114,63 @@ def predict_from_csv_bytes(
         feature_count=len(bundle.feature_columns),
         row_count=len(rows),
         rows=[row.model_dump() for row in rows],
+    )
+
+
+def screen_fasta_bytes(
+    registry: ArtifactRegistry,
+    *,
+    scope: str,
+    fasta_bytes: bytes,
+    fasta_name: str,
+    biosample: str | None = None,
+    threshold: float,
+    feature_builder: AmrFinderFeatureBuilder | None = None,
+) -> FastaScreenResponse:
+    bundles = registry.list_bundles(scope=scope)
+    if not bundles:
+        raise ValueError(f"No models loaded for scope={scope!r}.")
+
+    builder = feature_builder or AmrFinderFeatureBuilder()
+    frame = builder.run_amrfinder(fasta_bytes=fasta_bytes, fasta_name=fasta_name)
+    effective_biosample = biosample or Path(fasta_name).stem or "sample_0001"
+
+    predictions: list[FastaScreenPrediction] = []
+    hit_count = 0
+    for bundle in bundles:
+        parsed = builder.build_from_amrfinder_frame(frame, bundle.feature_columns)
+        hit_count = max(hit_count, parsed.hit_count)
+
+        aligned = pd.DataFrame(0.0, index=[0], columns=bundle.feature_columns)
+        for column, value in parsed.features.items():
+            if column in aligned.columns:
+                aligned.at[0, column] = float(value)
+
+        result = run_prediction(bundle, aligned, [effective_biosample], threshold)[0]
+        predictions.append(
+            FastaScreenPrediction(
+                antibiotic=bundle.antibiotic,
+                probability_resistant=result.probability_resistant,
+                predicted_label=result.predicted_label,
+            )
+        )
+
+    predictions.sort(
+        key=lambda item: (
+            0 if item.predicted_label == "resistant" else 1,
+            -item.probability_resistant,
+            item.antibiotic,
+        )
+    )
+    resistant = [item for item in predictions if item.predicted_label == "resistant"]
+    susceptible = [item for item in predictions if item.predicted_label == "susceptible"]
+
+    return FastaScreenResponse(
+        scope=scope,
+        threshold=threshold,
+        biosample=effective_biosample,
+        hit_count=hit_count,
+        resistant_antibiotics=resistant,
+        susceptible_antibiotics=susceptible,
+        all_predictions=predictions,
     )

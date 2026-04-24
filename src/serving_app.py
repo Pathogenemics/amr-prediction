@@ -14,6 +14,7 @@ from ingestion_service import DATA_ROOT, ingest_single_fasta, read_batch_manifes
 from serving_loader import ArtifactRegistry
 from serving_schemas import (
     CsvPredictResponse,
+    FastaScreenResponse,
     HealthResponse,
     IngestFastaResponse,
     ModelSummary,
@@ -22,7 +23,7 @@ from serving_schemas import (
     ProcessBatchRequest,
     ProcessBatchResponse,
 )
-from serving_service import predict_from_csv_bytes, predict_from_request
+from serving_service import predict_from_csv_bytes, predict_from_request, screen_fasta_bytes
 
 
 registry = ArtifactRegistry()
@@ -162,6 +163,31 @@ async def predict_csv(
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/screen-fasta-single", response_model=FastaScreenResponse)
+async def screen_fasta_single(
+    scope: str = Form("all"),
+    threshold: float = Form(0.5),
+    biosample: str | None = Form(None),
+    file: UploadFile = File(...),
+) -> FastaScreenResponse:
+    try:
+        file_bytes = await file.read()
+        return screen_fasta_bytes(
+            registry,
+            scope=scope,
+            fasta_bytes=file_bytes,
+            fasta_name=file.filename or "sample.fasta",
+            biosample=biosample,
+            threshold=threshold,
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 
 @app.post("/ingest-fasta-single", response_model=IngestFastaResponse)
