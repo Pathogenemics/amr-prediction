@@ -4,6 +4,8 @@
 
 This file tracks what has already been completed in the FASTA architecture refactor and what still remains.
 
+For the canonical architecture as of now, see `CURRENT_ARCHITECTURE.md`.
+
 ## Completed
 
 ### 1. FASTA preprocessing removed from FastAPI request-time prediction

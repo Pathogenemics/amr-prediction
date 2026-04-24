@@ -2,6 +2,8 @@
 
 ## 2026-04-24: FASTA architecture refactor
 
+For the canonical architecture after this refactor, see `CURRENT_ARCHITECTURE.md`.
+
 ### Goal
 
 Remove FASTA preprocessing from the FastAPI serving request path and move it into a separate micro-batch processing flow.
