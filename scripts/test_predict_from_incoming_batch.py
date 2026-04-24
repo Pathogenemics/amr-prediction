@@ -13,7 +13,10 @@ import pandas as pd
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ARTIFACT_ROOT = PROJECT_ROOT / "artifacts"
 BRONZE_CSV_BATCH_ROOT = PROJECT_ROOT / "data" / "bronze" / "incoming_csv_batches"
-LEGACY_INCOMING_ROOT = PROJECT_ROOT / "data" / "incoming"
+
+# CSV batch serving-check script:
+# this validates serving from a prepared CSV/genotype batch in bronze storage.
+# it is not the canonical FASTA ingestion -> processing -> serving flow.
 
 
 def antibiotic_to_safe_name(antibiotic: str) -> str:
@@ -45,13 +48,11 @@ def resolve_batch_dir(batch_name: str, batch_dir: str | None = None) -> Path:
     if canonical_dir.exists():
         return canonical_dir
 
-    legacy_dir = LEGACY_INCOMING_ROOT / batch_name
-    if legacy_dir.exists():
-        return legacy_dir
-
     raise FileNotFoundError(
         "Batch directory not found. "
-        f"Tried canonical path {canonical_dir} and legacy path {legacy_dir}."
+        f"Expected canonical path: {canonical_dir}. "
+        "If your batch still lives under data/incoming/, migrate it first with "
+        "scripts/migrate_incoming_batch_to_bronze.py."
     )
 
 
@@ -152,7 +153,7 @@ def main() -> int:
     parser.add_argument(
         "--batch-name",
         default="batch_001",
-        help="Batch folder name under data/bronze/incoming_csv_batches/ or legacy data/incoming/.",
+        help="Batch folder name under data/bronze/incoming_csv_batches/.",
     )
     parser.add_argument(
         "--batch-dir",

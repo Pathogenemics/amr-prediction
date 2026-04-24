@@ -16,6 +16,10 @@ single FASTA or FASTA batch
 -> serving via /predict or /predict-csv
 ```
 
+Operational orchestration script:
+
+- `scripts/run_single_fasta_pipeline.sh`
+
 ### CSV batch flow
 
 ```text
@@ -74,12 +78,12 @@ Batch status is standardized to:
 
 The repository still contains some older prototype artifacts and references.
 
-### Still supported for compatibility
+### Legacy migration source
 
 - `data/incoming/<batch_id>/`
 
-This is treated as a legacy path.
-The canonical CSV batch path is now:
+This should now be treated as migration-only legacy data.
+The canonical CSV batch path is:
 
 - `data/bronze/incoming_csv_batches/<batch_id>/`
 
@@ -91,7 +95,6 @@ The canonical CSV batch path is now:
 
 ### Legacy-oriented assets still present
 
-- some notebooks still describe the older prototype flow
 - `scripts/test_predict_from_incoming_batch.py` remains useful, but should be understood as a CSV-batch serving check, not the main FASTA processing path
 
 ## Recommended interpretation

@@ -59,11 +59,16 @@ Remove FASTA preprocessing from the FastAPI serving request path and move it int
 - Added `CURRENT_ARCHITECTURE.md` to define the canonical current-state architecture
 - Updated `ARCHITECTURE_HANDOFF.md` to mark it as historical context rather than the canonical current-state description
 
+#### Orchestration
+
+- Added `scripts/run_single_fasta_pipeline.sh` as the canonical single-FASTA operational flow
+- This script chains ingestion, processing, prediction, and metadata lookup
+
 #### Data layout cleanup
 
 - Standardized the canonical CSV batch path to `data/bronze/incoming_csv_batches/`
-- Updated `scripts/test_predict_from_incoming_batch.py` to prefer the canonical bronze path
-- Kept fallback support for legacy `data/incoming/`
+- Updated `scripts/test_predict_from_incoming_batch.py` to expect the canonical bronze path
+- Repositioned legacy `data/incoming/` as migration-only source data
 - Added `scripts/migrate_incoming_batch_to_bronze.py` to copy legacy CSV batches into the bronze layout
 
 ### Tests added
@@ -94,3 +99,5 @@ single FASTA or FASTA batch
 -> silver/gold staged outputs
 -> serving from feature-ready input
 ```
+
+This refactor track is now complete.

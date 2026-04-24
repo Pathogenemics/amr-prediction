@@ -95,64 +95,47 @@ For the canonical architecture as of now, see `CURRENT_ARCHITECTURE.md`.
 
 ## Remaining work
 
-### 1. CSV batch layout partially unified
+No architecture-critical work remains from this refactor track.
 
-Canonical layout is now:
+The core target state is now in place:
 
-- `data/bronze/incoming_csv_batches/<batch_id>/`
+- serving and processing are separated
+- ingestion exists
+- staged storage exists
+- lifecycle states exist
+- status/manifest lookup exists
+- canonical orchestration exists
+- canonical storage paths are defined
 
-Legacy compatibility still exists for:
+## Optional future enhancements
 
-- `data/incoming/<batch_id>/`
+These are improvements, not remaining refactor obligations.
 
-The script `scripts/test_predict_from_incoming_batch.py` now prefers the canonical bronze path and only falls back to the legacy path when needed.
+### 1. Operational hardening
 
-The helper `scripts/migrate_incoming_batch_to_bronze.py` can copy legacy incoming batches into the canonical bronze layout.
+- add retry/reprocess utilities
+- add cleanup/archive scripts for old batches
+- add richer failure diagnostics and recovery tooling
 
-### 2. Review old scripts that still assume the prototype flow
+### 2. Performance improvements
 
-Especially:
+- reduce `pandas` overhead in serving
+- precompute feature alignment structures
+- optimize large-batch processing behavior
 
-- `scripts/test_predict_from_incoming_batch.py`
+### 3. Product/runtime improvements
 
-This script still targets the prepared `/predict` flow rather than the FASTA batch flow.
-That is acceptable, but it should now be treated as the CSV-batch serving check, not the main FASTA architecture path.
-
-### 3. Optionally add orchestration for full batch flow
-
-Possible next enhancement:
-
-- one script or job that chains:
-  - ingest
-  - process
-  - predict
-
-This is optional, but would make the micro-batch workflow easier to operate.
-
-### 4. Clean up docs to remove mixed architectural signals
-
-Most core text docs are now aligned, but some legacy-oriented assets still remain.
-
-Need to make sure the repo does not look like it has two competing architectures:
-
-- old direct prototype path
-- new staged micro-batch path
-
-Most notably:
-
-- notebooks still narrate parts of the older prototype workflow
-- some compatibility scripts still mention legacy paths because fallback support remains intentional
+- add prediction result history if needed
+- add better job dashboards or monitoring
+- add more automation around scheduled micro-batch execution
 
 ## Recommended next task
 
-If only one task should be done next, choose:
+If more work is desired, choose based on project goal:
 
-### Review legacy scripts and notebooks
-
-Why:
-
-- lifecycle states and lookup endpoints now exist
-- the biggest remaining inconsistency is in older scripts and notebooks that still narrate the prototype path more heavily than the staged pipeline
+- for engineering quality: operational hardening
+- for performance claims: serving/process optimization
+- for demo value: dashboards or scheduled orchestration
 
 ## Short summary
 
@@ -162,4 +145,4 @@ The main architectural correction is complete:
 - FASTA now enters through ingestion and batch processing
 - serving consumes feature-ready inputs
 
-The next phase is pipeline completion and cleanup, not another major refactor.
+The architecture refactor track is complete.
