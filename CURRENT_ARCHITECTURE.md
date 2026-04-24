@@ -58,6 +58,15 @@ It is responsible for:
 - `POST /predict`
 - `POST /predict-csv`
 - `POST /ingest-fasta-single`
+- `POST /process-fasta-batch`
+
+It also serves the demo frontend at:
+
+- `GET /`
+
+There is also a Streamlit demo client for the same API:
+
+- `streamlit_app.py`
 
 FastAPI is not responsible for:
 

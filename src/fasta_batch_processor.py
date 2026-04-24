@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 from amrfinder_features import AmrFinderFeatureBuilder
-from ingestion_service import read_batch_manifest, write_batch_status
+from ingestion_service import _write_json_atomic, read_batch_manifest, write_batch_status
 from serving_loader import ARTIFACT_ROOT, antibiotic_to_safe_name
 
 
@@ -150,7 +150,7 @@ def write_batch_outputs(
         "samples": [asdict(sample) for sample in samples],
     }
 
-    manifest_path.write_text(json.dumps(manifest_payload, indent=2), encoding="utf-8")
+    _write_json_atomic(manifest_path, manifest_payload)
     return batch
 
 

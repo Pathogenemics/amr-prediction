@@ -36,6 +36,18 @@ $env:PYTHONPATH = "$PWD\src"
 uvicorn serving_app:app --host 0.0.0.0 --port 8000
 ```
 
+After startup, a demo frontend is available at:
+
+```text
+http://127.0.0.1:8000/
+```
+
+For a Streamlit demo UI aligned with the same backend APIs:
+
+```bash
+bash scripts/run_streamlit_demo.sh
+```
+
 ## Endpoints
 
 - `GET /health`
@@ -45,6 +57,7 @@ uvicorn serving_app:app --host 0.0.0.0 --port 8000
 - `POST /predict`
 - `POST /predict-csv`
 - `POST /ingest-fasta-single`
+- `POST /process-fasta-batch`
 
 ## Example JSON request
 
@@ -85,7 +98,19 @@ Batch status lifecycle now uses:
 - `completed`
 - `failed`
 
-Then process that batch outside FastAPI:
+Then trigger processing either from the demo UI/Streamlit app or directly via API:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/process-fasta-batch" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "batch_id": "batch_001",
+    "scope": "all",
+    "antibiotic": "ampicillin"
+  }'
+```
+
+The old shell entrypoint still works as an advanced/manual fallback:
 
 ```bash
 python scripts/process_fasta_batch.py \

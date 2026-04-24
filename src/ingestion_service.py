@@ -38,6 +38,13 @@ def _results_dir(category: str, data_root: Path = DATA_ROOT) -> Path:
     return output_dir
 
 
+def _write_json_atomic(path: Path, payload: dict[str, object]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp_path = path.with_suffix(f"{path.suffix}.tmp")
+    temp_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    temp_path.replace(path)
+
+
 def build_status_payload(
     *,
     batch_id: str,
@@ -110,7 +117,7 @@ def write_batch_status(
         error_message=error_message,
         next_step=next_step,
     )
-    status_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    _write_json_atomic(status_path, payload)
     return payload
 
 
@@ -153,7 +160,7 @@ def ingest_single_fasta(
             }
         ],
     }
-    manifest_path.write_text(json.dumps(manifest_payload, indent=2), encoding="utf-8")
+    _write_json_atomic(manifest_path, manifest_payload)
     write_batch_status(
         effective_batch_id,
         status="ingested",

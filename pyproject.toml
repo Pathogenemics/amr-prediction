@@ -13,7 +13,8 @@ dependencies = [
     "tqdm",
     "fastapi",
     "uvicorn",
-    "python-multipart"
+    "python-multipart",
+    "streamlit"
 ]
 
 [project.scripts]

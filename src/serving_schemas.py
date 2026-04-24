@@ -71,3 +71,19 @@ class IngestFastaResponse(BaseModel):
     manifest_path: str
     status_path: str
     status: str
+
+
+class ProcessBatchRequest(BaseModel):
+    batch_id: str
+    scope: str = "all"
+    antibiotic: str
+    input_dir: str | None = None
+
+
+class ProcessBatchResponse(BaseModel):
+    batch_id: str
+    status: str
+    scope: str
+    antibiotic: str
+    bronze_input_dir: str
+    message: str

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AMR Pipeline Console</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">AMR Prediction Pipeline</p>
+          <h1>Micro-batch console for ingestion, tracking, and serving.</h1>
+          <p class="lead">
+            This frontend follows the staged architecture now implemented in the backend:
+            ingest raw FASTA, track the batch lifecycle, then serve predictions from
+            feature-ready input.
+          </p>
+        </div>
+        <div class="hero-status" id="health-card">
+          <p class="label">Backend</p>
+          <strong id="health-status">Checking...</strong>
+          <span id="health-detail">Loading service metadata</span>
+        </div>
+      </header>
+
+      <main class="dashboard-grid">
+        <section class="panel panel-accent">
+          <div class="panel-header">
+            <p class="panel-kicker">Step 1</p>
+            <h2>Ingest FASTA</h2>
+          </div>
+          <form id="ingest-form" class="stack">
+            <label>
+              <span>Batch ID</span>
+              <input type="text" name="batch_id" placeholder="Optional custom batch_id" />
+            </label>
+            <label>
+              <span>Biosample</span>
+              <input type="text" name="biosample" placeholder="Optional biosample name" />
+            </label>
+            <label>
+              <span>FASTA file</span>
+              <input type="file" name="file" accept=".fa,.faa,.fasta,.fna" required />
+            </label>
+            <button type="submit">Ingest into bronze</button>
+          </form>
+          <div id="ingest-output" class="result-card empty-state">No FASTA uploaded yet.</div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <p class="panel-kicker">Step 2</p>
+            <h2>Track Batch</h2>
+          </div>
+          <form id="lookup-form" class="inline-form">
+            <input type="text" name="batch_id" placeholder="Enter batch_id" required />
+            <button type="submit">Fetch status</button>
+          </form>
+          <div class="lookup-grid">
+            <article class="subpanel">
+              <h3>Status</h3>
+              <pre id="status-output" class="json-output">Awaiting batch lookup.</pre>
+            </article>
+            <article class="subpanel">
+              <h3>Manifest</h3>
+              <pre id="manifest-output" class="json-output">Awaiting batch lookup.</pre>
+            </article>
+          </div>
+          <article class="subpanel orchestration-card">
+            <h3>Processing trigger</h3>
+            <p>
+              Start the processing layer directly from the UI. The shell command stays here
+              only as an advanced fallback.
+            </p>
+            <div class="orchestration-actions">
+              <button type="button" id="process-batch-button">Start processing</button>
+              <div id="process-result" class="result-card empty-state compact-card">
+                Fetch a batch first, then start processing here.
+              </div>
+            </div>
+            <h4>Advanced fallback</h4>
+            <pre id="process-command" class="json-output">Ingest a FASTA batch to generate a processing command.</pre>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <p class="panel-kicker">Step 3</p>
+            <h2>Predict from CSV</h2>
+          </div>
+          <form id="predict-csv-form" class="stack">
+            <label>
+              <span>Scope</span>
+              <select name="scope" id="scope-select"></select>
+            </label>
+            <label>
+              <span>Antibiotic</span>
+              <select name="antibiotic" id="antibiotic-select"></select>
+            </label>
+            <label>
+              <span>Threshold</span>
+              <input type="number" name="threshold" min="0" max="1" step="0.01" value="0.5" />
+            </label>
+            <label>
+              <span>Feature-ready CSV</span>
+              <input type="file" name="file" accept=".csv,text/csv" required />
+            </label>
+            <button type="submit">Run predict-csv</button>
+          </form>
+          <div id="predict-summary" class="result-card empty-state">No prediction run yet.</div>
+          <div class="table-shell">
+            <table id="prediction-table">
+              <thead>
+                <tr>
+                  <th>Biosample</th>
+                  <th>Probability resistant</th>
+                  <th>Label</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="3" class="table-empty">Prediction rows will appear here.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel panel-muted">
+          <div class="panel-header">
+            <p class="panel-kicker">Catalog</p>
+            <h2>Loaded models</h2>
+          </div>
+          <div id="models-grid" class="models-grid">
+            <div class="empty-state">Loading model registry.</div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="model-card-template">
+      <article class="model-card">
+        <p class="model-scope"></p>
+        <h3 class="model-name"></h3>
+        <dl>
+          <div>
+            <dt>Features</dt>
+            <dd class="model-features"></dd>
+          </div>
+          <div>
+            <dt>Samples</dt>
+            <dd class="model-samples"></dd>
+          </div>
+        </dl>
+      </article>
+    </template>
+
+    <script src="/assets/app.js" defer></script>
+  </body>
+</html>
