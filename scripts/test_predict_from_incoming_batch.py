@@ -12,7 +12,8 @@ import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 ARTIFACT_ROOT = PROJECT_ROOT / "artifacts"
-INCOMING_ROOT = PROJECT_ROOT / "data" / "incoming"
+BRONZE_CSV_BATCH_ROOT = PROJECT_ROOT / "data" / "bronze" / "incoming_csv_batches"
+LEGACY_INCOMING_ROOT = PROJECT_ROOT / "data" / "incoming"
 
 
 def antibiotic_to_safe_name(antibiotic: str) -> str:
@@ -31,6 +32,27 @@ def load_schema(scope: str, antibiotic: str) -> list[str]:
     if not schema_path.exists():
         raise FileNotFoundError(f"Schema not found: {schema_path}")
     return json.loads(schema_path.read_text(encoding="utf-8"))
+
+
+def resolve_batch_dir(batch_name: str, batch_dir: str | None = None) -> Path:
+    if batch_dir:
+        resolved = Path(batch_dir).expanduser().resolve()
+        if not resolved.exists():
+            raise FileNotFoundError(f"Batch directory not found: {resolved}")
+        return resolved
+
+    canonical_dir = BRONZE_CSV_BATCH_ROOT / batch_name
+    if canonical_dir.exists():
+        return canonical_dir
+
+    legacy_dir = LEGACY_INCOMING_ROOT / batch_name
+    if legacy_dir.exists():
+        return legacy_dir
+
+    raise FileNotFoundError(
+        "Batch directory not found. "
+        f"Tried canonical path {canonical_dir} and legacy path {legacy_dir}."
+    )
 
 
 def build_rows_from_incoming_batch(
@@ -121,15 +143,26 @@ def post_predict_request(base_url: str, payload: dict[str, object]) -> dict[str,
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Test the AMR /predict endpoint using a saved incoming batch.")
+    parser = argparse.ArgumentParser(
+        description="Test the AMR /predict endpoint using a saved CSV/genotype batch from staged storage."
+    )
     parser.add_argument("--base-url", default="http://127.0.0.1:8000", help="Base URL for the FastAPI backend.")
     parser.add_argument("--scope", default="all", help="Model scope to use.")
     parser.add_argument("--antibiotic", default="amoxicillin-clavulanic acid", help="Antibiotic model to test.")
-    parser.add_argument("--batch-name", default="batch_001", help="Incoming batch folder name under data/incoming/.")
+    parser.add_argument(
+        "--batch-name",
+        default="batch_001",
+        help="Batch folder name under data/bronze/incoming_csv_batches/ or legacy data/incoming/.",
+    )
+    parser.add_argument(
+        "--batch-dir",
+        default="",
+        help="Optional explicit batch directory. Overrides --batch-name lookup.",
+    )
     parser.add_argument("--limit", type=int, default=5, help="Maximum number of biosamples to include.")
     args = parser.parse_args()
 
-    batch_dir = INCOMING_ROOT / args.batch_name
+    batch_dir = resolve_batch_dir(batch_name=args.batch_name, batch_dir=args.batch_dir or None)
     rows, truth = build_rows_from_incoming_batch(
         batch_dir=batch_dir,
         scope=args.scope,

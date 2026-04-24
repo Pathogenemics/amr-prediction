@@ -55,6 +55,13 @@ Remove FASTA preprocessing from the FastAPI serving request path and move it int
 - Added `scripts/test_commands/run_fasta_e2e_verification.sh`
 - Added `scripts/test_commands/README.md`
 
+#### Data layout cleanup
+
+- Standardized the canonical CSV batch path to `data/bronze/incoming_csv_batches/`
+- Updated `scripts/test_predict_from_incoming_batch.py` to prefer the canonical bronze path
+- Kept fallback support for legacy `data/incoming/`
+- Added `scripts/migrate_incoming_batch_to_bronze.py` to copy legacy CSV batches into the bronze layout
+
 ### Tests added
 
 - `tests/test_fasta_batch_processor.py`
