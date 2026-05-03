@@ -42,28 +42,34 @@ The machine-learning scopes show a consistent progression from narrow to wide ev
 
 The most concise interpretation is therefore that \textit{strict} is biologically conservative but often too sparse, \textit{broad} is the strongest constrained alternative and best reflects cross-resistance within drug classes, and \textit{all} is the strongest global default if the main objective is predictive performance while also carrying the highest risk of co-occurrence leakage.
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
-\includegraphics[width=0.95\textwidth]{figures/recall_by_scope}
-\caption{Recall comparison across antibiotics and determinant-connection scopes.}
+\begin{subfigure}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures/recall_by_scope}
+\caption{Recall by scope.}
 \label{fig:recall-by-scope}
-\end{figure}
-
-\begin{figure}[H]
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.49\textwidth}
 \centering
-\includegraphics[width=0.95\textwidth]{figures/precision_by_scope}
-\caption{Precision comparison across antibiotics and determinant-connection scopes.}
+\includegraphics[width=\textwidth]{figures/precision_by_scope}
+\caption{Precision by scope.}
 \label{fig:precision-by-scope}
-\end{figure}
+\end{subfigure}
 
-\begin{figure}[H]
+\vspace{0.75em}
+
+\begin{subfigure}[t]{0.82\textwidth}
 \centering
-\includegraphics[width=0.95\textwidth]{figures/roc_auc_by_scope}
-\caption{ROC-AUC comparison across antibiotics and determinant-connection scopes.}
+\includegraphics[width=\textwidth]{figures/roc_auc_by_scope}
+\caption{ROC-AUC by scope.}
 \label{fig:roc-auc-by-scope}
+\end{subfigure}
+\caption[Performance comparison across antibiotics and scopes.]{Performance comparison across antibiotics and determinant-connection scopes.}
+\label{fig:scope-performance-comparison}
 \end{figure}
 
-The three plots reveal the same underlying pattern from different angles. Recall highlights where broader evidence is needed to recover resistant isolates. Precision highlights whether a wide scope is overcalling resistance. ROC-AUC then shows whether the model is still separating resistant and susceptible isolates well across thresholds even when the exact operating point differs.
+Figure~\ref{fig:scope-performance-comparison} reveals the same underlying pattern from different angles. Recall highlights where broader evidence is needed to recover resistant isolates. Precision highlights whether a wide scope is overcalling resistance. ROC-AUC then shows whether the model is still separating resistant and susceptible isolates well across thresholds even when the exact operating point differs.
 
 \subsection{Best scope by antibiotic}
 
@@ -155,7 +161,5 @@ The experimental results support the following conclusions:
 \end{enumerate}
 
 \section{Study Limitations}
-
-\subsection{Limitations of the current evaluation}
 
 This study predicts a binary resistant/susceptible phenotype rather than MIC, uses curated determinant resources rather than full pan-genome features, and has not yet performed external validation on an independent cohort. In addition, feature-importance analysis identifies strong predictive features rather than proving causal biological mechanisms. These limitations define the scope of the study clearly: it is a determinant-based bioinformatics analysis of AMR prediction behavior, not yet a full clinical deployment study.
