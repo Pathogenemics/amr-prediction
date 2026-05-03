@@ -1,31 +1,46 @@
-\section{Model Training and Prediction}
+\section{Rule-Based Prediction}
 
-The final predictive model in this project is an antibiotic-specific XGBoost classifier trained on prepared determinant tables. One model is trained per antibiotic because the resistance mechanisms, class balance, and relevant determinant set differ substantially from one drug to another.
+% Y doan: gioi thieu baseline rule-based va muc dich dua vao so sanh.
+% Vai tro: dat baseline xac dinh de tach tac dong cua connection scope khoi tac dong cua hoc may.
+Rule-based prediction is used as a deterministic reference baseline under the biologically constrained scopes. This direction is grounded in curated determinant resources and direct genotype-to-phenotype comparison logic, which are represented in this study by AMRFinderPlus-style determinant annotation and by genotypic-versus-phenotypic AMR comparison in \textit{Salmonella}~\citep{feldgarden2021amrfinderplus,shen2024comparison}. The baselines in the present study use the same cleaned cohort, the same normalized genotype table, and the same antibiotic-specific connection logic as the learned models. Their role is not to maximize performance, but to show what can already be inferred directly from retained determinant evidence before any learned combination is introduced.
 
-\subsection{Prepared model-input representation}
+% Y doan: mo ta quy tac du doan cua strict va broad rule-based.
+% Vai tro: dinh nghia ro co che baseline va ly do chi dung strict va broad.
+Only the \textit{strict} and \textit{broad} scopes are used for rule-based prediction. The \textit{all} scope is excluded because it deliberately retains determinants without requiring biological relevance to the target antibiotic, so a direct deterministic match rule would no longer represent antibiotic-specific inference. In the present study, after genotype filtering and scope matching, an isolate is predicted as resistant if at least one connected determinant remains with non-zero retained evidence. Otherwise, it is predicted as susceptible. Under this design, the difference between \textit{strict rule-based} and \textit{broad rule-based} is not a different prediction formula, but the width of genotype evidence allowed to connect to the target antibiotic before the rule is applied.
 
-Each prepared dataset contains one row per isolate for one antibiotic under one connection scope. The final feature set does \emph{not} use a separate binary presence flag. Instead, each retained determinant contributes \texttt{\{element\}\_coverage}, \texttt{\{element\}\_identity}, and \texttt{\{element\}\_lineage\_match}. This design was chosen because determinant presence is already implied by non-zero coverage and identity, and keeping only coverage, identity, and lineage-related scope information reduces redundancy while preserving both quantitative evidence quality and biological scope information.
+% Y doan: giai thich y nghia cua baseline.
+% Vai tro: noi ro vi sao can baseline nay trong thiet ke thuc nghiem.
+These baselines are included for two reasons. First, they provide a direct genotype-to-phenotype reference using explicit determinant matching alone. Second, they make it possible to separate performance gains caused by broader biological scope from gains caused by machine learning itself.
 
-\subsection{Label encoding}
+\section{Machine-Learning Prediction}
 
-The task is binary classification with resistant isolates encoded as \(1\) and susceptible isolates encoded as \(0\). This encoding makes recall, precision, and related positive-class metrics directly describe resistant-case detection, which is the clinically important side of the problem.
+% Y doan: gioi thieu phan hoc may va giai thich no dung cung du lieu da chuan bi.
+% Vai tro: chuyen tu baseline sang mo hinh hoc may ma van giu nguyen bien thuc nghiem chinh.
+Machine-learning prediction uses the same antibiotic-specific prepared inputs produced by the preceding data stage. In the rule-based baseline, resistance is inferred directly once at least one determinant remains connected to the target antibiotic after scope matching. In the machine-learning setting, by contrast, prediction is not triggered by a single explicit rule. Instead, multiple retained determinants can contribute jointly through their coverage, identity, and lineage-match attributes. For example, one isolate may contain several connected determinants with uneven evidence strength, and the model is allowed to learn how these signals combine rather than treating any one retained determinant as automatically sufficient. Because the biological scope is already encoded during data preparation, the learned comparison changes the way retained determinant evidence is combined rather than redefining the underlying cohort or the connection rules.
 
-\subsection{Learning algorithm and configuration}
+% Y doan: mo ta cau truc bang input cho mo hinh.
+% Vai tro: xac dinh ro don vi mau, label, va feature representation.
+\subsection{Construction of Model Inputs}
 
-The project uses XGBoost as the main classifier because it handles sparse, mixed-scale tabular features well and can model non-linear interactions between determinants without requiring heavy manual feature crossing. The final configuration uses \(250\) trees, learning rate \(0.05\), maximum depth \(5\), subsample \(0.8\), column subsample per tree \(0.8\), and a fixed random seed of \(42\). Because resistant cases are often the minority class, \texttt{scale\_pos\_weight} is recalculated per antibiotic from the resistant/susceptible ratio in the training split, which prevents the model from being dominated by the larger susceptible class.
+One prepared input table is constructed for each antibiotic under each connection scope. Each row represents one isolate, and the final label encoding uses \texttt{resistant = 1} and \texttt{susceptible = 0}. This encoding makes the positive class correspond directly to resistant isolates throughout training and later evaluation.
 
-\subsection{Cross-validation protocol}
+The final feature representation does not include a separate binary presence column. Instead, each retained determinant contributes three feature types: \texttt{\{element\}\_coverage}, \texttt{\{element\}\_identity}, and \texttt{\{element\}\_lineage\_match}. Presence is already implied by non-zero retained evidence, so an explicit presence flag would be redundant. This representation preserves both quantitative evidence quality and scope-related biological information while avoiding unnecessary duplication of the same determinant signal.
 
-Model quality is estimated with five-fold stratified cross-validation. Stratification keeps the resistant/susceptible ratio similar across folds, which is important because class imbalance differs strongly between antibiotics. A single train-test split would make the evaluation much more sensitive to random partitioning, especially for antibiotics with smaller resistant subsets. After cross-validation metrics are collected, a final model is fitted on the full antibiotic-specific dataset in order to extract feature-importance scores for interpretation.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=0.85\textwidth]{figures/prepared_input_example}
+\caption[Prepared model-input example.]{Example of a prepared model-input table after genotype evidence has been aligned with phenotype labels.}
+\label{fig:prepared-input-example}
+\end{figure}
 
-\subsection{Evaluation metrics}
+Prepared inputs are stored separately by scope before training begins. This separation is deliberate. It ensures that model fitting no longer depends on raw TSV ingestion or hidden preprocessing inside the training workflow. As a result, scope comparisons remain reproducible and can be traced back to fixed antibiotic-specific input tables.
 
-The final metric priority of the project is \textbf{recall} first, \textbf{precision} second, and \textbf{ROC-AUC} third. The rationale is straightforward: \textbf{recall} is primary because failing to detect resistant isolates is the highest-risk error, \textbf{precision} is second because a model can inflate recall by predicting resistance too broadly, and \textbf{ROC-AUC} is retained as a threshold-independent measure of ranking quality. Accuracy is reported only as supporting context because imbalanced antibiotics can make accuracy appear strong even when resistant-case detection is weak.
+% Y doan: mo ta cau hinh huan luyen cuoi cung.
+% Vai tro: dinh nghia mo hinh, ly do dung one-model-per-antibiotic, va setup train nhat quan.
+\subsection{Training Configuration}
 
-\subsection{Rule-based reference baselines}
+The final classifier is XGBoost, and one model is trained per antibiotic. This antibiotic-specific design is necessary because resistance mechanisms, class balance, and relevant determinant sets differ across drugs. A shared global model would therefore mix prediction tasks that are biologically and statistically distinct.
 
-In addition to machine learning, the final evaluation includes curated determinant-based rule baselines under the \textit{strict} and \textit{broad} scopes. These baselines use the same cleaned cohort and the same scope logic as the machine-learning inputs, but they replace learned combination with a direct deterministic rule. Under this design, an isolate is called resistant if at least one determinant connected to the target scope has non-zero retained evidence after genotype filtering and scope matching; otherwise, the isolate is called susceptible. The key difference between \textit{strict rule-based} and \textit{broad rule-based} is therefore not a different prediction formula, but the width of determinant evidence that is allowed to connect to the target antibiotic before the rule is applied. These baselines are important because they separate two kinds of improvement: improvement gained by changing the biological connection scope, and improvement gained by replacing direct inference with learned combination logic.
+The final XGBoost configuration uses \(250\) trees, learning rate \(0.05\), maximum depth \(5\), subsample \(0.8\), column subsample per tree \(0.8\), and random seed \(42\). Because resistant isolates are often the minority class, \texttt{scale\_pos\_weight} is recomputed per antibiotic from the resistant-to-susceptible imbalance in the training data. This keeps the model from being dominated by the larger susceptible class.
 
-\subsection{Feature-importance analysis}
-
-For the final model fitted on each antibiotic-specific dataset, XGBoost feature-importance scores are exported and ranked. These scores are used only as interpretation aids. A high-ranked feature means that the model relied on it strongly for prediction, but it does not automatically prove that the feature is a direct causal resistance determinant. This distinction is especially important in the \textit{all} setting, where some highly ranked features may reflect co-occurring resistance patterns rather than mechanism-specific causation.
+Training quality is estimated with five-fold stratified cross-validation. Stratification is necessary because the resistant/susceptible ratio differs substantially across antibiotics, and an unstratified split could distort the effective learning problem in smaller or more imbalanced datasets. After cross-validation metrics are collected, a final model is fitted on the full antibiotic-specific dataset so that feature-importance scores can be exported from a model trained on the complete prepared input.
