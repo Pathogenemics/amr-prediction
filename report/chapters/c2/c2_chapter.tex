@@ -1,34 +1,55 @@
-\chapter{Biological Background and Data Description}
+\chapter{Background Knowledge}
 
-\section{Biological background of antimicrobial resistance}
+\section{Antimicrobial Resistance}
 
-Antimicrobial resistance arises when bacteria acquire or express genetic changes that reduce the effectiveness of an antibiotic. In \textit{Salmonella enterica}, these changes can take multiple forms, including acquired resistance genes, resistance-associated point mutations, and combinations of determinants that affect the same drug family through different mechanisms. For example, beta-lactam resistance can involve enzymes that inactivate the drug, tetracycline resistance can involve efflux or protection mechanisms, and quinolone resistance can involve specific chromosomal mutations together with plasmid-mediated resistance determinants.
+% Ý đoạn: định nghĩa AMR và nêu ba con đường hình thành kháng ở mức khái quát:
+% đột biến, nhận vật liệu di truyền mới, và áp lực chọn lọc do dùng thuốc.
+Antimicrobial resistance (AMR) refers to the ability of bacteria to withstand the action of antimicrobial drugs. At the bacterial level, resistance can arise through mutational adaptations, acquisition of genetic material, or alteration of gene expression. In particular, resistance may occur either by mutations or by the acquisition of resistance-conferring genes through horizontal gene transfer. Over recent decades, the rate at which these processes occur and the number of resistant strains have increased markedly under selective pressure from human antibiotic use~\citep{blair2014mechanisms,munita2016mechanisms,vonwintersdorff2016dissemination}.
 
-This biological heterogeneity matters for prediction. AMR prediction is not simply a generic classification problem in which any correlated feature is equally acceptable. A useful predictor should retain a clear link between the phenotype and biologically meaningful genomic evidence, even when the final classifier is learned statistically.
+% Ý đoạn: giới thiệu các nhóm cơ chế kháng chính ở mức sinh học nền, không đi sâu ví dụ kỹ thuật.
+At a broad biological level, AMR can be organized into several major mechanism categories. One category is reduced drug uptake, in which bacteria limit antibiotic entry into the cell. Another is active efflux, in which transport systems extrude the harmful molecule and lower its intracellular concentration. Resistance can also arise through target-site modification, which reduces drug affinity, and through drug inactivation, in which bacteria enzymatically modify or destroy the antimicrobial compound. In addition, some resistant phenotypes involve changes to, or bypassing of, the original target site~\citep{blair2014mechanisms,munita2016mechanisms}.
 
-\section{Phenotype definition: AST and resistance labels}
+% Ý đoạn: chốt lại rằng AMR không phải một cơ chế đơn lẻ mà là tập hợp nhiều chiến lược thích nghi.
+These mechanisms show that AMR is not a single biological event but a collection of adaptive strategies. Different antibiotics may be affected by different mechanisms, and the same bacterial population may accumulate multiple resistance traits through mutation, altered expression, and horizontally acquired determinants. For that reason, understanding AMR requires both a general view of resistance biology and a more specific understanding of how particular genomic determinants relate to antimicrobial families~\citep{blair2014mechanisms,munita2016mechanisms,vonwintersdorff2016dissemination}.
 
-The phenotype side of the project comes from antimicrobial susceptibility testing (AST). AST evaluates whether an isolate behaves as resistant or susceptible to a given drug under laboratory conditions. The raw measurement is often the minimum inhibitory concentration (MIC), which is then interpreted through a breakpoint standard to produce labels such as susceptible, intermediate, or resistant.
 
-The final supervised learning target in this study is binary. Resistant isolates are encoded as the positive class, while susceptible isolates are encoded as the negative class.
+\section{Genotype and Phenotype}
 
-Intermediate, ambiguous, and contradictory phenotype cases are removed during cleaning. This choice is deliberate. The project is not trying to predict full MIC values or borderline categories; it is trying to build a stable resistant/susceptible prediction pipeline whose outputs can be compared fairly across antibiotics.
+\subsection{Genotype}
 
-\section{Genotype definition: curated AMR determinants}
+% Ý đoạn: định nghĩa genotype trong bối cảnh AMR và giới thiệu AMR determinants
+% như phần thông tin di truyền có liên quan đến kháng thuốc.
+In AMR studies, genotype refers to the bacterial genomic information that may encode, support, or influence antimicrobial resistance. In this context, the most relevant genomic features are AMR determinants, meaning genes or mutations that provide biologically meaningful resistance-related evidence~\citep{munita2016mechanisms,feldgarden2021amrfinderplus}.
 
-The genotype side of the project is built from curated AMR determinant records rather than raw sequence fragments. Each record is derived from AMRFinderPlus-supported annotations within the NCBI MicroBIGG-E resource, which provides a curated catalog of resistance genes and mutations together with standardized AMR metadata~\citep{feldgarden2021amrfinderplus}. The main fields used in this study are \texttt{BioSample} as the isolate identifier, \texttt{Element symbol} as the gene or mutation name, \texttt{Class} and \texttt{Subclass} as broad and specific drug-group annotations, \texttt{Subtype} as the determinant type, \texttt{Method} as the detection method, and the quantitative fields \texttt{\% Coverage of reference} and \texttt{\% Identity to reference}. This determinant representation is central to the project because it preserves biological meaning while remaining structured enough for large-scale feature engineering.
+% Ý đoạn: làm rõ determinants không chỉ là gene mà còn gồm point mutations,
+% đồng thời phân biệt acquired determinants với chromosomal determinants.
+AMR determinants are broader than resistance genes alone. They include not only acquired resistance genes but also resistance-associated point mutations. This distinction is important because resistance may arise either through the acquisition of a new resistance factor or through mutational changes that alter an endogenous target or pathway. It is therefore also useful to distinguish acquired determinants from chromosomal determinants. Acquired determinants are commonly introduced through horizontal gene transfer, often on mobile genetic elements such as plasmids or transposons. Chromosomal determinants, by contrast, usually correspond to endogenous genomic changes within the bacterial genome~\citep{blair2014mechanisms,munita2016mechanisms,vonwintersdorff2016dissemination,feldgarden2021amrfinderplus}.
 
-\section{Data sources used in the project}
+% Ý đoạn: giải thích vì sao determinants cần được hiểu theo ngữ cảnh class/subclass
+% của kháng sinh, để nối sang phần genotype-phenotype relation.
+AMR determinants are also interpreted in relation to antibiotic classes and subclasses. A determinant may be associated with one specific drug, with a subgroup of related drugs, or with a broader antimicrobial family. This means that genotype in AMR research should not be understood as a collection of isolated genes or mutations without context. Instead, it should be interpreted as a structured representation of resistance-related genomic evidence whose meaning depends on determinant type, biological mechanism, and antibiotic context~\citep{feldgarden2021amrfinderplus}.
 
-The study uses three main sources of information: NCBI AST phenotype data as the ground-truth source of resistant/susceptible labels, NCBI MicroBIGG-E genotype data as the large-scale determinant table for feature engineering, and antibiotic grouping information curated from NCBI and organized in \texttt{Antibiotic-Group.md} to define antibiotic hierarchy and scope rules.
+\subsection{Phenotype}
 
-In addition, assembled genomes in FASTA format were used earlier in the project for targeted AMRFinderPlus-based sanity checking, although the main large-scale modeling workflow ultimately relies on the curated genotype and phenotype tables rather than re-running genome-wide detection for every isolate.
-These resource types are not unique to \textit{Salmonella}; the same workflow design can in principle be applied to other bacterial species if comparable curated genotype and phenotype tables are available.
+% Ý đoạn: định nghĩa phenotype trong bối cảnh AMR và phân biệt với genotype.
+Phenotype refers to the observable response of a bacterial isolate when it is exposed to an antimicrobial agent. In the AMR setting, phenotype is concerned with whether growth is inhibited under defined laboratory conditions. Whereas genotype describes resistance-related genomic potential, phenotype captures the measured drug-response outcome observed in testing~\citep{shen2024comparison}.
 
-\section{Why the dataset is biologically non-trivial}
+% Ý đoạn: giới thiệu AST là cách đo phenotype và MIC là đại lượng đo cốt lõi.
+The main laboratory approach for characterizing AMR phenotype is antimicrobial susceptibility testing (AST). A central concept in AST is the minimum inhibitory concentration (MIC), which is the lowest concentration of an antibacterial agent that prevents visible growth under strictly controlled in vitro conditions. MIC is therefore a quantitative laboratory measurement of phenotypic response rather than an interpretation by itself~\citep{kowalskakrochmal2021mic,doern2011ast}.
 
-Even after curation and cleaning, genotype does not map perfectly to phenotype. A resistant isolate may lack an obvious determinant in the retained feature space, while a susceptible isolate may still carry one or more recognized AMR determinants. This can happen because a determinant may be present but not strongly expressed, because different sequence variants of the same determinant may not behave equally, because multiple determinants may interact or compensate for one another, because curated AMR resources may still miss some mechanisms, or because phenotype labels themselves depend on laboratory measurement and breakpoint interpretation.
+% Ý đoạn: giải thích breakpoint dùng để chuyển MIC thành các nhãn phenotype như S/I/R.
+To support clinical and surveillance use, MIC values are interpreted through breakpoint criteria and translated into categories such as susceptible, intermediate, and resistant. In other words, breakpoints serve to convert numerical AST results into clinically interpretable phenotype labels. In many AMR studies, these categorical outputs are used as the phenotype targets for downstream analysis~\citep{doern2011ast,jenkins2011breakpoints,shen2024comparison}.
 
-This genotype-phenotype gap motivates two major design choices in the project: including biologically structured rule baselines instead of assuming machine learning is always necessary, and comparing several genotype-to-phenotype connection scopes instead of assuming that one obvious feature-selection rule exists.
+\subsection{Relationship Between Genotype and Phenotype}
 
-Those two choices are the foundation of the later methodology and experiments.
+% Ý đoạn: nêu ý chính rằng genotype cung cấp bằng chứng kháng thuốc,
+% nhưng không ánh xạ hoàn hảo sang phenotype quan sát được.
+Although genotype provides biologically meaningful evidence about resistance potential, it does not map perfectly to phenotype. The presence of a known determinant does not always guarantee that laboratory resistance will be observed, and the absence of an identified determinant does not always imply susceptibility. This mismatch is one of the central biological challenges in AMR research.
+
+% Ý đoạn: tóm tắt các nguyên nhân chung làm cho ánh xạ genotype-phenotype
+% trở nên không hoàn hảo.
+Several factors contribute to this difficulty. Biological knowledge remains incomplete, so some resistance mechanisms may still be unknown or only partially characterized. In addition, gene expression, regulatory effects, and variant-specific behavior can influence whether a determinant produces a measurable resistant phenotype. Phenotype may also depend on interactions among multiple determinants, as well as on environmental conditions, testing procedures, and breakpoint interpretation.
+
+% Ý đoạn: giới thiệu cross-resistance và co-resistance như hai nguồn làm
+% quan hệ genotype-phenotype trở nên phức tạp hơn.
+Two related concepts further complicate this relationship. Cross-resistance occurs when one biological mechanism affects multiple related antibiotics, so the relevance of a determinant may extend beyond a single drug label~\citep{munita2016mechanisms}. Co-resistance occurs when multiple determinants are present in the same isolate, often because resistance genes can spread together on mobile genetic elements or be maintained under shared selection pressures~\citep{vonwintersdorff2016dissemination}. For these reasons, linking genomic evidence to observed antimicrobial response is biologically informative but not straightforward.
