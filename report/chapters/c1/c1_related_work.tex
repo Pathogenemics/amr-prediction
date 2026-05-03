@@ -1,33 +1,39 @@
 \section{Related Work}
 
-Research on genomic AMR prediction can be grouped into three broad method families.
+Genomic antimicrobial resistance prediction is already an active research direction, which itself shows that the problem is meaningful. The central goal is to infer observed resistance phenotype from genomic evidence quickly and at scale, but this goal remains difficult because genotype does not map perfectly to phenotype. Known resistance genes and mutations provide useful biological clues, yet they do not always explain the final laboratory phenotype completely. At the same time, broader genome-wide representations may improve predictive coverage but often weaken direct biological interpretation.
 
-\subsection{Biology-first and rule-based studies}
+As a result, the literature has not converged on one universally best solution. Some studies emphasize curated biological knowledge and direct interpretability, some use biologically meaningful features together with machine learning, and others move toward broad genome-wide representations such as SNPs, k-mers, or pan-genome features~\citep{feldgarden2021amrfinderplus,maguire2019identification,ren2022prediction}. This diversity is important for the present report because the main scientific question is not only whether AMR can be predicted, but also how the choice of genotype-to-phenotype representation affects the balance between predictive performance and biological explanation.
 
-The first family starts from known AMR genes and known resistance mutations, then predicts phenotype directly from curated biological knowledge. The main advantage is simplicity: every prediction can be traced back to a known gene or mutation. In addition, tools such as AMRFinderPlus provide a curated catalog of resistance mechanisms and standardized annotations that are useful for surveillance and genotype screening.
+Table~\ref{tab:related-work-overview} summarizes representative studies that are most relevant to the present project. The purpose of this table is methodological positioning rather than direct numerical benchmarking, because the studies differ in organism, phenotype target, feature representation, and evaluation protocol.
 
-However, rule-based approaches are limited by what is already known. If resistance depends on unknown variants, background lineage effects, interactions between genes, or incomplete annotation, a purely rule-based system may miss resistant isolates or may not explain mismatches well. For the present project, this family motivates the use of a curated determinant-based rule baseline rather than a manually designed expert system.
+The first family of studies begins from known AMR genes, known resistance-associated mutations, and curated biological annotation. In this direction, the main advantage is interpretability: every prediction or association can be traced back to a specific determinant or mechanism. The AMRFinderPlus framework of Feldgarden et al.~\citep{feldgarden2021amrfinderplus} is especially important here because it provides the curated determinant catalog that motivates the feature representation used in this report. Shen et al.~\citep{shen2024comparison} is also important because it directly compares genotypic and phenotypic resistance profiles in \textit{Salmonella enterica}, which is close in spirit to the rule-based reference baselines used in the present study. The limitation of this family is that direct inference can fail when resistance depends on broader within-class mechanisms, unknown variants, or incomplete determinant coverage.
 
-Representative studies and resources in this direction include the AMRFinderPlus framework of Feldgarden et al.~\citep{feldgarden2021amrfinderplus} and the genotype-phenotype comparison study of Shen et al.~\citep{shen2024comparison}.
+The second family uses biologically meaningful features but lets machine learning learn the final mapping from genotype to phenotype. This is the closest family to the present project. Maguire et al.~\citep{maguire2019identification} and Benefo et al.~\citep{benefo2024genomebased} both illustrate the value of combining mechanism-level features with supervised learning, so that the model can capture determinant interactions and weighting effects that a fixed rule cannot express easily. He et al.~\citep{he2025prediction} extends this direction toward broader pan-genome and pan-resistome modeling in \textit{Salmonella}, which is particularly relevant when comparing our biologically constrained settings with the wider \textit{all}-scope representation.
 
-\subsection{Biology-informed machine learning}
+The third family moves toward genome-wide or ML-heavy representations. Ren et al.~\citep{ren2022prediction} uses whole-genome sequencing with SNP-based features, while Wang et al.~\citep{wang2023using} predicts MIC from genome-wide 10-mers in nontyphoidal \textit{Salmonella}. These studies show that useful AMR signal may exist outside curated determinant catalogs, and they often achieve strong predictive performance. However, their broader feature spaces make the biological meaning of individual features harder to interpret directly. For the present report, they are therefore best treated as high-coverage comparison directions rather than as directly comparable determinant-based baselines.
 
-The second family uses biologically meaningful features but lets machine learning learn the mapping from genotype to phenotype. This direction is especially relevant to the present study. Instead of relying only on direct rules, a model is trained on AMR genes, mutations, and related annotations that already have biological meaning.
+The present study belongs primarily to the biology-informed machine-learning family, but it was intentionally designed to sit between strict rule-based inference and broader genome-wide prediction. It uses curated determinant-level features from AMRFinderPlus and MicroBIGG-E for interpretability, adds rule-based baselines to show how far direct genotype-to-phenotype inference can go, and then compares several genotype-to-phenotype connection scopes to measure how predictive gain changes as biological constraints are relaxed.
 
-The strength of this family is balance. Feature names such as resistance genes or point mutations remain meaningful, while the model can still learn combinations and patterns that are hard to encode as fixed rules. Studies in this family are therefore close in spirit to the present work, especially when the goal is to keep mechanism-level interpretation instead of treating the task as a pure black-box prediction problem.
+This position is useful because it avoids two extremes. It is more biologically explicit than a purely genome-wide black-box model, yet more flexible than a direct deterministic rule system. The resulting contribution of the study is therefore not merely another classifier benchmark. Instead, it is a controlled comparison of how curated determinant evidence, biological scope design, and learned combination interact in genomic AMR prediction.
 
-Examples include the work of Maguire et al.~\citep{maguire2019identification}, who analyzed major resistance drivers in nontyphoidal \textit{Salmonella}, and the more recent Salmonella-focused machine learning studies of Benefo et al.~\citep{benefo2024genomebased} and He et al.~\citep{he2025prediction}.
-
-\subsection{Genome-wide and ML-heavy approaches}
-
-The third family uses broad genome-wide representations such as SNPs, k-mers, pan-genome features, or graph-based encodings. These methods may capture wider genomic signal than curated determinant-only pipelines and can help when resistance depends on broader sequence context.
-
-Their main limitation is reduced biological transparency. A genome-wide feature with strong predictive value does not always correspond to a direct resistance mechanism. Such models may learn lineage background or dataset-specific correlations rather than a clear AMR mechanism. For this reason, they are valuable as high-coverage predictive approaches, but they are less convenient when the study needs to explain why a prediction was made in biological terms.
-
-Representative examples of this broader direction include the whole-genome machine learning framework of Ren et al.~\citep{ren2022prediction} and the k-mer-based MIC prediction study of Wang et al.~\citep{wang2023using}.
-
-\subsection{Position of the present study}
-
-The present study belongs primarily to the biology-informed machine learning family. It uses curated AMR determinants from AMRFinderPlus and MicroBIGG-E as interpretable features, while also comparing different levels of biological constraint in the genotype-to-phenotype connection step. In addition, it includes a curated determinant-based rule baseline to show how far direct genotype-to-phenotype inference can go before machine learning is introduced.
-
-The study therefore occupies an intermediate position between strict rule-based inference and broad genome-wide prediction. This position is appropriate because it emphasizes both predictive performance and biological explanation.
+\begin{table}[!htbp]
+\centering
+\caption{Representative related studies and their relation to the present project}
+\label{tab:related-work-overview}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{@{}p{2.1cm} p{1.8cm} p{2.1cm} p{2.0cm} p{4.8cm}@{}}
+\toprule
+Study & Target & Feature type & Method family & Relation to our study \\
+\midrule
+Feldgarden et al.~\citep{feldgarden2021amrfinderplus} & General AMR annotation & Curated determinants & Biology-first resource & Foundation for the determinant space used in our pipeline; not a direct prediction benchmark. \\
+Shen et al.~\citep{shen2024comparison} & Salmonella concordance & Genotypic AMR profiles & Rule-based direction & Closest conceptual basis for our direct genotype-to-phenotype baseline. \\
+Maguire et al.~\citep{maguire2019identification} & Salmonella AMR prediction & AMR features & Biology-informed ML & Close in spirit to our determinant-based machine-learning setting. \\
+Benefo et al.~\citep{benefo2024genomebased} & Salmonella AMR prediction & Genome-based features & Biology-informed ML & Similar biological task, but different representation and dataset context. \\
+He et al.~\citep{he2025prediction} & Salmonella phenotype and MIC & Pan-genome / pan-resistome & Broader ML & Closest literature analogue to our wider-scope machine-learning direction. \\
+Ren et al.~\citep{ren2022prediction} & Binary AMR prediction & Whole-genome SNPs & Genome-wide ML & Useful for discussing broad genomic signal beyond curated determinants. \\
+Wang et al.~\citep{wang2023using} & Salmonella MIC prediction & WGS-derived 10-mers & Genome-wide ML & Useful mainly for the richer MIC target and the interpretability trade-off of genome-wide features. \\
+\bottomrule
+\end{tabular}
+\end{table}
