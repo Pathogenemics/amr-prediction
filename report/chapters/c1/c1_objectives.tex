@@ -1,18 +1,23 @@
 \section{Research Objectives}
 
+% Ý đoạn: mở phần mục tiêu nghiên cứu.
+% Vai trò: chuyển từ phần tổng quan/problem sang các aims cụ thể của study.
 This study is guided by the following objectives:
 
+% Ý đoạn: liệt kê các mục tiêu nghiên cứu ở mức high-level.
+% Vai trò: xác định study aims, tránh biến chương mở đầu thành checklist implementation.
 \begin{enumerate}[label=\arabic*.]
-    \item Build a reproducible determinant-based AMR prediction workflow that connects curated genotype data, AST phenotype labels, and antibiotic grouping knowledge through a shared isolate identifier.
-    \item Clean phenotype data so that the final labels are restricted to a stable binary resistant/susceptible formulation suitable for supervised learning.
-    \item Clean and normalize genotype data so that duplicated detections, combined class/subclass labels, and known edge cases do not distort downstream antibiotic-specific feature construction.
-    \item Construct three determinant-connection settings---\textit{strict}, \textit{broad}, and \textit{all}---to study how biological scope changes the usable feature space.
-    \item Train and evaluate antibiotic-specific machine-learning models under a consistent cross-validation protocol using resistance as the positive class.
-    \item Include curated determinant-based rule baselines under constrained scopes so that direct genotype-to-phenotype inference can be compared against learned models.
-    \item Compare the resulting methods primarily in terms of resistant-case recall, resistant-case precision, and ROC-AUC.
-    \item Interpret the observed differences biologically, especially with respect to narrow lineage matching, cross-resistance within drug classes, zero-feature rows, and possible co-occurrence leakage.
+    \item Develop a biologically interpretable determinant-based workflow for AMR prediction from curated genotype and phenotype resources.
+    \item Investigate how different genotype-to-phenotype connection scopes affect antibiotic-specific prediction behavior.
+    \item Compare direct rule-based inference with machine-learning prediction under matched biological scope settings.
+    \item Evaluate the resulting prediction behavior using clinically relevant metrics, especially recall, precision, and ROC-AUC.
+    \item Interpret the observed differences biologically, particularly in relation to mechanism specificity, cross-resistance, feature coverage, and determinant co-occurrence.
 \end{enumerate}
 
-Taken together, these objectives define two main deliverables. First, the study provides a detailed and reproducible methodology for building determinant-based AMR prediction datasets from surveillance-style resources. Second, it provides an empirical comparison showing when narrower biologically constrained inputs are sufficient, when broader class-level evidence is beneficial, and when the widest determinant scope improves prediction at the cost of interpretability risk.
+% Ý đoạn: chốt lại tinh thần của bộ objectives.
+% Vai trò: nhấn mạnh đây là một nghiên cứu biology-informed, không phải to-do list kỹ thuật.
+Taken together, these objectives define the study as a biology-informed investigation of AMR prediction rather than a procedural modeling checklist. The emphasis is not only on predictive performance, but also on how the structure of curated genotype evidence shapes the resulting phenotype inference.
 
+% Ý đoạn: roadmap cho phần còn lại của báo cáo.
+% Vai trò: giúp người đọc biết mỗi chapter tiếp theo sẽ trả lời phần nào của bài toán.
 The remainder of the report is organized as follows. Chapter 2 introduces the biological background relevant to AMR, genotype, and phenotype, Chapter 3 describes the workflow and modeling design, and Chapter 4 presents the experimental results and limitations. The report closes with a conclusion summarizing the main findings.

@@ -1,15 +1,28 @@
 \section{Problem Definition}
 
-Antimicrobial resistance prediction from genomic data is the task of estimating a laboratory resistance phenotype from DNA-derived evidence. The scientific goal of this study is not to build a workflow for one specific bacterial species, but to develop a determinant-based genotype-to-phenotype prediction approach that can in principle be applied to any bacterial species for which sufficiently rich curated genotype and phenotype data are available. In this study, \textit{Salmonella enterica} is used as the case study because it is heavily represented in surveillance datasets and provides enough paired genotype and phenotype records for a credible antibiotic-specific evaluation.
+% Ý đoạn: định nghĩa bài toán AMR prediction theo nghĩa khái niệm,
+% rồi giới thiệu Salmonella như case study cụ thể.
+% Vai trò: đặt phạm vi của bài toán trước khi đi vào formulation chi tiết hơn.
+Antimicrobial resistance prediction from genomic data is the task of estimating a laboratory resistance phenotype from DNA-derived evidence. More generally, it is a genotype-to-phenotype inference problem in which resistance-related genomic information is used to anticipate observed antimicrobial response~\citep{shen2024comparison,ren2022prediction}. The scientific interest of this study is therefore broader than one organism or one dataset. In this report, \textit{Salmonella enterica} is used as the case study because it is well represented in surveillance resources and provides enough paired genotype and phenotype records for a credible antibiotic-specific evaluation.
 
-At the isolate level, the input consists of curated AMR determinants derived from genomic analysis, including acquired genes and chromosomal mutations. The output is a binary antibiotic-specific phenotype, namely \textit{resistant} or \textit{susceptible}, derived from antimicrobial susceptibility testing (AST). The practical question is therefore straightforward: given the determinant profile of one isolate, can the final AST phenotype for a target antibiotic be predicted reliably?
+% Ý đoạn: mô tả input-output của bài toán theo mức vừa đủ,
+% nhưng chưa đi sâu vào workflow hay implementation.
+% Vai trò: giúp người đọc hình dung rõ bài toán dự đoán mà không biến section này thành methodology.
+At the isolate level, the input is resistance-related genomic evidence and the output is an antibiotic-specific phenotype derived from antimicrobial susceptibility testing (AST). 
+In the present study, this genomic evidence is represented through curated AMR determinants, including acquired genes and chromosomal mutations.
+~\citep{feldgarden2021amrfinderplus,munita2016mechanisms}. 
+The practical question is therefore whether the determinant profile of a single isolate can reliably predict the final AST phenotype for a target antibiotic.
 
-The difficulty of the problem lies in the gap between genotype and phenotype. Some resistance mechanisms are directly associated with one antibiotic, whereas others act more broadly across a drug class. In addition, a detected determinant may co-occur with other resistance signals without being the direct cause of the target phenotype. As a result, the main challenge is not only to train a classifier, but also to define a biologically meaningful representation of genotype evidence before prediction.
 
-This leads to the central research question of the study:
+% Ý đoạn: nêu khó khăn cốt lõi là khoảng cách giữa genotype và phenotype.
+% Vai trò: làm rõ vì sao đây không chỉ là bài toán huấn luyện classifier thông thường.
+The difficulty of the problem lies in the gap between genotype and phenotype. Some resistance mechanisms are directly associated with one antibiotic, whereas others act more broadly across a drug class. In addition, a detected determinant may co-occur with other resistance signals without being the direct cause of the target phenotype~\citep{shen2024comparison,munita2016mechanisms}. As a result, the main challenge is not only to train a classifier, but also to define a biologically meaningful representation of genotype evidence before prediction.
 
-\begin{quote}
-Can curated AMR determinants reliably predict antibiotic resistance phenotype, and how does prediction quality change when genotype evidence is connected to phenotype under different levels of biological constraint?
-\end{quote}
+% Ý đoạn: rút toàn bộ phần problem definition về một research question trung tâm.
+% Vai trò: tạo trục chính cho toàn report và cho các phần sau bám vào.
+Accordingly, this study asks whether curated AMR determinants can reliably predict antibiotic resistance phenotype, and how prediction quality changes when genotype evidence is connected to phenotype under different levels of biological constraint.
 
-The project is therefore not just a comparison of predictive models. It is a study of how curated genomic evidence can be transformed into an antibiotic-specific AMR prediction workflow that remains biologically interpretable while still achieving strong predictive performance. The \textit{Salmonella} cohort provides the concrete experimental setting in this report because the data are available at sufficient scale, but the intended scope of the method is broader than one organism. In principle, the same workflow can be transferred to other bacterial species whenever comparable curated determinant annotations and AST labels are available.
+% Ý đoạn: chốt lại study position của đề tài.
+% Vai trò: nhấn mạnh đây là nghiên cứu về ảnh hưởng của biological constraint,
+% không chỉ là một benchmark mô hình dự đoán.
+The project is therefore not just a comparison of predictive models. It is a study of how curated genomic evidence can be used to support antibiotic-specific AMR prediction while remaining biologically interpretable. The \textit{Salmonella} cohort provides the concrete experimental setting in this report because the data are available at sufficient scale, but the intended scope of the study is broader than one organism. More specifically, the study examines how biologically constrained genotype evidence affects antibiotic-specific prediction behavior.
