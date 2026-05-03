@@ -23,14 +23,7 @@ The genotype side of the project is built from curated AMR determinant records r
 The study uses three main sources of information: NCBI AST phenotype data as the ground-truth source of resistant/susceptible labels, NCBI MicroBIGG-E genotype data as the large-scale determinant table for feature engineering, and antibiotic grouping information curated from NCBI and organized in \texttt{Antibiotic-Group.md} to define antibiotic hierarchy and scope rules.
 
 In addition, assembled genomes in FASTA format were used earlier in the project for targeted AMRFinderPlus-based sanity checking, although the main large-scale modeling workflow ultimately relies on the curated genotype and phenotype tables rather than re-running genome-wide detection for every isolate.
-
-\section{Cohort alignment and filtering}
-
-The first major cohort decision is isolate alignment. Not every isolate appears in both the genotype and phenotype resources, so all downstream analysis is restricted to the shared cohort by keeping only isolates with a \texttt{BioSample} present in both tables. This step is important because raw downloaded counts can be misleading if the two resources are explored independently, and all reported summaries after this point therefore refer only to the usable overlap cohort. Phenotype filtering then keeps only rows with the required identifying and label fields, resistant or susceptible phenotypes, and non-contradictory \texttt{(BioSample, Antibiotic)} pairs, while genotype filtering keeps AMR-related determinant rows and then applies the cleaning and normalization rules described in the methodology chapter.
-
-\section{Modeling thresholds and final antibiotic set}
-
-To make antibiotic-specific evaluation defensible, the study filters antibiotics by minimum data support using \texttt{MIN\_ANTIBIOTIC\_ROWS = 500} and \texttt{MIN\_CLASS\_COUNT = 100}. The first threshold ensures that a drug has enough observations overall. The second ensures that both resistant and susceptible classes are represented strongly enough for stable stratified cross-validation. These values are intentionally stricter than a permissive exploratory threshold because the goal of the final report is not only to show what can be trained, but to report what can be evaluated credibly. After filtering, the final experiment set contains 14 antibiotics: amoxicillin-clavulanic acid, ampicillin, cefoxitin, ceftiofur, ceftriaxone, chloramphenicol, ciprofloxacin, gentamicin, kanamycin, nalidixic acid, streptomycin, sulfisoxazole, tetracycline, and trimethoprim-sulfamethoxazole.
+These resource types are not unique to \textit{Salmonella}; the same workflow design can in principle be applied to other bacterial species if comparable curated genotype and phenotype tables are available.
 
 \section{Why the dataset is biologically non-trivial}
 

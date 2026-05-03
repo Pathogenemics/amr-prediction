@@ -5,7 +5,7 @@ The workflow was constructed in four major stages.
 \paragraph{Stage 1: phenotype cleaning.}
 Phenotype processing was performed first because the entire modeling problem is antibiotic-specific. The cleaning sequence kept only rows belonging to isolates that also existed in the genotype table, retained only rows with the required identifying and label fields, restricted labels to \texttt{resistant} and \texttt{susceptible}, removed \texttt{(BioSample, Antibiotic)} pairs that contained both labels, and resolved remaining duplicates by keeping the row with the lowest MIC after explicit ordering of the measurement sign.
 
-After cleaning, antibiotic summaries were created and thresholded using \texttt{MIN\_ANTIBIOTIC\_ROWS = 500} and \texttt{MIN\_CLASS\_COUNT = 100}.
+After cleaning, antibiotics were retained only if they had at least 500 rows overall and at least 100 isolates in each class.
 
 \paragraph{Stage 2: genotype cleaning and collapse.}
 Genotype processing began from determinant-level records. Exact duplicate rows were removed first. The more difficult step was resolving repeated detections of the same determinant in the same isolate. To avoid counting one determinant multiple times, the table was collapsed to one row per \texttt{(BioSample, Element symbol)}.
@@ -19,7 +19,7 @@ The raw genotype \texttt{Class} and \texttt{Subclass} fields were not directly u
 
 Normalization therefore lower-cased class and subclass labels, split combined subclass strings into separate normalized rows, split combined class strings and reassigned subclass tokens using a registry built from simpler single-class observations, used the antibiotic grouping reference as additional guidance, and fell back to \texttt{unknown} only when no reliable assignment could be made.
 
-Several biologically meaningful edge cases required explicit manual support before the \texttt{unknown} fallback. In particular, \texttt{rifampin} was mapped to \texttt{rifamycin}, \texttt{clindamycin} was mapped to \texttt{lincosamide}, and \texttt{trimethoprim-sulfamethoxazole} was decomposed into \texttt{trimethoprim} and \texttt{sulfonamide}.
+Several biologically meaningful edge cases required explicit manual support before the \texttt{unknown} fallback. In particular, rifampin was mapped to rifamycin, clindamycin was mapped to lincosamide, and the combination drug trimethoprim-sulfamethoxazole was decomposed into trimethoprim and sulfonamide.
 
 This normalization stage produced the final single-class, single-subclass genotype table used for connection.
 

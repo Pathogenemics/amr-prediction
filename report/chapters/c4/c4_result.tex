@@ -1,8 +1,12 @@
-\section{Experimental Results}
+\section{Experimental Setup}
 
-\subsection{Experimental setup}
+All experiments were conducted on antibiotic-specific datasets built from the same shared genotype-phenotype cohort. The same phenotype-cleaning logic, genotype normalization logic, and class-count thresholds were used across all scopes so that differences in performance can be attributed to the determinant-connection strategy rather than to a changing cohort.
 
-All experiments were conducted on antibiotic-specific datasets built from the same shared genotype-phenotype cohort. The same phenotype-cleaning logic, genotype normalization logic, and class-count thresholds were used across all scopes so that differences in performance can be attributed to the determinant-connection strategy rather than to a changing cohort. The final experiment set contains 14 antibiotics. These are amoxicillin-clavulanic acid, ampicillin, cefoxitin, ceftiofur, ceftriaxone, chloramphenicol, ciprofloxacin, gentamicin, kanamycin, nalidixic acid, streptomycin, sulfisoxazole, tetracycline, and trimethoprim-sulfamethoxazole. The machine-learning comparison includes three settings, namely \textbf{Strict ML}, \textbf{Broad ML}, and \textbf{All ML}, while the direct genotype-to-phenotype reference baselines are \textbf{Strict rule-based} and \textbf{Broad rule-based}. This design is more informative than a generic comparison of many classifiers because it isolates the effect of biological connection scope and makes it possible to distinguish between gain from using broader genotype evidence and gain from replacing direct scope-based rules with learned combination logic.
+The final experiment set contains 14 antibiotics: amoxicillin-clavulanic acid, ampicillin, cefoxitin, ceftiofur, ceftriaxone, chloramphenicol, ciprofloxacin, gentamicin, kanamycin, nalidixic acid, streptomycin, sulfisoxazole, tetracycline, and trimethoprim-sulfamethoxazole.
+
+The machine-learning comparison includes three settings, namely \textbf{Strict ML}, \textbf{Broad ML}, and \textbf{All ML}, while the direct genotype-to-phenotype reference baselines are \textbf{Strict rule-based} and \textbf{Broad rule-based}. This design is more informative than a generic comparison of many classifiers because it isolates the effect of biological connection scope and makes it possible to distinguish between gain from using broader genotype evidence and gain from replacing direct scope-based rules with learned combination logic.
+
+\section{Comparative Performance}
 
 \subsection{Average performance across methods}
 
@@ -61,9 +65,9 @@ The most concise interpretation is therefore that \textit{strict} is biologicall
 
 The three plots reveal the same underlying pattern from different angles. Recall highlights where broader evidence is needed to recover resistant isolates. Precision highlights whether a wide scope is overcalling resistance. ROC-AUC then shows whether the model is still separating resistant and susceptible isolates well across thresholds even when the exact operating point differs.
 
-\subsection{Best-performing scope by antibiotic}
+\subsection{Best scope by antibiotic}
 
-Because this is an antibiotic-specific problem, average metrics do not tell the full story. Using the project’s final priority ordering of recall first, precision second, and ROC-AUC third, the best-performing scope per antibiotic is summarized in Table~\ref{tab:best-scope-by-antibiotic}.
+Because this is an antibiotic-specific problem, average metrics do not tell the full story. Using the project's final priority ordering of recall first, precision second, and ROC-AUC third, the best-performing scope per antibiotic is summarized in Table~\ref{tab:best-scope-by-antibiotic}.
 
 \begin{table}[H]
 \centering
@@ -94,6 +98,8 @@ trimethoprim-sulfamethoxazole & all \\
 
 The counts are also informative. \textit{All} wins on 6 antibiotics, \textit{broad} wins on 5, and \textit{strict} wins on 3. This reinforces the main interpretation that the widest scope is the strongest default overall, while narrower biologically constrained settings are still preferable for some antibiotics where direct mechanism specificity remains strong.
 
+\section{Interpretation of Model Behavior}
+
 \subsection{Rule-based versus machine-learning behavior}
 
 The rule-based baselines are useful because they show when connected determinant evidence is already sufficient for direct phenotype inference and when learned combination becomes necessary.
@@ -104,7 +110,7 @@ For other antibiotics, however, direct rules become too weak or too coarse. Unde
 
 Machine learning changes this balance substantially. For ceftriaxone, \textit{broad ML} achieves precision \(0.992\) and recall \(0.976\), while \textit{all ML} reaches precision \(0.990\) and recall \(0.974\). In other words, the learned models preserve the broad evidence needed for sensitivity, but avoid much of the precision collapse seen in broad rule-based inference. This pattern is one of the strongest arguments for the machine-learning stage in the final workflow.
 
-\subsection{Zero-feature rows and coverage limitations}
+\subsection{Zero-feature rows and coverage limits}
 
 One of the clearest empirical signals in the project is the role of all-zero rows. In the rule-based setting, a zero-hit row means that no determinant connected to the target scope was found. In the machine-learning setting, the same situation appears as an all-zero feature vector.
 
@@ -114,7 +120,6 @@ This explains much of the gap between \textit{strict} and the broader settings. 
 
 \subsection{Feature-importance interpretation}
 
-\paragraph{Feature-importance interpretation.}
 Feature-importance scores help show whether the learned models are relying on biologically plausible determinants and how that behavior changes by scope.
 
 \paragraph{Strict scope: direct mechanism alignment.}
@@ -128,6 +133,16 @@ The \textit{all} scope produces the strongest global default, but the feature-im
 
 The same pattern appears in gentamicin and trimethoprim-sulfamethoxazole under \textit{all}. Important expected signals remain visible, but unrelated or only indirectly related determinants can also rise in the ranking. This does not invalidate the predictive benefit of \textit{all}; rather, it clarifies why \textit{all} should be described as a high-performance but less biologically constrained representation.
 
+\subsection{Error analysis and failure modes}
+
+The remaining errors follow three main patterns. The first is \textbf{sparsity-driven false negatives} under the narrow scope. This is most visible for beta-lactam-related antibiotics. Under \textit{strict rule-based}, ceftriaxone reaches recall only \(0.101\) and ceftiofur reaches \(0.133\). Even \textit{strict ML} remains weak for these tasks, with precision only \(0.201\) for ceftriaxone and \(0.235\) for ceftiofur. These failures are consistent with the very large number of zero-feature rows in the strict scope and show that narrow determinant matching is excluding evidence that is still biologically relevant within the same drug family.
+
+The second pattern is \textbf{scope-driven false positives}. This appears most clearly in the broad rule baseline, where recall is recovered but precision collapses. For example, broad rule-based precision is only \(0.489\) for ceftriaxone, \(0.455\) for ceftiofur, \(0.331\) for cefoxitin, and \(0.488\) for amoxicillin-clavulanic acid. Gentamicin and kanamycin are even more extreme under broad rule-based inference, with precision \(0.218\) and \(0.281\), respectively. These cases show that class-level determinant matching is biologically broader, but a direct rule has no mechanism for deciding which within-class signals should matter strongly and which should be down-weighted.
+
+The third pattern is that \textbf{some antibiotics remain difficult even for the strongest learned settings}. Under \textit{all ML}, most antibiotics have precision and recall near or above \(0.97\), but gentamicin, kanamycin, and trimethoprim-sulfamethoxazole remain visibly harder. Their all-scope precisions are \(0.887\), \(0.958\), and \(0.927\), respectively, despite strong ROC-AUC values. This suggests that the model is ranking isolates reasonably well but that the final decision boundary still mixes directly relevant determinants with broader co-occurrence signals. In practical terms, these are the antibiotics where prediction remains useful, but biological interpretation should be treated with more caution.
+
+Taken together, the error analysis reinforces the central conclusion of the study. Errors are not random. They arise from identifiable failure modes: evidence can be lost when the scope is too narrow, resistance can be overcalled when the scope is widened without learned combination, and some antibiotics remain intrinsically harder because curated determinant presence does not map cleanly to phenotype even when broader evidence is available.
+
 \subsection{Main conclusions from the experiments}
 
 The experimental results support the following conclusions:
@@ -139,6 +154,8 @@ The experimental results support the following conclusions:
     \item \textbf{Machine learning adds most value when broad evidence must be combined selectively.} Direct rules can already be strong for some antibiotics, but they become too crude when broader within-class evidence is necessary.
 \end{enumerate}
 
-\subsection{Discussion of limitations}
+\section{Study Limitations}
+
+\subsection{Limitations of the current evaluation}
 
 This study predicts a binary resistant/susceptible phenotype rather than MIC, uses curated determinant resources rather than full pan-genome features, and has not yet performed external validation on an independent cohort. In addition, feature-importance analysis identifies strong predictive features rather than proving causal biological mechanisms. These limitations define the scope of the study clearly: it is a determinant-based bioinformatics analysis of AMR prediction behavior, not yet a full clinical deployment study.

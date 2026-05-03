@@ -1,0 +1,9 @@
+\subsection{Cohort Construction and Antibiotic Selection}
+
+The first implementation decision is cohort alignment. Not every isolate appears in both the genotype and phenotype resources, so all downstream analysis is restricted to the shared cohort by keeping only isolates with a \texttt{BioSample} present in both tables. This step is essential because raw downloaded counts can be misleading if genotype and phenotype resources are explored independently. All reported summaries after this point therefore refer only to the usable overlap cohort.
+
+Phenotype filtering then keeps only rows with the required identifying and label fields, resistant or susceptible phenotypes, and non-contradictory \texttt{(BioSample, Antibiotic)} pairs. Genotype filtering keeps AMR-related determinant rows and then applies the cleaning and normalization rules described in the next subsection.
+
+To make antibiotic-specific evaluation defensible, the study filters antibiotics by minimum data support using \texttt{MIN\_ANTIBIOTIC\_ROWS = 500} and \texttt{MIN\_CLASS\_COUNT = 100}. The first threshold ensures that a drug has enough observations overall. The second ensures that both resistant and susceptible classes are represented strongly enough for stable stratified cross-validation.
+
+After filtering, the final experiment set contains 14 antibiotics. The exact list is reported in the experiments chapter together with the final evaluation results.
