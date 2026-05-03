@@ -1,0 +1,16 @@
+\section{Research Objectives}
+
+This study is guided by the following objectives:
+
+\begin{enumerate}[label=\arabic*.]
+    \item Build a reproducible determinant-based AMR prediction workflow that connects curated genotype data, AST phenotype labels, and antibiotic grouping knowledge through a shared isolate identifier.
+    \item Clean phenotype data so that the final labels are restricted to a stable binary resistant/susceptible formulation suitable for supervised learning.
+    \item Clean and normalize genotype data so that duplicated detections, combined class/subclass labels, and known edge cases do not distort downstream antibiotic-specific feature construction.
+    \item Construct three determinant-connection settings---\textit{strict}, \textit{broad}, and \textit{all}---to study how biological scope changes the usable feature space.
+    \item Train and evaluate antibiotic-specific machine-learning models under a consistent cross-validation protocol using resistance as the positive class.
+    \item Include curated determinant-based rule baselines under constrained scopes so that direct genotype-to-phenotype inference can be compared against learned models.
+    \item Compare the resulting methods primarily in terms of resistant-case recall, resistant-case precision, and ROC-AUC.
+    \item Interpret the observed differences biologically, especially with respect to narrow lineage matching, cross-resistance within drug classes, zero-feature rows, and possible co-occurrence leakage.
+\end{enumerate}
+
+Taken together, these objectives define two main deliverables. First, the study provides a detailed and reproducible methodology for building determinant-based AMR prediction datasets from surveillance-style resources. Second, it provides an empirical comparison showing when narrower biologically constrained inputs are sufficient, when broader class-level evidence is beneficial, and when the widest determinant scope improves prediction at the cost of interpretability risk.

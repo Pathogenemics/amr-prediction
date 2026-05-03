@@ -1,0 +1,159 @@
+﻿\documentclass[a4paper]{report}
+\usepackage[utf8]{vietnam}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{xspace}
+\usepackage[font=small]{caption}
+\usepackage{booktabs}
+\usepackage[unicode]{hyperref}
+\usepackage[left=3cm,right=2cm,top=2.5cm,bottom=3cm]{geometry}
+\usepackage{titlesec}
+\usepackage{scrextend}
+\usepackage{enumerate}
+\usepackage{url}
+\usepackage{tikz}
+\usepackage{float}
+\usepackage{afterpage}
+\usepackage{multirow}
+\usepackage{sectsty}
+\usepackage{tocloft,calc}
+\usepackage{listings}
+\usepackage{makecell}
+\usepackage[numbers,sort&compress]{natbib}
+\usetikzlibrary{calc}
+\usepackage{algorithm}
+\usepackage{subcaption}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage{mdframed}
+\usepackage[flushleft]{threeparttable}
+\usepackage{perpage}
+\newtheorem{definition}{Definition}[chapter]
+
+\MakePerPage{footnote}
+\PassOptionsToPackage{table}{xcolor}
+
+\def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]}
+\let\endchangemargin=\endlist
+
+\changefontsizes{13pt}
+\bibliographystyle{unsrtnat}
+
+\makeatletter
+\def\l@figure{\@dottedtocline{1}{1em}{2.2em}}
+\def\l@table{\@dottedtocline{1}{1em}{2.2em}}
+\renewcommand*{\ALG@name}{Algorithm}
+\gdef\@chapapp{Chapter}
+\makeatother
+
+\sectionfont{\fontsize{15}{15}\selectfont}
+\subsectionfont{\fontsize{13}{15}\selectfont}
+
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{0pt}{\LARGE}
+\titlespacing*{\chapter}{0cm}{-\topskip}{0pt}[0pt]
+
+\renewcommand{\baselinestretch}{1.3}
+\renewcommand{\chaptername}{Chapter}
+\renewcommand{\chaptertitlename}{Chapter}
+\renewcommand{\contentsname}{Contents}
+\renewcommand{\listfigurename}{List of Figures}
+\renewcommand{\listtablename}{List of Tables}
+\renewcommand{\figurename}{Figure}
+\renewcommand{\tablename}{Table}
+\renewcommand{\bibname}{References}
+\renewcommand{\cftchappresnum}{Chapter }
+\AtBeginDocument{\addtolength\cftchapnumwidth{\widthof{\bfseries Chapter }}}
+\setlength{\parskip}{0.4em}
+\setlength{\parindent}{0pt}
+
+\title{Antimicrobial Resistance Prediction from Bacterial Genome}
+\author{Mạc Gia Khánh and Đào Xuân Nghĩa}
+
+\newcommand{\argmax}{\arg\!\max}
+\newcommand{\tool}{\textsc{ToolName}\xspace}
+\newcommand{\modulea}{\textit{ModuleA}\xspace}
+\newcommand{\moduleb}{\textit{ModuleB}\xspace}
+\newcommand{\frameworka}{\textsc{FrameworkA}\xspace}
+\newcommand{\dataseta}{\textsc{DatasetA}\xspace}
+\newcommand{\datasetb}{\textsc{DatasetB}\xspace}
+\newcommand{\toolLong}{\textbf{Long Tool Name}\xspace}
+\newcommand{\methoda}{\textit{MethodA}\xspace}
+\newcommand{\methodb}{\textit{MethodB}\xspace}
+\newcommand{\baselinea}{\textit{BaselineA}\xspace}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.6}
+\definecolor{lightblue}{rgb}{0.0,0.0,0.9}
+\definecolor{cyan}{rgb}{0.0,0.6,0.6}
+\definecolor{darkred}{rgb}{0.6,0.0,0.0}
+\definecolor{bg_gray}{RGB}{242, 242, 235}
+
+\renewcommand{\lstlistingname}{Listing}
+\newcommand{\cev}[1]{\reflectbox{\ensuremath{\vec{\reflectbox{\ensuremath{#1}}}}}}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  columns=fullflexible,
+  showstringspaces=false,
+  numbers=left,
+  numberstyle=\small\color{gray},
+  stepnumber=1,
+  numbersep=5pt,
+  backgroundcolor=\color{bg_gray},
+  showspaces=false,
+  showtabs=false,
+  frame=none,
+  rulecolor=\color{black},
+  tabsize=2,
+  captionpos=b,
+  breaklines=true,
+  breakatwhitespace=false,
+  title=\lstname,
+  commentstyle=\color{gray}\upshape
+}
+
+\usepackage[table]{xcolor}
+\definecolor{light-gray}{gray}{0.92}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\input{cover}\newpage\cleardoublepage
+\input{chapters/abtract}\newpage\cleardoublepage
+
+\renewcommand{\contentsname}{Contents}
+\addcontentsline{toc}{chapter}{Contents}
+\tableofcontents\newpage\cleardoublepage
+
+\newpage
+\renewcommand{\listfigurename}{List of Figures}
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures\cleardoublepage
+
+\newpage
+\renewcommand{\listtablename}{List of Tables}
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+
+\newpage
+\input{chapters/glossary}\newpage\cleardoublepage
+
+\hypersetup{pageanchor=true}
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+\input{chapters/c1/c1_chaper}\newpage\cleardoublepage
+\input{chapters/c2/c2_chapter}\newpage\cleardoublepage
+\input{chapters/c3/c3_chapter}\newpage\cleardoublepage
+\input{chapters/c4/c4_chapter}\newpage\cleardoublepage
+\input{chapters/conclusion}\newpage\cleardoublepage
+
+\renewcommand{\bibname}{References}
+\bibliography{references}\newpage\cleardoublepage
+
+\end{document}

@@ -1,4 +1,10 @@
 data/
+report/*
+!report/chapters/
+!report/figures/
+!report/references.bib
+!report/cover.tex
+!report/main.tex
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

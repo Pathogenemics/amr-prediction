@@ -1,0 +1,19 @@
+\section{Problem Definition}
+
+Antimicrobial resistance prediction from genomic data is the task of estimating a laboratory resistance phenotype from DNA-derived evidence. In this study, the target organism is \textit{Salmonella enterica}, an important foodborne pathogen that is heavily represented in surveillance datasets and that exhibits resistance through both acquired genes and chromosomal mutations. The practical question is antibiotic-specific: given the genomic determinant profile of one isolate, can we predict whether that isolate will be resistant or susceptible to a particular drug in antimicrobial susceptibility testing (AST)?
+
+The genotype side of the problem is represented by curated AMR determinants rather than raw sequence. Each isolate is described through AMRFinderPlus-derived genes and mutations together with biologically meaningful annotations such as drug class, drug subclass, subtype, and detection method. This representation is more interpretable than generic genome-wide features because every retained signal can be traced back to a named determinant.
+
+The phenotype side of the problem comes from AST labels. For this project, the final target is a binary resistant/susceptible label per antibiotic. Intermediate and ambiguous outcomes are excluded so that the learning task matches a clear operational decision boundary.
+
+The core difficulty is not only learning a classifier. The deeper challenge is deciding how genotype evidence should be connected to phenotype before learning begins. A determinant can be relevant because it is directly associated with the exact antibiotic, because it belongs to a broader within-class resistance mechanism and therefore contributes a biologically meaningful cross-resistance signal, or because it simply co-occurs with determinants from other classes, which may help prediction but also risks leakage-like behavior.
+
+This leads to the central research question of the study:
+
+\begin{quote}
+Can curated AMR determinants from a \textit{Salmonella enterica} genome reliably predict antibiotic resistance phenotype, and how does prediction quality change when genotype evidence is connected to phenotype under different levels of biological constraint?
+\end{quote}
+
+To answer this question, the study compares three determinant-connection settings. The \textbf{strict} setting retains only determinants aligned with the narrow lineage of the target antibiotic. The \textbf{broad} setting also retains determinants from the broader drug class, which allows same-class cross-resistance evidence to contribute. The \textbf{all} setting retains all curated determinants detected in the isolate, maximizing coverage but also allowing co-occurrence leakage.
+
+The project is therefore not just a comparison of machine-learning models. It is an investigation of how biological scope affects the meaning of the feature space, the quality of prediction, and the trade-off between mechanism-level interpretability and broader statistical coverage.

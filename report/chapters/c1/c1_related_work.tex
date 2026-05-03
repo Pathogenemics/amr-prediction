@@ -1,0 +1,33 @@
+\section{Related Work}
+
+Research on genomic AMR prediction can be grouped into three broad method families.
+
+\subsection{Biology-first and rule-based studies}
+
+The first family starts from known AMR genes and known resistance mutations, then predicts phenotype directly from curated biological knowledge. The main advantage is simplicity: every prediction can be traced back to a known gene or mutation. In addition, tools such as AMRFinderPlus provide a curated catalog of resistance mechanisms and standardized annotations that are useful for surveillance and genotype screening.
+
+However, rule-based approaches are limited by what is already known. If resistance depends on unknown variants, background lineage effects, interactions between genes, or incomplete annotation, a purely rule-based system may miss resistant isolates or may not explain mismatches well. For the present project, this family motivates the use of a curated determinant-based rule baseline rather than a manually designed expert system.
+
+Representative studies and resources in this direction include the AMRFinderPlus framework of Feldgarden et al.~\citep{feldgarden2021amrfinderplus} and the genotype-phenotype comparison study of Shen et al.~\citep{shen2024comparison}.
+
+\subsection{Biology-informed machine learning}
+
+The second family uses biologically meaningful features but lets machine learning learn the mapping from genotype to phenotype. This direction is especially relevant to the present study. Instead of relying only on direct rules, a model is trained on AMR genes, mutations, and related annotations that already have biological meaning.
+
+The strength of this family is balance. Feature names such as resistance genes or point mutations remain meaningful, while the model can still learn combinations and patterns that are hard to encode as fixed rules. Studies in this family are therefore close in spirit to the present work, especially when the goal is to keep mechanism-level interpretation instead of treating the task as a pure black-box prediction problem.
+
+Examples include the work of Maguire et al.~\citep{maguire2019identification}, who analyzed major resistance drivers in nontyphoidal \textit{Salmonella}, and the more recent Salmonella-focused machine learning studies of Benefo et al.~\citep{benefo2024genomebased} and He et al.~\citep{he2025prediction}.
+
+\subsection{Genome-wide and ML-heavy approaches}
+
+The third family uses broad genome-wide representations such as SNPs, k-mers, pan-genome features, or graph-based encodings. These methods may capture wider genomic signal than curated determinant-only pipelines and can help when resistance depends on broader sequence context.
+
+Their main limitation is reduced biological transparency. A genome-wide feature with strong predictive value does not always correspond to a direct resistance mechanism. Such models may learn lineage background or dataset-specific correlations rather than a clear AMR mechanism. For this reason, they are valuable as high-coverage predictive approaches, but they are less convenient when the study needs to explain why a prediction was made in biological terms.
+
+Representative examples of this broader direction include the whole-genome machine learning framework of Ren et al.~\citep{ren2022prediction} and the k-mer-based MIC prediction study of Wang et al.~\citep{wang2023using}.
+
+\subsection{Position of the present study}
+
+The present study belongs primarily to the biology-informed machine learning family. It uses curated AMR determinants from AMRFinderPlus and MicroBIGG-E as interpretable features, while also comparing different levels of biological constraint in the genotype-to-phenotype connection step. In addition, it includes a curated determinant-based rule baseline to show how far direct genotype-to-phenotype inference can go before machine learning is introduced.
+
+The study therefore occupies an intermediate position between strict rule-based inference and broad genome-wide prediction. This position is appropriate because it emphasizes both predictive performance and biological explanation.

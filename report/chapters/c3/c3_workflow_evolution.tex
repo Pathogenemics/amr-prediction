@@ -1,0 +1,11 @@
+\subsection{Workflow Evolution}
+
+The workflow did not begin in its final form. It evolved as exploratory analysis revealed that apparently simple biological matching rules were often too brittle for the actual dataset.
+
+The earliest design intuition was to follow only the narrow lineage of the target antibiotic. This became the \textit{strict} scope. It is biologically attractive because it minimizes ambiguity: the retained determinants are as close as possible to the drug of interest. However, once the cleaned phenotype and normalized genotype tables were connected, this design produced many isolates with no retained determinant evidence at all. In the final model-input tables, those isolates appeared as all-zero feature rows.
+
+This observation forced a more careful interpretation of biological relevance. In practice, a determinant may still matter to a target drug even when it is not labeled with the exact narrow subclass token of that drug. The clearest example was the beta-lactam family. A determinant annotated under one beta-lactam branch can still be relevant to another branch because the broader resistance mechanism is shared. This motivated the \textit{broad} scope, which expands matching from narrow lineage to broader class-level evidence.
+
+The \textit{all} scope was introduced last. Its purpose was not to propose the most biologically conservative representation, but to measure the predictive value of allowing the model to see all curated determinants observed in the isolate. This scope eliminates the zero-feature problem entirely, but it also opens the door to wider co-occurrence patterns that may not correspond to direct mechanism-specific relevance.
+
+The transition from \textit{strict} to \textit{broad} to \textit{all} therefore should not be read as a purely technical parameter sweep. It reflects a sequence of scientific questions: how much is lost when narrow biological specificity is required, how much is gained when same-class cross-resistance evidence is allowed, and how much further prediction can improve when the full curated determinant background is exposed to the model even at the risk of co-occurrence leakage. This evolutionary path became the core experimental design of the study.

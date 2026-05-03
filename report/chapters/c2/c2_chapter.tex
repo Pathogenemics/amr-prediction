@@ -1,0 +1,41 @@
+\chapter{Biological Background and Data Description}
+
+\section{Biological background of antimicrobial resistance}
+
+Antimicrobial resistance arises when bacteria acquire or express genetic changes that reduce the effectiveness of an antibiotic. In \textit{Salmonella enterica}, these changes can take multiple forms, including acquired resistance genes, resistance-associated point mutations, and combinations of determinants that affect the same drug family through different mechanisms. For example, beta-lactam resistance can involve enzymes that inactivate the drug, tetracycline resistance can involve efflux or protection mechanisms, and quinolone resistance can involve specific chromosomal mutations together with plasmid-mediated resistance determinants.
+
+This biological heterogeneity matters for prediction. AMR prediction is not simply a generic classification problem in which any correlated feature is equally acceptable. A useful predictor should retain a clear link between the phenotype and biologically meaningful genomic evidence, even when the final classifier is learned statistically.
+
+\section{Phenotype definition: AST and resistance labels}
+
+The phenotype side of the project comes from antimicrobial susceptibility testing (AST). AST evaluates whether an isolate behaves as resistant or susceptible to a given drug under laboratory conditions. The raw measurement is often the minimum inhibitory concentration (MIC), which is then interpreted through a breakpoint standard to produce labels such as susceptible, intermediate, or resistant.
+
+The final supervised learning target in this study is binary. Resistant isolates are encoded as the positive class, while susceptible isolates are encoded as the negative class.
+
+Intermediate, ambiguous, and contradictory phenotype cases are removed during cleaning. This choice is deliberate. The project is not trying to predict full MIC values or borderline categories; it is trying to build a stable resistant/susceptible prediction pipeline whose outputs can be compared fairly across antibiotics.
+
+\section{Genotype definition: curated AMR determinants}
+
+The genotype side of the project is built from curated AMR determinant records rather than raw sequence fragments. Each record is derived from AMRFinderPlus-supported annotations within the NCBI MicroBIGG-E resource, which provides a curated catalog of resistance genes and mutations together with standardized AMR metadata~\citep{feldgarden2021amrfinderplus}. The main fields used in this study are \texttt{BioSample} as the isolate identifier, \texttt{Element symbol} as the gene or mutation name, \texttt{Class} and \texttt{Subclass} as broad and specific drug-group annotations, \texttt{Subtype} as the determinant type, \texttt{Method} as the detection method, and the quantitative fields \texttt{\% Coverage of reference} and \texttt{\% Identity to reference}. This determinant representation is central to the project because it preserves biological meaning while remaining structured enough for large-scale feature engineering.
+
+\section{Data sources used in the project}
+
+The study uses three main sources of information: NCBI AST phenotype data as the ground-truth source of resistant/susceptible labels, NCBI MicroBIGG-E genotype data as the large-scale determinant table for feature engineering, and antibiotic grouping information curated from NCBI and organized in \texttt{Antibiotic-Group.md} to define antibiotic hierarchy and scope rules.
+
+In addition, assembled genomes in FASTA format were used earlier in the project for targeted AMRFinderPlus-based sanity checking, although the main large-scale modeling workflow ultimately relies on the curated genotype and phenotype tables rather than re-running genome-wide detection for every isolate.
+
+\section{Cohort alignment and filtering}
+
+The first major cohort decision is isolate alignment. Not every isolate appears in both the genotype and phenotype resources, so all downstream analysis is restricted to the shared cohort by keeping only isolates with a \texttt{BioSample} present in both tables. This step is important because raw downloaded counts can be misleading if the two resources are explored independently, and all reported summaries after this point therefore refer only to the usable overlap cohort. Phenotype filtering then keeps only rows with the required identifying and label fields, resistant or susceptible phenotypes, and non-contradictory \texttt{(BioSample, Antibiotic)} pairs, while genotype filtering keeps AMR-related determinant rows and then applies the cleaning and normalization rules described in the methodology chapter.
+
+\section{Modeling thresholds and final antibiotic set}
+
+To make antibiotic-specific evaluation defensible, the study filters antibiotics by minimum data support using \texttt{MIN\_ANTIBIOTIC\_ROWS = 500} and \texttt{MIN\_CLASS\_COUNT = 100}. The first threshold ensures that a drug has enough observations overall. The second ensures that both resistant and susceptible classes are represented strongly enough for stable stratified cross-validation. These values are intentionally stricter than a permissive exploratory threshold because the goal of the final report is not only to show what can be trained, but to report what can be evaluated credibly. After filtering, the final experiment set contains 14 antibiotics: amoxicillin-clavulanic acid, ampicillin, cefoxitin, ceftiofur, ceftriaxone, chloramphenicol, ciprofloxacin, gentamicin, kanamycin, nalidixic acid, streptomycin, sulfisoxazole, tetracycline, and trimethoprim-sulfamethoxazole.
+
+\section{Why the dataset is biologically non-trivial}
+
+Even after curation and cleaning, genotype does not map perfectly to phenotype. A resistant isolate may lack an obvious determinant in the retained feature space, while a susceptible isolate may still carry one or more recognized AMR determinants. This can happen because a determinant may be present but not strongly expressed, because different sequence variants of the same determinant may not behave equally, because multiple determinants may interact or compensate for one another, because curated AMR resources may still miss some mechanisms, or because phenotype labels themselves depend on laboratory measurement and breakpoint interpretation.
+
+This genotype-phenotype gap motivates two major design choices in the project: including biologically structured rule baselines instead of assuming machine learning is always necessary, and comparing several genotype-to-phenotype connection scopes instead of assuming that one obvious feature-selection rule exists.
+
+Those two choices are the foundation of the later methodology and experiments.

@@ -1,0 +1,31 @@
+\section{Model Training and Prediction}
+
+The final predictive model in this project is an antibiotic-specific XGBoost classifier trained on prepared determinant tables. One model is trained per antibiotic because the resistance mechanisms, class balance, and relevant determinant set differ substantially from one drug to another.
+
+\subsection{Prepared model-input representation}
+
+Each prepared dataset contains one row per isolate for one antibiotic under one connection scope. The final feature set does \emph{not} use a separate binary presence flag. Instead, each retained determinant contributes \texttt{\{element\}\_coverage}, \texttt{\{element\}\_identity}, and \texttt{\{element\}\_lineage\_match}. This design was chosen because determinant presence is already implied by non-zero coverage and identity, and keeping only coverage, identity, and lineage-related scope information reduces redundancy while preserving both quantitative evidence quality and biological scope information.
+
+\subsection{Label encoding}
+
+The task is binary classification with resistant isolates encoded as \(1\) and susceptible isolates encoded as \(0\). This encoding makes recall, precision, and related positive-class metrics directly describe resistant-case detection, which is the clinically important side of the problem.
+
+\subsection{Learning algorithm and configuration}
+
+The project uses XGBoost as the main classifier because it handles sparse, mixed-scale tabular features well and can model non-linear interactions between determinants without requiring heavy manual feature crossing. The final configuration uses \(250\) trees, learning rate \(0.05\), maximum depth \(5\), subsample \(0.8\), column subsample per tree \(0.8\), and a fixed random seed of \(42\). Because resistant cases are often the minority class, \texttt{scale\_pos\_weight} is recalculated per antibiotic from the resistant/susceptible ratio in the training split, which prevents the model from being dominated by the larger susceptible class.
+
+\subsection{Cross-validation protocol}
+
+Model quality is estimated with five-fold stratified cross-validation. Stratification keeps the resistant/susceptible ratio similar across folds, which is important because class imbalance differs strongly between antibiotics. A single train-test split would make the evaluation much more sensitive to random partitioning, especially for antibiotics with smaller resistant subsets. After cross-validation metrics are collected, a final model is fitted on the full antibiotic-specific dataset in order to extract feature-importance scores for interpretation.
+
+\subsection{Evaluation metrics}
+
+The final metric priority of the project is \textbf{recall} first, \textbf{precision} second, and \textbf{ROC-AUC} third. The rationale is straightforward: \textbf{recall} is primary because failing to detect resistant isolates is the highest-risk error, \textbf{precision} is second because a model can inflate recall by predicting resistance too broadly, and \textbf{ROC-AUC} is retained as a threshold-independent measure of ranking quality. Accuracy is reported only as supporting context because imbalanced antibiotics can make accuracy appear strong even when resistant-case detection is weak.
+
+\subsection{Rule-based reference baselines}
+
+In addition to machine learning, the final evaluation includes curated determinant-based rule baselines under the \textit{strict} and \textit{broad} scopes. These baselines use the same cleaned cohort and the same scope logic as the machine-learning inputs, but they replace learned combination with a direct deterministic rule. Under this design, an isolate is called resistant if at least one determinant connected to the target scope has non-zero retained evidence after genotype filtering and scope matching; otherwise, the isolate is called susceptible. The key difference between \textit{strict rule-based} and \textit{broad rule-based} is therefore not a different prediction formula, but the width of determinant evidence that is allowed to connect to the target antibiotic before the rule is applied. These baselines are important because they separate two kinds of improvement: improvement gained by changing the biological connection scope, and improvement gained by replacing direct inference with learned combination logic.
+
+\subsection{Feature-importance analysis}
+
+For the final model fitted on each antibiotic-specific dataset, XGBoost feature-importance scores are exported and ranked. These scores are used only as interpretation aids. A high-ranked feature means that the model relied on it strongly for prediction, but it does not automatically prove that the feature is a direct causal resistance determinant. This distinction is especially important in the \textit{all} setting, where some highly ranked features may reflect co-occurring resistance patterns rather than mechanism-specific causation.
