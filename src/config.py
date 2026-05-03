@@ -9,6 +9,7 @@ class PipelineConfig:
     output_dir: Path = Path("outputs")
     prepared_input_dir: Path | None = None
     prepared_input_root: Path | None = None
+    run_mode: str = "model"
     cv_folds: int = 5
     top_feature_count: int = 20
     random_state: int = 42
