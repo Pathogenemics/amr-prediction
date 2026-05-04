@@ -1,20 +1,33 @@
 \chapter*{Glossary}
+\phantomsection
 \addcontentsline{toc}{chapter}{Glossary}
 
-\begin{tabular}{|m{3.4cm}|m{9.6cm}|}
+\begingroup
+\small
+\renewcommand{\arraystretch}{1.02}
+\setlength{\LTpre}{0pt}
+\setlength{\LTpost}{0pt}
+\begin{longtable}{|p{0.24\textwidth}|p{0.69\textwidth}|}
 \hline
 \textbf{Term} & \textbf{Description} \\ \hline
+\endfirsthead
+\hline
+\textbf{Term} & \textbf{Description} \\ \hline
+\endhead
 AMR & Antimicrobial resistance. \\ \hline
 AST & Antimicrobial susceptibility testing. \\ \hline
-Genotype & DNA-based representation of an isolate, here summarized by detected resistance genes and mutations. \\ \hline
-Phenotype & Observed resistant or susceptible label from laboratory testing. \\ \hline
-Determinant & A curated resistance gene or resistance-associated mutation. \\ \hline
-MIC & Minimum inhibitory concentration, the drug level needed to stop visible bacterial growth. \\ \hline
-BioSample & The isolate identifier used to match genotype and phenotype records. \\ \hline
-Beta-lactam & A major antibiotic class that includes drugs such as penicillins and cephalosporins. \\ \hline
-Strict scope & Uses only determinants closely matched to the target antibiotic. \\ \hline
-Broad scope & Uses determinants from the broader drug class of the target antibiotic. \\ \hline
-All scope & Uses all curated AMR determinants detected in the isolate. \\ \hline
-ROC-AUC & A score that measures how well a model separates resistant and susceptible isolates across thresholds. \\ \hline
-Zero-feature row & A sample whose input vector contains no matched determinant evidence under a given scope. \\ \hline
-\end{tabular}
+Genotype & DNA-based representation of an isolate, summarized here by detected resistance genes and resistance-associated mutations. \\ \hline
+Phenotype & Observed resistant or susceptible outcome from laboratory testing. \\ \hline
+Determinant & A curated resistance gene or resistance-associated mutation used as biologically meaningful evidence. \\ \hline
+MIC & Minimum inhibitory concentration, the lowest drug concentration that prevents visible bacterial growth. \\ \hline
+BioSample & The isolate identifier used to match genotype and phenotype records across resources. \\ \hline
+Cross-resistance & Resistance mechanism whose effect extends to multiple related antibiotics within the same family or class. \\ \hline
+Co-resistance & Co-occurrence of multiple resistance determinants in the same isolate, even when they are not equally relevant to one target antibiotic. \\ \hline
+Beta-lactam & A major antibiotic class that includes penicillins, cephalosporins, and related drugs. \\ \hline
+Strict scope & Connection scope that keeps only narrowly matched determinant evidence for the target antibiotic. \\ \hline
+Broad scope & Connection scope that allows determinant evidence from the broader class of the target antibiotic. \\ \hline
+All scope & Connection scope that retains all curated AMR determinants detected in the isolate. \\ \hline
+ROC-AUC & Score that measures how well a model separates resistant and susceptible isolates across decision thresholds. \\ \hline
+Zero-feature row & Sample whose final input vector contains no retained determinant evidence under a given scope. \\ \hline
+\end{longtable}
+\endgroup

@@ -1,5 +1,5 @@
 ﻿\documentclass[a4paper]{report}
-\usepackage[utf8]{vietnam}
+% \usepackage[utf8]{vietnam}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -21,6 +21,7 @@
 \usepackage{sectsty}
 \usepackage{tocloft,calc}
 \usepackage{listings}
+\usepackage{longtable}
 \usepackage{makecell}
 \usepackage[numbers,sort&compress]{natbib}
 \usetikzlibrary{calc}
@@ -74,8 +75,8 @@
 \setlength{\floatsep}{10pt plus 2pt minus 2pt}
 \setlength{\intextsep}{10pt plus 2pt minus 2pt}
 
-\title{Antimicrobial Resistance Prediction from Bacterial Genome}
-\author{Mạc Gia Khánh and Đào Xuân Nghĩa}
+% \title{Antimicrobial Resistance Prediction from Bacterial Genome}
+% \author{Mạc Gia Khánh and Đào Xuân Nghĩa}
 
 \newcommand{\argmax}{\arg\!\max}
 \newcommand{\tool}{\textsc{ToolName}\xspace}
@@ -127,38 +128,44 @@
 % \flushbottom
 \raggedbottom
 \begin{document}
-\hypersetup{pageanchor=false}
-\input{cover}\newpage\cleardoublepage
-\input{chapters/abtract}\newpage\cleardoublepage
 
-\renewcommand{\contentsname}{Contents}
-\addcontentsline{toc}{chapter}{Contents}
-\tableofcontents\newpage\cleardoublepage
+  \hypersetup{pageanchor=false}
 
-\newpage
-\renewcommand{\listfigurename}{List of Figures}
-\addcontentsline{toc}{chapter}{List of Figures}
-\listoffigures\cleardoublepage
+  \input{cover}\newpage\cleardoublepage
 
-\newpage
-\renewcommand{\listtablename}{List of Tables}
-\addcontentsline{toc}{chapter}{List of Tables}
-\listoftables
+  \input{chapters/abtract}\newpage\cleardoublepage
 
-\newpage
-\input{chapters/glossary}\newpage\cleardoublepage
+  \cleardoublepage
+  \phantomsection
+  \renewcommand{\contentsname}{Contents}
+  \addcontentsline{toc}{chapter}{Contents}
+  \tableofcontents\cleardoublepage
 
-\hypersetup{pageanchor=true}
-\setcounter{page}{1}
-\pagenumbering{arabic}
+  \cleardoublepage
+  \phantomsection
+  \renewcommand{\listfigurename}{List of Figures}
+  \addcontentsline{toc}{chapter}{List of Figures}
+  \listoffigures\cleardoublepage
 
-\input{chapters/c1/c1_chaper}\newpage\cleardoublepage
-\input{chapters/c2/c2_chapter}\newpage\cleardoublepage
-\input{chapters/c3/c3_chapter}\newpage\cleardoublepage
-\input{chapters/c4/c4_chapter}\newpage\cleardoublepage
-\input{chapters/conclusion}\newpage\cleardoublepage
+  \cleardoublepage
+  \phantomsection
+  \renewcommand{\listtablename}{List of Tables}
+  \addcontentsline{toc}{chapter}{List of Tables}
+  \listoftables\clearpage
 
-\renewcommand{\bibname}{References}
-\bibliography{references}\newpage\cleardoublepage
+  \input{chapters/glossary}\clearpage
+
+  \hypersetup{pageanchor=true}
+  \setcounter{page}{1}
+  \pagenumbering{arabic}
+
+  \input{chapters/c1/c1_chaper}\newpage\cleardoublepage
+  \input{chapters/c2/c2_chapter}\newpage\cleardoublepage
+  \input{chapters/c3/c3_chapter}\newpage\cleardoublepage
+  \input{chapters/c4/c4_chapter}\newpage\cleardoublepage
+  \input{chapters/conclusion}\newpage\cleardoublepage
+
+  \renewcommand{\bibname}{References}
+  \bibliography{references}\newpage\cleardoublepage
 
 \end{document}

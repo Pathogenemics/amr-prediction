@@ -16,7 +16,7 @@ The machine-learning comparison contains three scope settings, namely \textit{st
 
 % Y doan: dua antibiotic-level comparison len lam trong tam cua chuong.
 % Vai tro: nhan manh day la bai toan one-model-per-antibiotic, nen hanh vi theo tung thuoc quan trong hon average chung.
-Because one model is trained for each antibiotic and determinant relevance varies across drugs, scope effects are interpreted primarily at the antibiotic level. Scope comparison prioritizes recall first, precision second, and ROC-AUC third. In close cases, biologically narrower scopes are treated as preferable from the standpoint of interpretation.
+Because one model is trained for each antibiotic and determinant relevance varies across drugs, scope effects are interpreted primarily at the antibiotic level. Scope comparison prioritizes recall first, precision second, and ROC-AUC third.
 
 \begin{table}[H]
 \centering
@@ -132,7 +132,7 @@ This trade-off is easier to see when the rule-based results are viewed across an
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\textwidth]{figures/rule_recall_by_scope_fixed}
+\includegraphics[width=\textwidth]{figures/rule_recall_by_scope}
 \caption[Antibiotic-specific rule-based recall by scope.]{Antibiotic-specific rule-based recall comparison across biologically constrained scopes.}
 \label{fig:rule-recall-by-scope}
 \end{figure}
@@ -141,7 +141,7 @@ Figure~\ref{fig:rule-recall-by-scope} shows that \textit{broad rule-based} subst
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\textwidth]{figures/rule_precision_by_scope_fixed}
+\includegraphics[width=\textwidth]{figures/rule_precision_by_scope}
 \caption[Antibiotic-specific rule-based precision by scope.]{Antibiotic-specific rule-based precision comparison across biologically constrained scopes.}
 \label{fig:rule-precision-by-scope}
 \end{figure}

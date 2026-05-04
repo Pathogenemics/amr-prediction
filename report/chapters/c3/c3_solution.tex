@@ -2,7 +2,7 @@
 
 % Y doan: mo dau phan data bang vai tro cua pipeline trong bai toan.
 % Vai tro: dat khung cho ba buoc du lieu chinh va nhan manh bien thuc nghiem nam o connection scope.
-This study uses a staged determinant-based pipeline to transform curated phenotype and genotype resources from NCBI Pathogen Detection\footnote{\url{https://www.ncbi.nlm.nih.gov/pathogens/}} into antibiotic-specific prediction tables. The workflow first restricts both resources to a shared genotype-phenotype cohort, then normalizes determinant-level genotype evidence, and finally reconnects that evidence to phenotype under alternative biological scopes. This structure keeps cohort definition, determinant normalization, and scope-dependent feature construction explicit before model fitting begins.
+This study uses a staged determinant-based pipeline to transform curated NCBI pathogen-surveillance resources\footnote{\url{https://www.ncbi.nlm.nih.gov/pathogens/}} into antibiotic-specific prediction tables. The workflow first restricts both resources to a shared genotype-phenotype cohort, then normalizes determinant-level genotype evidence, and finally reconnects that evidence to phenotype under alternative biological scopes. This structure keeps cohort definition, determinant normalization, and scope-dependent feature construction explicit before model fitting begins.
 
 % Y doan: mo ta xu ly phenotype va quy tac loc khang sinh.
 % Vai tro: xac dinh label dich va cohort phenotype sach truoc khi noi sang genotype.
