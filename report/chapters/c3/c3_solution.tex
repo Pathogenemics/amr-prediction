@@ -2,13 +2,13 @@
 
 % Y doan: mo dau phan data bang vai tro cua pipeline trong bai toan.
 % Vai tro: dat khung cho ba buoc du lieu chinh va nhan manh bien thuc nghiem nam o connection scope.
-This study uses a staged determinant-based pipeline to transform curated NCBI pathogen-surveillance resources\footnote{\url{https://www.ncbi.nlm.nih.gov/pathogens/}} into antibiotic-specific prediction tables. The workflow first restricts both resources to a shared genotype-phenotype cohort, then normalizes determinant-level genotype evidence, and finally reconnects that evidence to phenotype under alternative biological scopes. This structure keeps cohort definition, determinant normalization, and scope-dependent feature construction explicit before model fitting begins.
+This study uses a staged determinant-based pipeline to transform curated NCBI pathogen-surveillance resources\footnote{\url{https://www.ncbi.nlm.nih.gov/pathogens/}} into antibiotic-specific prediction tables. The workflow first restricts both resources to a shared genotype-phenotype cohort, then normalizes determinant-level genotype evidence, and finally reconnects that evidence to phenotype under alternative biological scopes. This structure keeps cohort definition, determinant normalization, and scope-dependent feature construction explicit before the modeling stage begins.
 
 % Y doan: mo ta xu ly phenotype va quy tac loc khang sinh.
 % Vai tro: xac dinh label dich va cohort phenotype sach truoc khi noi sang genotype.
 \subsection{Phenotype Processing}
 
-Phenotype processing starts from curated AST records available through the NCBI Pathogen Detection AST Browser\footnote{\url{https://www.ncbi.nlm.nih.gov/pathogens/ast}} and is restricted immediately to isolates that also appear in the genotype resource through a shared \texttt{BioSample} identifier. After cohort alignment, only rows with the required identifying and phenotype fields are retained, and only the labels \texttt{susceptible} and \texttt{resistant} are kept for downstream binary prediction. Any \texttt{(BioSample, Antibiotic)} pair that appears with both labels is removed as contradictory evidence.
+Phenotype processing starts from curated AST records available through the NCBI Pathogen Detection AST Browser\footnote{\url{https://www.ncbi.nlm.nih.gov/pathogens/ast}} and is restricted immediately to isolates that also appear in the genotype resource through a shared \texttt{BioSample} identifier. After cohort alignment, only rows with the required identifying and phenotype fields are retained, and only the labels \texttt{susceptible} and \texttt{resistant} are kept for downstream binary prediction. Any \texttt{(BioSample, Antibiotic)} pair that appears with both labels is removed as contradictory phenotype evidence.
 
 If multiple phenotype rows remain for the same \texttt{(BioSample, Antibiotic)} pair after contradictory labels have been removed, one row is retained by selecting the lowest MIC observation after explicit ordering of measurement signs. This rule makes duplicate resolution deterministic while preserving a consistent and less extreme MIC value within the same final phenotype label, which may be useful if the workflow is later extended beyond binary prediction. The cleaned phenotype data are then split into antibiotic-specific tables because every downstream prediction task is defined at the antibiotic level.
 
@@ -74,7 +74,7 @@ Several rare but biologically meaningful cases require explicit manual normaliza
   \draw[linearrow] (tie) -- (normalize);
   \draw[linearrow] (normalize) -- (output);
 \end{tikzpicture}
-\caption[Genotype-processing flowchart.]{Flowchart summarizing the genotype-cleaning and determinant-normalization procedure.}
+\caption[Genotype-processing flowchart.]{Flowchart summarizing the genotype-cleaning and determinant-normalization steps used in the workflow.}
 \label{fig:genotype-processing-flow}
 \end{figure}
 
@@ -94,6 +94,6 @@ Under the \textit{strict} scope, a genotype row is retained only if its normaliz
 \label{fig:broad-scope-example}
 \end{figure}
 
-One important special case is \texttt{trimethoprim-sulfamethoxazole}. For this combination drug, the strict scope is manually expanded so that matching can use biologically meaningful component subclasses rather than a literal compound token only. This makes the strict setting component-aware for that antibiotic and prevents an artificial loss of retained genotype evidence.
+One important special case is \texttt{trimethoprim-sulfamethoxazole}. For this combination drug, the strict scope is manually expanded so that matching can use biologically meaningful component subclasses rather than a literal compound token only. This makes the strict setting component-aware for that antibiotic and avoids an artificial loss of retained evidence during scope matching.
 
 These three scopes represent progressively wider biological assumptions. A narrow subclass match preserves the most specific interpretation, but it can leave some isolates with sparse retained evidence. A broader family-level match admits within-class signals that may reflect cross-resistance across related drugs. The all-scope representation provides the widest determinant coverage and therefore shows how much predictive signal remains once the biological restriction is removed.

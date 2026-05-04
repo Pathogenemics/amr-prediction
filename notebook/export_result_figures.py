@@ -36,7 +36,7 @@ def save_scope_barplots(
     scope_palette: dict[str, str],
     figure_output_dir: Path,
 ) -> None:
-    plot_height = max(8, 0.7 * metrics["Antibiotic"].nunique())
+    plot_height = max(9, 0.85 * metrics["Antibiotic"].nunique())
     x_ticks = [value / 10 for value in range(0, 11)]
 
     for metric_name, title, xlabel, filename in metric_specs:
@@ -96,7 +96,7 @@ def save_rule_barplots(rule_metrics: pd.DataFrame, figure_output_dir: Path) -> N
         ),
     ]
 
-    plot_height = max(8, 0.7 * rule_metrics["Antibiotic"].nunique())
+    plot_height = max(9, 0.85 * rule_metrics["Antibiotic"].nunique())
     x_ticks = [value / 10 for value in range(0, 11)]
 
     for metric_name, title, xlabel, filename in metric_specs:
