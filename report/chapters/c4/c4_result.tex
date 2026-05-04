@@ -16,11 +16,11 @@ The machine-learning comparison contains three scope settings, namely \textit{st
 
 % Y doan: dua antibiotic-level comparison len lam trong tam cua chuong.
 % Vai tro: nhan manh day la bai toan one-model-per-antibiotic, nen hanh vi theo tung thuoc quan trong hon average chung.
-Because one model is trained for each antibiotic and determinant relevance varies across drugs, scope effects are interpreted primarily at the antibiotic level. Scope preference is evaluated first through recall, then precision, and then ROC-AUC. When the observed differences are small, the narrower scope is favored because it preserves stronger biological specificity.
+Because one model is trained for each antibiotic and determinant relevance varies across drugs, scope effects are interpreted primarily at the antibiotic level. Scope comparison prioritizes recall first, precision second, and ROC-AUC third. In close cases, biologically narrower scopes are treated as preferable from the standpoint of interpretation.
 
 \begin{table}[H]
 \centering
-\caption{Best-performing scope by antibiotic under the final metric priority}
+\caption{Preferred scope by antibiotic under the final metric priority}
 \label{tab:best-scope-by-antibiotic}
 \small
 \begin{tabular}{ll}
@@ -47,7 +47,7 @@ trimethoprim-sulfamethoxazole & all \\
 
 % Y doan: dien giai nhom antibiotic ma strict duoc uu tien.
 % Vai tro: lien he ket qua voi truong hop determinant hep da du thong tin.
-Table~\ref{tab:best-scope-by-antibiotic} reveals three interpretable groups. Under the final ranking rule, \textit{all} is preferred for 6 antibiotics, \textit{broad} for 5, and \textit{strict} for 3. First, \textit{strict} is preferred for chloramphenicol, ciprofloxacin, and sulfisoxazole. These are cases where narrow determinant signatures are already highly informative. For ciprofloxacin, \textit{strict ML} reaches recall \(0.9917\) and precision \(0.9802\), while chloramphenicol reaches recall \(0.9846\) and precision \(0.9931\). In such antibiotics, widening the determinant pool does not improve the primary ranking enough to justify a less specific biological scope.
+Table~\ref{tab:best-scope-by-antibiotic} reveals three interpretable groups. Under this interpretation, \textit{all} is preferred for 6 antibiotics, \textit{broad} for 5, and \textit{strict} for 3. First, \textit{strict} is preferred for chloramphenicol, ciprofloxacin, and sulfisoxazole. These are cases where narrow determinant signatures are already highly informative. For ciprofloxacin, \textit{strict ML} reaches recall \(0.9917\) and precision \(0.9802\), while chloramphenicol reaches recall \(0.9846\) and precision \(0.9931\). In such antibiotics, widening the determinant pool does not improve the prioritized metrics enough to justify a less specific biological scope.
 
 % Y doan: dien giai nhom antibiotic ma broad duoc uu tien.
 % Vai tro: nhan manh broad huu ich khi within-class cross-resistance thong tin hon matching hep.
@@ -90,7 +90,7 @@ Figure~\ref{fig:roc-auc-by-scope} shows whether ranking quality remains stable a
 
 % Y doan: tong hop bang average metrics sau khi da phan tich antibiotic-level.
 % Vai tro: giu average metrics o vai tro summary phu, khong de no lam bang chung chinh.
-Aggregate metrics provide a compact summary across the 14 antibiotics, although interpretation remains centered on antibiotic-specific behavior because each model is fitted to a different drug and determinant profile.
+Aggregate metrics provide a secondary summary across the 14 antibiotics, although interpretation remains centered on antibiotic-specific behavior because each model is fitted to a different drug and determinant profile.
 
 \begin{table}[H]
 \centering
@@ -164,7 +164,7 @@ The difference across scopes is large. On average, \textit{strict} retains only 
 
 % Y doan: dien giai y nghia cua zero-feature burden.
 % Vai tro: giai thich vi sao strict thuong yeu hon broad/all nhung van co mot so antibiotic manh.
-This pattern explains much of the gap between \textit{strict} and the broader settings. A biologically conservative scope is attractive conceptually, but if it removes nearly all usable determinant evidence for large parts of the cohort, both direct rules and learned models are forced to work from a weak representation. At the same time, zero-feature burden is not the whole story. Strict still performs very well for antibiotics such as ciprofloxacin and chloramphenicol because the remaining narrow determinants are highly informative when they do appear. The empirical lesson is therefore not that strict matching is biologically wrong, but that it is too sparse to serve as the strongest default across all antibiotics.
+This pattern explains much of the gap between \textit{strict} and the broader settings. A biologically conservative scope is attractive conceptually, but if it removes nearly all usable determinant evidence for large parts of the cohort, both direct rules and learned models are forced to work from a weak representation. At the same time, zero-feature burden is not the whole story. Strict still performs very well for antibiotics such as ciprofloxacin and chloramphenicol because the remaining narrow determinants are highly informative when they do appear. These results do not imply that strict matching is biologically wrong; they show that it is too sparse to serve as the strongest default across all antibiotics.
 
 \section{Feature-Importance Interpretation}
 
