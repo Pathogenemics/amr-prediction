@@ -60,7 +60,7 @@ Third, \textit{all} is preferred for amoxicillin-clavulanic acid, ampicillin, ce
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/recall_by_scope}
-\caption[Antibiotic-specific ML recall by scope.]{Antibiotic-specific ML recall comparison across determinant-connection scopes.}
+\caption[Antibiotic-specific ML recall by scope.]{Antibiotic-specific machine-learning recall comparison across determinant-connection scopes.}
 \label{fig:recall-by-scope}
 \end{figure}
 
@@ -69,7 +69,7 @@ Figure~\ref{fig:recall-by-scope} identifies the antibiotics for which broader de
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/precision_by_scope}
-\caption[Antibiotic-specific ML precision by scope.]{Antibiotic-specific ML precision comparison across determinant-connection scopes.}
+\caption[Antibiotic-specific ML precision by scope.]{Antibiotic-specific machine-learning precision comparison across determinant-connection scopes.}
 \label{fig:precision-by-scope}
 \end{figure}
 
@@ -78,7 +78,7 @@ Figure~\ref{fig:precision-by-scope} shows where that broader evidence begins to 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/roc_auc_by_scope}
-\caption[Antibiotic-specific ML ROC-AUC by scope.]{Antibiotic-specific ML ROC-AUC comparison across the three determinant-connection scopes.}
+\caption[Antibiotic-specific ML ROC-AUC by scope.]{Antibiotic-specific machine-learning ROC-AUC comparison across the three determinant-connection scopes.}
 \label{fig:roc-auc-by-scope}
 \end{figure}
 
@@ -205,4 +205,4 @@ The evaluation results support the following main findings:
 
 % Y doan: neu ngan gon cac gioi han chinh cua danh gia hien tai.
 % Vai tro: xac dinh pham vi cua ket qua ma khong lam loang ket luan chinh.
-The present evaluation has several clear limitations. It predicts a binary resistant/susceptible phenotype rather than MIC, it relies on curated determinant representations rather than genome-wide features, and it has not yet been tested on an external validation cohort. In addition, feature-importance results indicate what the models found predictive, not what has been proven mechanistically causal. These limitations define the scope of the chapter: the results support a determinant-based analysis of genotype-to-phenotype connection behavior, but they should not yet be interpreted as a complete clinical validation study.
+The present evaluation has several clear limitations. It predicts a binary resistant/susceptible phenotype rather than MIC, it relies on curated determinant representations rather than genome-wide features, and it has not yet been tested on an external validation cohort. The reported performance should therefore be interpreted as internal cross-validation performance rather than evidence of out-of-cohort generalization, because the stratified splits are not explicitly separated by lineage, source, geography, or collection time. In addition, feature-importance results indicate what the models found predictive, not what has been proven mechanistically causal. These limitations define the scope of the chapter. The results support a determinant-based analysis of genotype-to-phenotype connection behavior, but they should not yet be interpreted as a complete clinical validation study.
