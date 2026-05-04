@@ -6,7 +6,7 @@ Rule-based prediction serves as a deterministic reference baseline under the bio
 
 % Y doan: mo ta quy tac du doan cua strict va broad rule-based.
 % Vai tro: dinh nghia ro co che baseline va ly do chi dung strict va broad.
-Only the \textit{strict} and \textit{broad} scopes are used for rule-based prediction. The \textit{all} scope is excluded because it deliberately retains determinants without requiring biological relevance to the target antibiotic, so a direct deterministic match rule would no longer represent antibiotic-specific inference. In the present study, after genotype filtering and scope matching, an isolate is predicted as resistant if at least one connected determinant feature is present. Otherwise, it is predicted as susceptible. Under this design, the difference between \textit{strict rule-based} and \textit{broad rule-based} is not a different prediction formula, but the width of genotype evidence allowed to connect to the target antibiotic before the rule is applied.
+Only the \textit{strict} and \textit{broad} scopes are used for rule-based prediction. The \textit{all} scope is excluded because it deliberately retains determinants without requiring biological relevance to the target antibiotic, so a direct deterministic match rule would no longer represent antibiotic-specific inference. After genotype filtering and scope matching, an isolate is predicted as resistant if at least one connected determinant feature is present. Otherwise, it is predicted as susceptible. Under this design, the difference between \textit{strict rule-based} and \textit{broad rule-based} is not a different prediction formula, but the width of genotype evidence allowed to connect to the target antibiotic before the rule is applied.
 
 % Y doan: giai thich y nghia cua baseline.
 % Vai tro: noi ro vi sao can baseline nay trong thiet ke thuc nghiem.
@@ -29,7 +29,7 @@ The final feature representation does not include a separate binary presence col
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=0.85\textwidth]{figures/prepared_input_example}
-\caption[Prepared model-input example.]{Example of a prepared model-input table after genotype evidence has been aligned with phenotype labels.}
+\caption[Prepared model-input example.]{Example of an antibiotic-specific prepared input matrix after phenotype labels have been aligned with retained genotype features.}
 \label{fig:prepared-input-example}
 \end{figure}
 
