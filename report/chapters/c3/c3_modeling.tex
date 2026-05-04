@@ -24,7 +24,7 @@ Machine-learning prediction uses the same antibiotic-specific prepared inputs pr
 
 One prepared input table is constructed for each antibiotic under each connection scope. Each row represents one isolate, and the final label encoding uses \texttt{resistant = 1} and \texttt{susceptible = 0}. This encoding makes the positive class correspond directly to resistant isolates throughout training and later evaluation.
 
-The final feature representation does not include a separate binary presence column. Instead, each retained determinant contributes three feature types: \texttt{\{element\}\_coverage}, \texttt{\{element\}\_identity}, and \texttt{\{element\}\_lineage\_match}. Presence is already implied when retained determinant evidence is present, so an explicit presence flag would be redundant. This representation preserves both quantitative evidence quality and scope-related biological information while avoiding unnecessary duplication of the same determinant signal.
+The final feature representation does not include a separate binary presence column. Instead, each retained determinant contributes three feature types: \texttt{\{element\}\_coverage}, \texttt{\{element\}\_identity}, and \texttt{\{element\}\_lineage\_match}. Presence is already implied when retained determinant evidence is present, so an explicit presence flag would be redundant. This preserves both quantitative evidence quality and scope-related biological information while avoiding unnecessary duplication of the same determinant signal.
 
 \begin{figure}[!htbp]
 \centering
