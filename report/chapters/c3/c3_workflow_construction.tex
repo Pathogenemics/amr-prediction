@@ -3,7 +3,7 @@
 The workflow was constructed in four major stages.
 
 \paragraph{Stage 1: phenotype cleaning.}
-Phenotype processing was performed first because the entire modeling problem is antibiotic-specific. The cleaning sequence kept only rows belonging to isolates that also existed in the genotype table, retained only rows with the required identifying and label fields, restricted labels to \texttt{resistant} and \texttt{susceptible}, removed \texttt{(BioSample, Antibiotic)} pairs that contained both labels, and resolved remaining duplicates by keeping the row with the lowest MIC after explicit ordering of the measurement sign.
+Phenotype processing was performed first because the entire modeling problem is antibiotic-specific. The cleaning sequence kept only rows belonging to isolates that also existed in the genotype table, retained only rows with the required identifying and label fields, restricted labels to \texttt{resistant} and \texttt{susceptible}, removed \texttt{(BioSample, Antibiotic)} pairs that contained both labels, and then resolved the remaining duplicate rows by selecting the lowest MIC after explicit ordering of the measurement sign.
 
 After cleaning, antibiotics were retained only if they had at least 500 rows overall and at least 100 isolates in each class.
 

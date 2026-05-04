@@ -2,7 +2,7 @@
 
 % Y doan: gioi thieu baseline rule-based va muc dich dua vao so sanh.
 % Vai tro: dat baseline xac dinh de tach tac dong cua connection scope khoi tac dong cua hoc may.
-Rule-based prediction is used as a deterministic reference baseline under the biologically constrained scopes. This direction is grounded in curated determinant resources and direct genotype-to-phenotype comparison logic, which are represented in this study by AMRFinderPlus-style determinant annotation and by genotypic-versus-phenotypic AMR comparison in \textit{Salmonella}~\citep{feldgarden2021amrfinderplus,shen2024comparison}. The baselines in the present study use the same cleaned cohort, the same normalized genotype table, and the same antibiotic-specific connection logic as the learned models. Their role is not to maximize performance, but to show what can already be inferred directly from retained determinant evidence before any learned combination is introduced.
+Rule-based prediction serves as a deterministic reference baseline under the biologically constrained scopes. This direction is grounded in curated determinant resources and direct genotype-to-phenotype comparison logic, which are represented in this study by AMRFinderPlus-style determinant annotation and by genotypic-versus-phenotypic AMR comparison in \textit{Salmonella}~\citep{feldgarden2021amrfinderplus,shen2024comparison}. The baselines use the same cleaned cohort, the same normalized genotype table, and the same antibiotic-specific connection logic as the learned models, so they show how much signal is already available from retained determinant evidence before any learned weighting is introduced.
 
 % Y doan: mo ta quy tac du doan cua strict va broad rule-based.
 % Vai tro: dinh nghia ro co che baseline va ly do chi dung strict va broad.
@@ -10,7 +10,7 @@ Only the \textit{strict} and \textit{broad} scopes are used for rule-based predi
 
 % Y doan: giai thich y nghia cua baseline.
 % Vai tro: noi ro vi sao can baseline nay trong thiet ke thuc nghiem.
-These baselines are included for two reasons. First, they provide a direct genotype-to-phenotype reference using explicit determinant matching alone. Second, they make it possible to separate performance gains caused by broader biological scope from gains caused by machine learning itself.
+As a result, the rule-based baselines provide a direct genotype-to-phenotype reference and help separate gains produced by broader biological scope from gains produced by machine learning itself.
 
 \section{Machine-Learning Prediction}
 
@@ -33,7 +33,7 @@ The final feature representation does not include a separate binary presence col
 \label{fig:prepared-input-example}
 \end{figure}
 
-Prepared inputs are stored separately by scope before training begins. This separation is deliberate. It ensures that model fitting no longer depends on raw TSV ingestion or hidden preprocessing inside the training workflow. As a result, scope comparisons remain reproducible and can be traced back to fixed antibiotic-specific input tables.
+Prepared inputs are stored separately by scope before training begins. This keeps model fitting independent from raw TSV ingestion and hidden preprocessing inside the training workflow, so scope comparisons remain reproducible and can be traced back to fixed antibiotic-specific input tables.
 
 % Y doan: mo ta cau hinh huan luyen cuoi cung.
 % Vai tro: dinh nghia mo hinh, ly do dung one-model-per-antibiotic, va setup train nhat quan.

@@ -2,7 +2,7 @@
 
 % Y doan: dat khung danh gia va noi ro nhung gi duoc giu co dinh qua moi thi nghiem.
 % Vai tro: xac dinh rang cac khac biet ket qua chu yeu den tu connection scope, khong phai do cohort hay workflow thay doi.
-All experiments use the same shared cleaned genotype-phenotype cohort, the same phenotype-processing and genotype-normalization pipeline, and the same antibiotic-specific prepared-input workflow described in Chapter~3. The machine-learning experiments also keep the same one-model-per-antibiotic strategy and the same five-fold stratified cross-validation protocol across all settings. The main variable that changes across the learned comparison is therefore the genotype-to-phenotype connection scope rather than the cohort, the preprocessing logic, or the training design.
+All experiments use the same shared cleaned genotype-phenotype cohort, the same phenotype-processing and genotype-normalization pipeline, and the same antibiotic-specific prepared-input workflow described in Chapter~3. The machine-learning experiments also keep the same one-model-per-antibiotic strategy and the same five-fold stratified cross-validation protocol across all settings. Under this shared framework, performance differences reflect how genotype evidence is connected to phenotype under different biological scopes rather than changes in cohort construction, preprocessing, or training design.
 
 % Y doan: liet ke pham vi thuc nghiem va cac quy uoc danh gia.
 % Vai tro: giup nguoi doc biet ro cac bai toan cu the duoc danh gia va cach doc metric trong ca chuong.
@@ -16,7 +16,7 @@ The machine-learning comparison contains three scope settings, namely \textit{st
 
 % Y doan: dua antibiotic-level comparison len lam trong tam cua chuong.
 % Vai tro: nhan manh day la bai toan one-model-per-antibiotic, nen hanh vi theo tung thuoc quan trong hon average chung.
-Because one model is trained per antibiotic, antibiotic-level behavior is more informative than global averages. For this reason, the core comparison of the chapter is the per-antibiotic behavior of the three machine-learning scopes. Scopes are ranked primarily by recall, then precision, then ROC-AUC. When two scopes are numerically indistinguishable under this ordering, the narrower scope is preferred as the more biologically specific assignment.
+Because one model is trained for each antibiotic and determinant relevance varies across drugs, scope effects are interpreted primarily at the antibiotic level. Scope preference is evaluated first through recall, then precision, and then ROC-AUC. When the observed differences are small, the narrower scope is favored because it preserves stronger biological specificity.
 
 \begin{table}[H]
 \centering
@@ -86,13 +86,13 @@ Third, \textit{all} is preferred for amoxicillin-clavulanic acid, ampicillin, ce
 
 % Y doan: dung cac plot de cuong co cach nhin theo tung antibiotic.
 % Vai tro: cho thay bang hinh anh rang cac pattern trong bang khong phai la cac truong hop le.
-Figure~\ref{fig:scope-performance-comparison} supports the same interpretation from three complementary angles. Recall highlights where broader evidence is needed to recover resistant isolates, precision shows whether wider scopes are overcalling resistance, and ROC-AUC shows whether the ranking quality remains strong across thresholds. Taken together, the plots confirm that the determinant-connection scope behaves differently across antibiotics, and that the most meaningful scientific comparison in this project is therefore antibiotic-specific rather than scope-averaged.
+Across the three plots, recall identifies antibiotics for which broader evidence is needed to recover resistant isolates, precision shows when widening the scope begins to overcall resistance, and ROC-AUC shows whether ranking quality remains stable across thresholds. The same figures also show that these trade-offs vary markedly by antibiotic, with different drugs favoring narrow, class-level, or unconstrained determinant evidence.
 
 \section{Scope-Level Summary Across Antibiotics}
 
 % Y doan: tong hop bang average metrics sau khi da phan tich antibiotic-level.
 % Vai tro: giu average metrics o vai tro summary phu, khong de no lam bang chung chinh.
-Average metrics are retained only as a compact secondary summary after the antibiotic-specific comparison above. They are useful for describing overall tendencies across the 14 antibiotics, but they should not replace the antibiotic-level evidence because the project trains one model per antibiotic and the behavior is clearly heterogeneous across drugs.
+Aggregate metrics provide a compact summary across the 14 antibiotics, although interpretation remains centered on antibiotic-specific behavior because each model is fitted to a different drug and determinant profile.
 
 \begin{table}[H]
 \centering
@@ -120,7 +120,7 @@ Several overall tendencies follow from Table~\ref{tab:method-average-metrics}. \
 
 % Y doan: giai thich muc dich cua so sanh rule-based va ML.
 % Vai tro: tach ro tac dong cua direct determinant matching khoi tac dong cua hoc cach ket hop evidence.
-The purpose of the rule-based versus machine-learning comparison is twofold. First, it shows when direct determinant-based inference is already sufficient for phenotype prediction. Second, it shows when broader determinant evidence must be combined more carefully than a simple deterministic rule allows.
+The contrast between rule-based and learned prediction distinguishes antibiotics for which direct determinant matching already captures most of the signal from those that require broader evidence to be combined more selectively.
 
 % Y doan: chi ra cac truong hop direct rule da rat manh.
 % Vai tro: chong lai cach hieu sai rang ML luc nao cung can thiet hon rule-based.
@@ -129,6 +129,28 @@ For some antibiotics, direct determinant matching is already very strong. Under 
 % Y doan: chi ra khi direct rule tro nen qua tho va broad ML moi that su co gia tri.
 % Vai tro: nhan manh dong gop thuc su cua ML trong bai toan nay.
 For other antibiotics, however, direct rules are either too narrow or too coarse. Under \textit{strict rule-based} inference, ceftriaxone reaches precision only \(0.0904\) and recall \(0.1006\), while ceftiofur reaches precision \(0.1020\) and recall \(0.1328\). The learned strict models improve substantially on these same sparse representations, but they remain unstable, for example reaching only precision \(0.2011\) and recall \(0.9101\) for ceftriaxone. Under \textit{broad rule-based} matching, recall is recovered for many antibiotics, but precision collapses because any within-class determinant hit is treated as sufficient evidence. Ceftriaxone broad rule-based prediction reaches recall \(0.9852\) but precision only \(0.4894\); ceftiofur reaches recall \(0.9859\) but precision only \(0.4550\); gentamicin and kanamycin fall even lower in precision at \(0.2178\) and \(0.2808\), respectively.
+
+This trade-off is easier to see when the rule-based results are viewed across antibiotics. The recall plot highlights where broader deterministic matching recovers resistant isolates more effectively, whereas the precision plot shows how often that same widening of scope leads to overcalling.
+
+\begin{figure}[!htbp]
+\centering
+\begin{subfigure}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures/rule_recall_by_scope}
+\caption{Recall by scope.}
+\label{fig:rule-recall-by-scope}
+\end{subfigure}\hfill
+\begin{subfigure}[t]{0.49\textwidth}
+\centering
+\includegraphics[width=\textwidth]{figures/rule_precision_by_scope}
+\caption{Precision by scope.}
+\label{fig:rule-precision-by-scope}
+\end{subfigure}
+\caption[Antibiotic-specific rule-based performance by scope.]{Antibiotic-specific rule-based performance comparison across biologically constrained scopes.}
+\label{fig:rule-scope-performance-comparison}
+\end{figure}
+
+Figure~\ref{fig:rule-scope-performance-comparison} shows the same pattern from two complementary angles. For several antibiotics, \textit{broad rule-based} substantially improves recall over \textit{strict rule-based}, indicating that broader within-class matching can recover resistant isolates missed by the narrowest rule. However, the precision plot shows that this gain often comes with a marked increase in false resistant calls, especially for ceftriaxone, ceftiofur, gentamicin, and kanamycin. In this setting, wider deterministic matching increases sensitivity, but it cannot distinguish between directly informative determinants and broader co-occurring evidence within the same class.
 
 % Y doan: ket luan so sanh giua broad rule va broad ML.
 % Vai tro: cho thay ML co gia tri nhat khi phai ket hop broad evidence mot cach co chon loc.
@@ -152,7 +174,7 @@ This pattern explains much of the gap between \textit{strict} and the broader se
 
 % Y doan: dat khung cho feature importance.
 % Vai tro: nhac nguoi doc rang importance la dau hieu du doan, khong phai bang chung co che nhan qua.
-Feature-importance outputs are used here to interpret what the learned models found predictive under each scope. They are not treated as proof of causal resistance mechanisms. Their role is instead to show whether the dominant predictive signals remain biologically plausible and how that plausibility changes as the determinant-connection scope widens.
+Feature-importance patterns indicate which retained determinants contribute most strongly to prediction under each scope. These rankings reflect predictive reliance rather than demonstrated causal mechanisms, but they help show how biological plausibility changes as the determinant-connection scope widens.
 
 % Y doan: vi du strict.
 % Vai tro: cho thay strict co the noi bat len cac determinant hep va giai thich duoc sinh hoc.
@@ -175,8 +197,8 @@ For amoxicillin-clavulanic acid under \textit{all}, highly plausible beta-lactam
 % Vai tro: khong lap lai tung bang/hinh, ma rut ra cac phat hien chinh tu bang chung da trinh bay.
 The evaluation results support the following main findings:
 \begin{enumerate}[label=\arabic*.]
-    \item \textbf{The determinant-connection scope is a major scientific variable.} Performance changes substantially depending on whether determinant evidence is connected narrowly, broadly, or without biological restriction.
-    \item \textbf{Antibiotic-specific behavior is more informative than global averages.} Because one model is trained per antibiotic, scope choice must be interpreted at the antibiotic level before any average summary is considered.
+    \item \textbf{Performance depends strongly on the determinant-connection scope.} Prediction quality changes substantially depending on whether determinant evidence is connected narrowly, broadly, or without biological restriction.
+    \item \textbf{Scope effects vary substantially across antibiotics.} Because each model is fitted to one drug and one determinant profile, scope behavior is best interpreted at the antibiotic level rather than through aggregate scores alone.
     \item \textbf{Broad scope is the strongest biologically constrained setting.} It captures meaningful within-class cross-resistance signals and is especially effective for beta-lactam and aminoglycoside tasks.
     \item \textbf{All scope is the strongest global predictive default.} Its main advantages are complete feature coverage, no zero-feature rows, and the strongest overall ranking quality, although it also carries greater leakage risk.
     \item \textbf{Strict scope remains useful as a narrow biological reference.} It is not the strongest universal default, but it remains highly competitive for antibiotics whose phenotype is tightly linked to specific determinant signatures.
