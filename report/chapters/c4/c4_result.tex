@@ -2,7 +2,7 @@
 
 % Y doan: dat khung danh gia va noi ro nhung gi duoc giu co dinh qua moi thi nghiem.
 % Vai tro: xac dinh rang cac khac biet ket qua chu yeu den tu connection scope, khong phai do cohort hay workflow thay doi.
-All experiments use the same shared cleaned genotype-phenotype cohort, the same phenotype-processing and genotype-normalization pipeline, and the same antibiotic-specific prepared-input workflow described in Chapter~3. The machine-learning experiments also keep the same one-model-per-antibiotic strategy and the same five-fold stratified cross-validation protocol across all settings. Under this shared framework, performance differences reflect how genotype evidence is connected to phenotype under different biological scopes rather than changes in cohort construction, preprocessing, or training configuration.
+All experiments use the same shared cleaned genotype-phenotype cohort, the same phenotype-processing and genotype-normalization pipeline, and the same antibiotic-specific prepared-input workflow described in Chapter~3. The machine-learning experiments also keep the same one-model-per-antibiotic strategy and the same five-fold stratified cross-validation protocol across all settings. The project repository contains the workflow code, prepared inputs, and result files used for the experiments reported in this chapter\footnote{\url{https://github.com/Pathogenemics/amr-prediction}}. Under this shared framework, performance differences reflect how genotype evidence is connected to phenotype under different biological scopes rather than changes in cohort construction, preprocessing, or training configuration.
 
 % Y doan: liet ke pham vi thuc nghiem va cac quy uoc danh gia.
 % Vai tro: giup nguoi doc biet ro cac bai toan cu the duoc danh gia va cach doc metric trong ca chuong.
@@ -16,7 +16,7 @@ The machine-learning comparison contains three scope settings, namely \textit{st
 
 % Y doan: dua antibiotic-level comparison len lam trong tam cua chuong.
 % Vai tro: nhan manh day la bai toan one-model-per-antibiotic, nen hanh vi theo tung thuoc quan trong hon average chung.
-Because one model is trained for each antibiotic and determinant relevance varies across drugs, scope effects are interpreted primarily at the antibiotic level. Scope comparison prioritizes recall first, precision second, and ROC-AUC third.
+Because one model is trained for each antibiotic and determinant relevance varies across drugs, scope effects are interpreted primarily at the antibiotic level. Scope comparison prioritizes recall first, precision second, and ROC-AUC third. When two scopes produce identical or effectively indistinguishable values under this priority, the narrower scope is reported because it preserves stronger biological specificity.
 
 \begin{table}[H]
 \centering
@@ -60,7 +60,7 @@ Third, \textit{all} is preferred for amoxicillin-clavulanic acid, ampicillin, ce
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/recall_by_scope}
-\caption[Antibiotic-specific recall by scope.]{Antibiotic-specific recall comparison across determinant-connection scopes.}
+\caption[Antibiotic-specific ML recall by scope.]{Antibiotic-specific ML recall comparison across determinant-connection scopes.}
 \label{fig:recall-by-scope}
 \end{figure}
 
@@ -69,7 +69,7 @@ Figure~\ref{fig:recall-by-scope} identifies the antibiotics for which broader de
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/precision_by_scope}
-\caption[Antibiotic-specific precision by scope.]{Antibiotic-specific precision comparison across determinant-connection scopes.}
+\caption[Antibiotic-specific ML precision by scope.]{Antibiotic-specific ML precision comparison across determinant-connection scopes.}
 \label{fig:precision-by-scope}
 \end{figure}
 
@@ -78,7 +78,7 @@ Figure~\ref{fig:precision-by-scope} shows where that broader evidence begins to 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/roc_auc_by_scope}
-\caption[Antibiotic-specific ROC-AUC by scope.]{Antibiotic-specific ROC-AUC comparison across the three determinant-connection scopes.}
+\caption[Antibiotic-specific ML ROC-AUC by scope.]{Antibiotic-specific ML ROC-AUC comparison across the three determinant-connection scopes.}
 \label{fig:roc-auc-by-scope}
 \end{figure}
 
@@ -94,7 +94,7 @@ Aggregate metrics provide a secondary summary across the 14 antibiotics, althoug
 
 \begin{table}[H]
 \centering
-\caption{Average performance across antibiotics}
+\caption{Average antibiotic-level performance by prediction method}
 \label{tab:method-average-metrics}
 \small
 \begin{tabular}{lccccc}
@@ -114,7 +114,7 @@ All ML            & 0.987 & 0.966 & 0.974 & 0.988 & 0.0 \\
 % Vai tro: rut ra cac tendency khong phu thuoc mot antibiotic don le.
 Several overall tendencies follow from Table~\ref{tab:method-average-metrics}. \textit{Strict ML} is the weakest learned setting on average, especially in ROC-AUC, because the narrowest scope often leaves the representation too sparse. \textit{Broad ML} is the strongest biologically constrained setting, with the best average precision and essentially tied average recall. \textit{All ML} is the strongest global default in terms of ranking quality, with the best average ROC-AUC and no zero-feature burden. The rule-based rows show the same contrast from another angle: \textit{broad rule-based} reaches extremely high average recall, but its average precision remains weak because direct within-class matching cannot weight evidence selectively.
 
-\section{Rule-Based Versus Machine-Learning Comparison}
+\section{Comparison Between Rule-Based and Machine-Learning Prediction}
 
 % Y doan: giai thich muc dich cua so sanh rule-based va ML.
 % Vai tro: tach ro tac dong cua direct determinant matching khoi tac dong cua hoc cach ket hop evidence.

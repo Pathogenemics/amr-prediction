@@ -31,10 +31,12 @@
 \usepackage{enumitem}
 \usepackage{mdframed}
 \usepackage[flushleft]{threeparttable}
-\usepackage{perpage}
+\usepackage[bottom]{footmisc}
 \newtheorem{definition}{Definition}[chapter]
 
-\MakePerPage{footnote}
+\makeatletter
+\@removefromreset{footnote}{chapter}
+\makeatother
 \PassOptionsToPackage{table}{xcolor}
 
 \def\changemargin#1#2{\list{}{\rightmargin#2\leftmargin#1}\item[]}
