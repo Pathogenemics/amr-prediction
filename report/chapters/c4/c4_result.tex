@@ -59,34 +59,32 @@ Third, \textit{all} is preferred for amoxicillin-clavulanic acid, ampicillin, ce
 
 \begin{figure}[!htbp]
 \centering
-\begin{subfigure}[t]{0.49\textwidth}
-\centering
 \includegraphics[width=\textwidth]{figures/recall_by_scope}
-\caption{Recall by scope.}
+\caption[Antibiotic-specific recall by scope.]{Antibiotic-specific recall comparison across determinant-connection scopes.}
 \label{fig:recall-by-scope}
-\end{subfigure}\hfill
-\begin{subfigure}[t]{0.49\textwidth}
+\end{figure}
+
+Figure~\ref{fig:recall-by-scope} identifies the antibiotics for which broader determinant evidence is needed to recover resistant isolates. The strongest recall gains appear when moving from \textit{strict} to \textit{broad} or \textit{all}, especially for amoxicillin-clavulanic acid, ceftriaxone, and ceftiofur, which indicates that narrow matching misses a substantial share of the resistant class in these tasks.
+
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/precision_by_scope}
-\caption{Precision by scope.}
+\caption[Antibiotic-specific precision by scope.]{Antibiotic-specific precision comparison across determinant-connection scopes.}
 \label{fig:precision-by-scope}
-\end{subfigure}
+\end{figure}
 
-\vspace{0.75em}
+Figure~\ref{fig:precision-by-scope} shows where that broader evidence begins to overcall resistance. For several antibiotics, \textit{broad} and \textit{all} preserve high precision, but the plot also shows that widening the determinant pool does not help uniformly and can reduce biological specificity when the added evidence becomes less directly tied to the target phenotype.
 
-\begin{subfigure}[t]{0.82\textwidth}
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/roc_auc_by_scope}
-\caption{ROC-AUC by scope.}
+\caption[Antibiotic-specific ROC-AUC by scope.]{Antibiotic-specific ROC-AUC comparison across determinant-connection scopes.}
 \label{fig:roc-auc-by-scope}
-\end{subfigure}
-\caption[Antibiotic-specific performance by scope.]{Antibiotic-specific performance comparison across determinant-connection scopes.}
-\label{fig:scope-performance-comparison}
 \end{figure}
 
 % Y doan: dung cac plot de cuong co cach nhin theo tung antibiotic.
 % Vai tro: cho thay bang hinh anh rang cac pattern trong bang khong phai la cac truong hop le.
-Across the three plots, recall identifies antibiotics for which broader evidence is needed to recover resistant isolates, precision shows when widening the scope begins to overcall resistance, and ROC-AUC shows whether ranking quality remains stable across thresholds. The same figures also show that these trade-offs vary markedly by antibiotic, with different drugs favoring narrow, class-level, or unconstrained determinant evidence.
+Figure~\ref{fig:roc-auc-by-scope} shows whether ranking quality remains stable across thresholds after the recall and precision trade-offs are taken into account. Read together, the three figures confirm that scope effects vary markedly by antibiotic, with different drugs favoring narrow, class-level, or unconstrained determinant evidence.
 
 \section{Scope-Level Summary Across Antibiotics}
 
@@ -134,23 +132,21 @@ This trade-off is easier to see when the rule-based results are viewed across an
 
 \begin{figure}[!htbp]
 \centering
-\begin{subfigure}[t]{0.49\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures/rule_recall_by_scope}
-\caption{Recall by scope.}
+\includegraphics[width=\textwidth]{figures/rule_recall_by_scope_fixed}
+\caption[Antibiotic-specific rule-based recall by scope.]{Antibiotic-specific rule-based recall comparison across biologically constrained scopes.}
 \label{fig:rule-recall-by-scope}
-\end{subfigure}\hfill
-\begin{subfigure}[t]{0.49\textwidth}
-\centering
-\includegraphics[width=\textwidth]{figures/rule_precision_by_scope}
-\caption{Precision by scope.}
-\label{fig:rule-precision-by-scope}
-\end{subfigure}
-\caption[Antibiotic-specific rule-based performance by scope.]{Antibiotic-specific rule-based performance comparison across biologically constrained scopes.}
-\label{fig:rule-scope-performance-comparison}
 \end{figure}
 
-Figure~\ref{fig:rule-scope-performance-comparison} shows the same pattern from two complementary angles. For several antibiotics, \textit{broad rule-based} substantially improves recall over \textit{strict rule-based}, indicating that broader within-class matching can recover resistant isolates missed by the narrowest rule. However, the precision plot shows that this gain often comes with a marked increase in false resistant calls, especially for ceftriaxone, ceftiofur, gentamicin, and kanamycin. In this setting, wider deterministic matching increases sensitivity, but it cannot distinguish between directly informative determinants and broader co-occurring evidence within the same class.
+Figure~\ref{fig:rule-recall-by-scope} shows that \textit{broad rule-based} substantially improves recall over \textit{strict rule-based} for several antibiotics. In these cases, broader within-class matching recovers resistant isolates that are missed by the narrowest deterministic rule.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\textwidth]{figures/rule_precision_by_scope_fixed}
+\caption[Antibiotic-specific rule-based precision by scope.]{Antibiotic-specific rule-based precision comparison across biologically constrained scopes.}
+\label{fig:rule-precision-by-scope}
+\end{figure}
+
+Figure~\ref{fig:rule-precision-by-scope} shows the corresponding cost in precision. The recall gain from broader deterministic matching often comes with a marked increase in false resistant calls, especially for ceftriaxone, ceftiofur, gentamicin, and kanamycin. In this setting, wider deterministic matching increases sensitivity, but it cannot distinguish between directly informative determinants and broader co-occurring evidence within the same class.
 
 % Y doan: ket luan so sanh giua broad rule va broad ML.
 % Vai tro: cho thay ML co gia tri nhat khi phai ket hop broad evidence mot cach co chon loc.
