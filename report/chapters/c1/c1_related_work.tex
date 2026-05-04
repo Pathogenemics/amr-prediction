@@ -7,12 +7,10 @@ Genomic antimicrobial resistance prediction is already an active research direct
 
 % Ý đoạn: giới thiệu logic tổ chức literature thành nhiều hướng tiếp cận.
 % Vai trò: chuẩn bị cho ba family bên dưới và nêu rõ tiêu chí so sánh của report.
-As a result, the literature has not converged on one universally best solution. Some studies emphasize curated biological knowledge and direct interpretability, some use biologically meaningful features together with machine learning, and others move toward broad genome-wide representations such as SNPs, k-mers, or pan-genome features~\citep{feldgarden2021amrfinderplus,maguire2019identification,ren2022prediction}. Recent reviews also highlight that these choices affect not only predictive performance but also interpretability, robustness, and potential clinical utility~\citep{kim2022ml,tang2022systematic,ardila2024wgsml}. This diversity is important for the present report because the main scientific question is not only whether AMR can be predicted, but also how the choice of genotype-to-phenotype representation affects the balance between predictive performance and biological explanation.
+As a result, the literature has not converged on one universally best solution. Some studies emphasize curated biological knowledge and direct interpretability, some use biologically meaningful features together with machine learning, and others move toward broad genome-wide representations such as SNPs, k-mers, or pan-genome features~\citep{feldgarden2021amrfinderplus,maguire2019identification,ren2022prediction}. Recent reviews also highlight that these choices affect not only predictive performance but also interpretability, robustness, and potential clinical utility~\citep{kim2022ml,tang2022systematic,ardila2024wgsml}. This diversity is important for the present report because the main scientific question is not only whether AMR can be predicted, but also how the choice of genotype-to-phenotype representation affects the balance between predictive performance and biological explanation. Table~\ref{tab:related-work-overview} summarizes representative studies that are most relevant to the present project across organism, phenotype target, feature representation, and evaluation design.
 
 % Ý đoạn: giải thích chức năng của bảng related work.
 % Vai trò: nói rõ bảng này dùng để định vị phương pháp, không phải benchmark số học trực tiếp.
-Table~\ref{tab:related-work-overview} summarizes representative studies that are most relevant to the present project across organism, phenotype target, feature representation, and evaluation design.
-
 % Ý đoạn: family 1 = rule/knowledge-driven, mạnh về interpretability nhưng hạn chế về coverage.
 % Vai trò: tạo mốc so sánh cho hướng baseline sinh học trực tiếp của đề tài.
 The first family of studies begins from known AMR genes, known resistance-associated mutations, and curated biological annotation. In this direction, the main advantage is interpretability: every prediction or association can be traced back to a specific determinant or mechanism. The AMRFinderPlus framework of Feldgarden et al.~\citep{feldgarden2021amrfinderplus} is especially important here because it provides the curated determinant catalog that motivates the feature representation used in this report. Shen et al.~\citep{shen2024comparison} is also important because it directly compares genotypic and phenotypic resistance profiles in \textit{Salmonella enterica}, which is close in spirit to the rule-based reference baselines used in the present study. The limitation of this family is that direct inference can fail when resistance depends on broader within-class mechanisms, unknown variants, or incomplete determinant coverage.
@@ -38,7 +36,7 @@ The study is most closely aligned with the biology-informed machine-learning fam
 % không phải chỉ thêm một classifier benchmark.
 Within this landscape, determinant-based prediction occupies an intermediate position between direct deterministic matching and broader black-box genomic representations. The resulting analysis is therefore a controlled comparison of biological connection scopes in genomic AMR prediction.
 
-\begin{table}[]
+\begin{table}[H]
 \centering
 \caption{Representative related studies and their relation to the present project}
 \label{tab:related-work-overview}
@@ -50,11 +48,11 @@ Within this landscape, determinant-based prediction occupies an intermediate pos
 Study & Target & Feature type & Method family & Relation to our study \\
 \midrule
 Feldgarden et al.~\citep{feldgarden2021amrfinderplus} & General AMR annotation & Curated determinants & Biology-first resource & Foundation for the determinant space used in our pipeline; not a direct prediction benchmark. \\
-Shen et al.~\citep{shen2024comparison} & Salmonella concordance & Genotypic AMR profiles & Rule-based direction & Closest conceptual basis for our direct genotype-to-phenotype baseline. \\
-Maguire et al.~\citep{maguire2019identification} & Salmonella AMR prediction & AMR gene annotations / k-mers & Biology-informed ML & Shows both determinant-centered and gene-free learning within the same Salmonella task. \\
+Shen et al.~\citep{shen2024comparison} & Salmonella genotype-phenotype concordance & WGS-detected AMR genes & Direct determinant comparison & Conceptual basis for direct genotype-to-phenotype matching rather than a supervised ML benchmark. \\
+Maguire et al.~\citep{maguire2019identification} & Salmonella AMR prediction & CARD/RGI determinant presence-absence and 31-mer k-mers & Determinant-based and k-mer ML & Shows learned determinant weights and k-mer rules within the same Salmonella task. \\
 He et al.~\citep{he2025prediction} & Salmonella phenotype and MIC & Pan-genome / pan-resistome & Broader ML & Closest literature analogue to our wider-scope machine-learning direction. \\
-Ren et al.~\citep{ren2022prediction} & Binary AMR prediction & Whole-genome SNPs & Genome-wide ML & Useful for discussing broad genomic signal beyond curated determinants. \\
-Wang et al.~\citep{wang2023using} & Salmonella MIC prediction & WGS-derived 10-mers & Genome-wide ML & Useful mainly for the richer MIC target and the interpretability trade-off of genome-wide features. \\
+Ren et al.~\citep{ren2022prediction} & E. coli binary AMR prediction & Whole-genome SNPs with label/one-hot/FCGR encodings & SNP-based genome-wide ML & Useful for discussing broad genomic signal beyond curated determinants in a different organism. \\
+Wang et al.~\citep{wang2023using} & Salmonella MIC prediction & 10-mer frequency vectors with feature selection & K-mer random-forest MIC prediction & Useful mainly for the richer MIC target and the interpretability trade-off of genome-wide features. \\
 \bottomrule
 \end{tabular}
 \end{table}
